@@ -6,7 +6,7 @@
 #define DEFAULT_WINDOW_WIDTH (800)
 #define DEFAULT_WINDOW_HEIGHT (600)
 
-#include <windows.h>
+#include "d3dclass.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -28,7 +28,7 @@ private:
 	bool Render();
 
 private:
-
+	D3DClass* m_Direcrt3D;
 };
 
 #endif
