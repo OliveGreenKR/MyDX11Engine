@@ -5,6 +5,7 @@ ModelClass::ModelClass()
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
 	m_Texture = 0;
+	m_shape = Triangle;
 }
 
 ModelClass::ModelClass(const ModelClass& other)
@@ -15,13 +16,13 @@ ModelClass::~ModelClass()
 {
 }
 
-bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename)
+bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename, MeshShape shape = Triangle)
 {
 	bool result;
 
 
 	// Initialize the vertex and index buffers.
-	result = InitializeBuffers(device);
+	result = InitializeBuffers(device, shape);
 	if (!result)
 	{
 		return false;
@@ -65,7 +66,7 @@ ID3D11ShaderResourceView* ModelClass::GetTexture()
 	return m_Texture->GetTexture();
 }
 
-bool ModelClass::InitializeBuffers(ID3D11Device* device)
+bool ModelClass::InitializeBuffers(ID3D11Device* device, MeshShape shape)
 {
 	VertexType* vertices;
 	unsigned long* indices;
@@ -93,28 +94,51 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 		return false;
 	}
 #pragma region Load Models Data 
-	// Load the vertex array with data.
-	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // bottom-left
-	vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
+	m_shape = shape;
 
-	vertices[1].position = XMFLOAT3(-1.0f, 1.0f, 0.0f);  // top-left
-	vertices[1].texture = XMFLOAT2(0.0f, 0.0f);
+	switch (m_shape) {
+	case Triangle:
+	{
+		// Load the vertex array with data.
+		vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
+		vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
 
-	vertices[2].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // top-right
-	vertices[2].texture = XMFLOAT2(1.0f, 0.0f);
+		vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // Top middle.
+		vertices[1].texture = XMFLOAT2(0.5f, 0.0f);
 
-	vertices[3].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // bottom-right
-	vertices[3].texture = XMFLOAT2(1.0f, 1.0f);
+		vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
+		vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
 
-	// Load the index array with data.
-	indices[0] = 0;  // Bottom left.
-	indices[1] = 1;  // Top left
-	indices[2] = 2;  // Top Right
+		// Load the index array with data.
+		indices[0] = 0;  // Top middle.
+		indices[1] = 1;  // Bottom left.
+		indices[2] = 2;  // Bottom right.
+	}break;
+	case Quad:
+	{
+		// Load the vertex array with data.
+		vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // bottom-left
+		vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
 
-	indices[3] = 2;  // Top Right
-	indices[4] = 3;  // Bottom Right
-	indices[5] = 0;  // Bottom left
+		vertices[1].position = XMFLOAT3(-1.0f, 1.0f, 0.0f);  // top-left
+		vertices[1].texture = XMFLOAT2(0.0f, 0.0f);
 
+		vertices[2].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // top-right
+		vertices[2].texture = XMFLOAT2(1.0f, 0.0f);
+
+		vertices[3].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // bottom-right
+		vertices[3].texture = XMFLOAT2(1.0f, 1.0f);
+
+		// Load the index array with data.
+		indices[0] = 0;  // Bottom left.
+		indices[1] = 1;  // Top left
+		indices[2] = 2;  // Top Right
+
+		indices[3] = 2;  // Top Right
+		indices[4] = 3;  // Bottom Right
+		indices[5] = 0;  // Bottom left
+	}break;
+	}
 
 #pragma endregion
 #pragma region Create Vertex, Index Buffer

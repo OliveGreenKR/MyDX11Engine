@@ -16,13 +16,19 @@ private:
 		XMFLOAT3 position;
 		XMFLOAT2 texture;
 	};
+public:
+	enum MeshShape 
+	{
+		Triangle,
+		Quad,
+	};
 
 public:
 	ModelClass();
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*);
+	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*, MeshShape);
 
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
@@ -33,7 +39,7 @@ public:
 
 
 private:
-	bool InitializeBuffers(ID3D11Device*);
+	bool InitializeBuffers(ID3D11Device*, MeshShape shape);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext*);
 
@@ -44,6 +50,7 @@ private:
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
 	int m_vertexCount, m_indexCount;
 	TextureClass* m_Texture;
+	MeshShape m_shape;
 };
 
 #endif
