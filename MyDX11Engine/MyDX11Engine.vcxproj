@@ -104,6 +104,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -131,9 +133,12 @@
     <ClInclude Include="Cameraclass.h" />
     <ClInclude Include="ColorShaderclass.h" />
     <ClInclude Include="D3dclass.h" />
+    <ClInclude Include="Define.h" />
     <ClInclude Include="Inputclass.h" />
     <ClInclude Include="Modelclass.h" />
     <ClInclude Include="Systemclass.h" />
+    <ClInclude Include="Textureclass.h" />
+    <ClInclude Include="TextureShaderclass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Applicationclass.cpp" />
@@ -144,6 +149,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Modelclass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
+    <ClCompile Include="Textureclass.cpp" />
+    <ClCompile Include="TextureShaderclass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MyDX11Engine.rc" />
@@ -154,6 +161,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.gitignore" />
+    <FxCompile Include="psTexture.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="vsTexture.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="vsColor.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <FileType>Document</FileType>
