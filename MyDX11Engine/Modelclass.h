@@ -14,7 +14,6 @@ private:
 	struct VertexType
 	{
 		XMFLOAT3 position;
-		XMFLOAT4 color;
 		XMFLOAT2 texture;
 	};
 
@@ -23,7 +22,6 @@ public:
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
-	bool Initialize(ID3D11Device*);
 	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*);
 
 	void Shutdown();
