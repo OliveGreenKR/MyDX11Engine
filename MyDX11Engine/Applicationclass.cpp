@@ -39,12 +39,12 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera = new CameraClass;
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -15.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
 	// Set the name of the texture file that we will be loading.
-	strcpy_s(textureFilename, (cwd + "/data/stone02.tga").c_str());
+	strcpy_s(textureFilename, (cwd + "/data/stone01.tga").c_str());
 
 	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), textureFilename, ModelClass::MeshShape::Triangle);
 	if (!result)

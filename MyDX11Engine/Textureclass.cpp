@@ -25,7 +25,7 @@ bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceC
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 
 	// Load the targa image data into memory.
-	result = LoadTarga32Bit(filename);
+	result = LoadTarga(filename);
 	if (!result)
 	{
 		return false;
@@ -116,7 +116,7 @@ ID3D11ShaderResourceView* TextureClass::GetTexture()
 	return m_textureView;
 }
 
-bool TextureClass::LoadTarga32Bit(char* filename)
+bool TextureClass::LoadTarga(char* filename)
 {
 	int error, bpp, imageSize, index, i, j, k;
 	FILE* filePtr;
@@ -144,8 +144,8 @@ bool TextureClass::LoadTarga32Bit(char* filename)
 	m_width = (int)targaFileHeader.width;
 	bpp = (int)targaFileHeader.bpp;
 
-	// Check that it is 32 bit and not 24 bit.
-	if (bpp != 32)
+	// Check that it is 32 bit or 24 bit.
+	if (bpp != 32 && bpp != 24)
 	{
 		return false;
 	}
@@ -173,6 +173,56 @@ bool TextureClass::LoadTarga32Bit(char* filename)
 	// Allocate memory for the targa destination data.
 	m_targaData = new unsigned char[imageSize];
 
+	//Copy Image to m_TargaData
+	switch (bpp) {
+	case 24:
+		LoadTarga24Bit(targaImage);
+		break;
+	case 32:
+		LoadTarga32Bit(targaImage);
+		break;
+	}
+
+	// Release the targa image data now that it was copied into the destination array.
+	delete[] targaImage;
+	targaImage = nullptr;
+
+	return true;
+}
+
+void  TextureClass::LoadTarga24Bit(unsigned char* targaImage)
+{
+	int i, j, k, index;
+
+	// Initialize the index into the targa destination data array.
+	index = 0;
+
+	// Initialize the index into the targa image data.
+	k = (m_width * m_height * 3) - (m_width * 3);
+
+	// Now copy the targa image data into the targa destination array in the correct order since the targa format is stored upside down and also is not in RGBA order.
+	for (j = 0; j < m_height; j++)
+	{
+		for (i = 0; i < m_width; i++)
+		{
+			m_targaData[index + 0] = targaImage[k + 2];  // Red.
+			m_targaData[index + 1] = targaImage[k + 1];  // Green.
+			m_targaData[index + 2] = targaImage[k + 0];  // Blue
+			m_targaData[index + 3] = 255;  // Alpha
+
+			// Increment the indexes into the targa data.
+			k += 3;
+			index += 4;
+		}
+
+		// Set the targa image data index back to the preceding row at the beginning of the column since its reading it in upside down.
+		k -= (m_width * 6);
+	}
+}
+void TextureClass::LoadTarga32Bit(unsigned char* targaImage)
+{
+	int i, j, k, index;
+
 	// Initialize the index into the targa destination data array.
 	index = 0;
 
@@ -197,15 +247,7 @@ bool TextureClass::LoadTarga32Bit(char* filename)
 		// Set the targa image data index back to the preceding row at the beginning of the column since its reading it in upside down.
 		k -= (m_width * 8);
 	}
-
-	// Release the targa image data now that it was copied into the destination array.
-	delete[] targaImage;
-	targaImage = 0;
-
-	return true;
 }
-
-//
 
 int TextureClass::GetWidth()
 {

@@ -30,8 +30,9 @@ public:
     int GetHeight();
 
 private:
-    bool LoadTarga32Bit(char*);
-
+    void LoadTarga32Bit(unsigned char* targaImage);
+    void LoadTarga24Bit(unsigned char* targaImage);
+    bool LoadTarga(char*);
 private:
 	unsigned char* m_targaData;
 	ID3D11Texture2D* m_texture;
