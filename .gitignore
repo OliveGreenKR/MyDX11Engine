@@ -41,4 +41,4 @@
 *.idb
 *.ilk
 # Ignore the build directory and all its contents
-/MyDX11Engine/x64/Debug
+MyDX11Engine/x64/Debug
