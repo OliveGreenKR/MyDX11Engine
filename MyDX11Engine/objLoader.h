@@ -19,30 +19,24 @@ class ObjLoader
 
 private:
 
-	__forceinline int GetVertexIndex(const string& indexStr)
-	{
-		int result = stoi(indexStr);
-		return result < 0 ? result : result - 1;
-	}
-
-	void CalculateNormals(const vector<int>& indices, OUT vector<VertexInfo>& mesh) {
-		size_t size =  mesh.size();
+	void CalculateNormals(const vector<size_t>& vertexIndices, OUT vector<VertexInfo>& verteces) {
+		size_t size = verteces.size();
 		// Initialize normals
 		for (size_t i = 0; i < size; ++i) {
-			mesh[i].nx = 0.0f;
-			mesh[i].ny = 0.0f;
-			mesh[i].nz = 0.0f;
+			verteces[i].nx = 0.0f;
+			verteces[i].ny = 0.0f;
+			verteces[i].nz = 0.0f;
 		}
 
 		// Calculate face normals and add to vertex normals
-		for (size_t i = 0; i < indices.size(); i += 3) {
-			int index0 = indices[i];
-			int index1 = indices[i + 1];
-			int index2 = indices[i + 2];
+		for (size_t i = 0; i < vertexIndices.size(); i += 3) {
+			auto index0 = vertexIndices[i];
+			auto index1 = vertexIndices[i + 1];
+			auto index2 = vertexIndices[i + 2];
 
-			XMFLOAT3 v0(mesh[index0].x, mesh[index0].y, mesh[index0].z);
-			XMFLOAT3 v1(mesh[index1].x, mesh[index1].y, mesh[index1].z);
-			XMFLOAT3 v2(mesh[index2].x, mesh[index2].y, mesh[index2].z);
+			XMFLOAT3 v0(verteces[index0].x, verteces[index0].y, verteces[index0].z);
+			XMFLOAT3 v1(verteces[index1].x, verteces[index1].y, verteces[index1].z);
+			XMFLOAT3 v2(verteces[index2].x, verteces[index2].y, verteces[index2].z);
 
 			XMVECTOR vec0 = XMLoadFloat3(&v0);
 			XMVECTOR vec1 = XMLoadFloat3(&v1);
@@ -56,31 +50,33 @@ private:
 			XMFLOAT3 normal;
 			XMStoreFloat3(&normal, faceNormal);
 
-			mesh[index0].nx += normal.x;
-			mesh[index0].ny += normal.y;
-			mesh[index0].nz += normal.z;
+			verteces[index0].nx += normal.x;
+			verteces[index0].ny += normal.y;
+			verteces[index0].nz += normal.z;
 
-			mesh[index1].nx += normal.x;
-			mesh[index1].ny += normal.y;
-			mesh[index1].nz += normal.z;
+			verteces[index1].nx += normal.x;
+			verteces[index1].ny += normal.y;
+			verteces[index1].nz += normal.z;
 
-			mesh[index2].nx += normal.x;
-			mesh[index2].ny += normal.y;
-			mesh[index2].nz += normal.z;
+			verteces[index2].nx += normal.x;
+			verteces[index2].ny += normal.y;
+			verteces[index2].nz += normal.z;
 		}
 
 		// Normalize the vertex normals
 		for (size_t i = 0; i < size; ++i) {
-			XMVECTOR normal = XMVectorSet(mesh[i].nx, mesh[i].ny, mesh[i].nz, 0.0f);
+			XMVECTOR normal = XMVectorSet(verteces[i].nx, verteces[i].ny, verteces[i].nz, 0.0f);
 			normal = XMVector3Normalize(normal);
-			XMStoreFloat3(reinterpret_cast<XMFLOAT3*>(&mesh[i].nx), normal);
+			XMStoreFloat3(reinterpret_cast<XMFLOAT3*>(&verteces[i].nx), normal);
 		}
 	}
 
 public:
 
-	bool Load(const string& filename, OUT vector<VertexInfo>& mesh, OUT int& vertexCount, OUT int& indexCount)
+	bool Load(const string& filename, OUT vector<VertexInfo>& verteces, OUT vector<unsigned long>& indices)
 	{
+		size_t vertexCount, indexCount;
+
 		ifstream file(filename);
 		if (!file.is_open())
 		{
@@ -91,7 +87,7 @@ public:
 		vector<XMFLOAT3> positions;
 		vector<XMFLOAT2> texCoords;
 		vector<XMFLOAT3> normals;
-		vector<int> positionIndices, texCoordIndices, normalIndices;
+		vector<size_t> vertexIndices, texCoordIndices, normalIndices;
 
 		string line;
 		while (getline(file, line))
@@ -121,16 +117,18 @@ public:
 			else if (prefix == "f")
 			{
 				string vertexData;
+				//get vertex data in CW order
 				for (int i = 0; i < 3; ++i)
 				{
 					iss >> vertexData;
 					istringstream viss(vertexData);
 					string index;
-					int posIndex = 0, texIndex = 0, normIndex = 0;
+					int vertexIndex = 0, texIndex = 0, normIndex = 0;
 
 					getline(viss, index, '/');
-					posIndex = GetVertexIndex(index);
-
+					vertexIndex = stoi(index);
+					vertexIndex < 0 ? vertexIndex : --vertexIndex;
+	
 					if (getline(viss, index, '/'))
 					{
 						if (!index.empty())
@@ -146,71 +144,62 @@ public:
 						}
 					}
 
-					positionIndices.push_back(posIndex);
+					vertexIndices.push_back(vertexIndex);
 					texCoordIndices.push_back(texIndex);
 					normalIndices.push_back(normIndex);
 				}
 			}
 		}
 
-		indexCount = positionIndices.size();
+		indexCount = vertexIndices.size();
 		vertexCount = positions.size();
 
-		mesh.resize(positions.size());
-
+		verteces.resize(vertexCount);
+		indices.resize(indexCount);
 
 		auto setVertex = [&](VertexInfo& vertex, int posIndex, int texIndex, int normIndex)
-		{
-			vertex.x = positions[posIndex].x;
-			vertex.y = positions[posIndex].y;
-			vertex.z = positions[posIndex].z;
-			vertex.tu = texCoords[texIndex].x;
-			vertex.tv = texCoords[texIndex].y;
-			vertex.nx = normals[normIndex].x;
-			vertex.ny = normals[normIndex].y;
-			vertex.nz = normals[normIndex].z;
-		};
+			{
+				posIndex = posIndex < 0 ? posIndex+vertexCount : posIndex;
 
-		//adding Clock-wise
+				vertex.x = positions[posIndex].x;
+				vertex.y = positions[posIndex].y;
+				vertex.z = positions[posIndex].z;
+
+				if (!texCoords.empty()) {
+					vertex.tu = texCoords[texIndex].x;
+					vertex.tv = texCoords[texIndex].y;
+				}
+				else {
+					vertex.tu = 0.0f;
+					vertex.tv = 0.0f;
+				}
+				
+				if (!normals.empty()) {
+					vertex.nx = normals[normIndex].x;
+					vertex.ny = normals[normIndex].y;
+					vertex.nz = normals[normIndex].z;
+				}
+			};
+
+		// Adding vertices in clockwise order
 		for (size_t i = 0; i < indexCount; i += 3)
 		{
-			VertexInfo vertex1, vertex2, vertex3;
+			VertexInfo& vertex1 = verteces[vertexIndices[i]];
+			VertexInfo& vertex2 = verteces[vertexIndices[i + 1]];
+			VertexInfo& vertex3 = verteces[vertexIndices[i + 2]];
 
-			vertex1.x = positions[positionIndices[i] - 1].x;
-			vertex1.y = positions[positionIndices[i] - 1].y;
-			vertex1.z = positions[positionIndices[i] - 1].z;
-			vertex1.tu = texCoords[texCoordIndices[i] - 1].x;
-			vertex1.tv = texCoords[texCoordIndices[i] - 1].y;
-			vertex1.nx = normals[normalIndices[i] - 1].x;
-			vertex1.ny = normals[normalIndices[i] - 1].y;
-			vertex1.nz = normals[normalIndices[i] - 1].z;
+			setVertex(vertex1, vertexIndices[i], texCoordIndices[i], normalIndices[i]);
+			setVertex(vertex2, vertexIndices[i + 1], texCoordIndices[i + 1], normalIndices[i + 1]);
+			setVertex(vertex3, vertexIndices[i + 2], texCoordIndices[i + 2], normalIndices[i + 2]);
 
-			vertex2.x = positions[positionIndices[i + 1] - 1].x;
-			vertex2.y = positions[positionIndices[i + 1] - 1].y;
-			vertex2.z = positions[positionIndices[i + 1] - 1].z;
-			vertex2.tu = texCoords[texCoordIndices[i + 1] - 1].x;
-			vertex2.tv = texCoords[texCoordIndices[i + 1] - 1].y;
-			vertex2.nx = normals[normalIndices[i + 1] - 1].x;
-			vertex2.ny = normals[normalIndices[i + 1] - 1].y;
-			vertex2.nz = normals[normalIndices[i + 1] - 1].z;
-
-			vertex3.x = positions[positionIndices[i + 2] - 1].x;
-			vertex3.y = positions[positionIndices[i + 2] - 1].y;
-			vertex3.z = positions[positionIndices[i + 2] - 1].z;
-			vertex3.tu = texCoords[texCoordIndices[i + 2] - 1].x;
-			vertex3.tv = texCoords[texCoordIndices[i + 2] - 1].y;
-			vertex3.nx = normals[normalIndices[i + 2] - 1].x;
-			vertex3.ny = normals[normalIndices[i + 2] - 1].y;
-			vertex3.nz = normals[normalIndices[i + 2] - 1].z;
-
-			mesh.push_back(vertex1);
-			mesh.push_back(vertex2);
-			mesh.push_back(vertex3);
+			indices[i] = i;
+			indices[i + 1] = i + 1;
+			indices[i + 2] = i + 2;
 		}
 
 		if (normals.empty())
 		{
-			CalculateNormals(positionIndices, mesh);
+			CalculateNormals(vertexIndices, verteces);
 		}
 
 		return true;

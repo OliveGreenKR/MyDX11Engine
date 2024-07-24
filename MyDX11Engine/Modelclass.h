@@ -60,7 +60,7 @@ private:
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
 	TextureClass* m_texture;
 
-	vector<VertexInfo> m_model;
+	vector<VertexInfo> m_verteces;
 	vector<unsigned long> m_indices;
 };
 

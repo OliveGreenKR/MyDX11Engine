@@ -6,7 +6,7 @@ ModelClass::ModelClass()
 	m_vertexBuffer = nullptr;
 	m_indexBuffer = nullptr;
 	m_texture = nullptr;
-    m_model = vector<VertexInfo>();
+    m_verteces = vector<VertexInfo>();
 }
 
 ModelClass::ModelClass(const ModelClass& other)
@@ -78,47 +78,21 @@ ID3D11ShaderResourceView* ModelClass::GetTexture()
 
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
-  /*  VertexType* vertices;
-    unsigned long* indices;*/
     D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
     HRESULT result;
     int i;
 
- //   // Create the vertex array.
- //   vertices = new VertexType[m_vertexCount];
- //   if (!vertices)
- //   {
- //       return false;
- //   }
-
- //   // Create the index array.
- //   indices = new unsigned long[m_indexCount];
- //   if (!indices)
- //   {
- //       return false;
- //   }
-
-	//// Load the vertex array and index array with data.
- //   for (i = 0; i < m_vertexCount; i++)
- //   {
- //       vertices[i].position = XMFLOAT3(m_model[i].x, m_model[i].y, m_model[i].z);
- //       vertices[i].texture = XMFLOAT2(m_model[i].tu, m_model[i].tv);
- //       vertices[i].normal = XMFLOAT3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
-
- //       indices[i] = i;
- //   }
-
     // Set up the description of the static vertex buffer.
     vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_model.size();
+    vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_verteces.size();
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
     vertexBufferDesc.MiscFlags = 0;
     vertexBufferDesc.StructureByteStride = 0;
 
     // Give the subresource structure a pointer to the vertex data.
-    vertexData.pSysMem = m_model.begin()._Ptr;
+    vertexData.pSysMem = m_verteces.data();
     vertexData.SysMemPitch = 0;
     vertexData.SysMemSlicePitch = 0;
 
@@ -138,7 +112,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
     indexBufferDesc.StructureByteStride = 0;
 
     // Give the subresource structure a pointer to the index data.
-    indexData.pSysMem = m_indices.begin()._Ptr;
+    indexData.pSysMem = m_indices.data();
     indexData.SysMemPitch = 0;
     indexData.SysMemSlicePitch = 0;
 
@@ -148,13 +122,6 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
     {
         return false;
     }
-
-    // Release the arrays now that the vertex and index buffers have been created and loaded.
-    //delete[] vertices;
-    //vertices = 0;
-
-    //delete[] indices;
-    //indices = 0;
 
     return true;
 }
@@ -244,7 +211,7 @@ bool ModelClass::LoadModel(char* filename)
 	else if (strcmp(extend, ".obj") == 0)
 	{
         ObjLoader objLoader;
-        //return objLoader.Load(filename, m_model, m_vertexCount, m_indexCount);
+        return objLoader.Load(filename, m_verteces, m_indices);
 	}
 	else
 	{
@@ -283,7 +250,7 @@ bool ModelClass::LoadTxtModel(char* filename) {
     indexCount = vertexCount;
 
     // Create the model using the vertex count that was read in.
-    m_model.resize(vertexCount);
+    m_verteces.resize(vertexCount);
     m_indices.resize(indexCount);
 
     // Read up to the beginning of the data.
@@ -298,9 +265,9 @@ bool ModelClass::LoadTxtModel(char* filename) {
     // Read in the vertex data.
     for (i = 0; i < vertexCount; i++)
     {
-        fin >> m_model[i].x >> m_model[i].y >> m_model[i].z;
-        fin >> m_model[i].tu >> m_model[i].tv;
-        fin >> m_model[i].nx >> m_model[i].ny >> m_model[i].nz;
+        fin >> m_verteces[i].x >> m_verteces[i].y >> m_verteces[i].z;
+        fin >> m_verteces[i].tu >> m_verteces[i].tv;
+        fin >> m_verteces[i].nx >> m_verteces[i].ny >> m_verteces[i].nz;
         m_indices[i] = i;
     }
 
@@ -311,10 +278,10 @@ bool ModelClass::LoadTxtModel(char* filename) {
 
 void ModelClass::ReleaseModel()
 {
-    if (!m_model.empty())
+    if (!m_verteces.empty())
     {
-        m_model.clear();
-        m_model.shrink_to_fit();
+        m_verteces.clear();
+        m_verteces.shrink_to_fit();
     }
 
     return;
