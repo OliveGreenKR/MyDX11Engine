@@ -5,7 +5,7 @@ ModelClass::ModelClass()
 {
 	m_vertexBuffer = nullptr;
 	m_indexBuffer = nullptr;
-	m_Texture = nullptr;
+	m_texture = nullptr;
     m_model = vector<VertexInfo>();
 }
 
@@ -68,57 +68,57 @@ void ModelClass::Render(ID3D11DeviceContext* deviceContext)
 
 int ModelClass::GetIndexCount()
 {
-	return m_indexCount;
+	return m_indices.size();
 }
 
 ID3D11ShaderResourceView* ModelClass::GetTexture()
 {
-	return m_Texture->GetTexture();
+	return m_texture->GetTexture();
 }
 
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
-    VertexType* vertices;
-    unsigned long* indices;
+  /*  VertexType* vertices;
+    unsigned long* indices;*/
     D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
     HRESULT result;
     int i;
 
-    // Create the vertex array.
-    vertices = new VertexType[m_vertexCount];
-    if (!vertices)
-    {
-        return false;
-    }
+ //   // Create the vertex array.
+ //   vertices = new VertexType[m_vertexCount];
+ //   if (!vertices)
+ //   {
+ //       return false;
+ //   }
 
-    // Create the index array.
-    indices = new unsigned long[m_indexCount];
-    if (!indices)
-    {
-        return false;
-    }
+ //   // Create the index array.
+ //   indices = new unsigned long[m_indexCount];
+ //   if (!indices)
+ //   {
+ //       return false;
+ //   }
 
-	// Load the vertex array and index array with data.
-    for (i = 0; i < m_vertexCount; i++)
-    {
-        vertices[i].position = XMFLOAT3(m_model[i].x, m_model[i].y, m_model[i].z);
-        vertices[i].texture = XMFLOAT2(m_model[i].tu, m_model[i].tv);
-        vertices[i].normal = XMFLOAT3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
+	//// Load the vertex array and index array with data.
+ //   for (i = 0; i < m_vertexCount; i++)
+ //   {
+ //       vertices[i].position = XMFLOAT3(m_model[i].x, m_model[i].y, m_model[i].z);
+ //       vertices[i].texture = XMFLOAT2(m_model[i].tu, m_model[i].tv);
+ //       vertices[i].normal = XMFLOAT3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
 
-        indices[i] = i;
-    }
+ //       indices[i] = i;
+ //   }
 
     // Set up the description of the static vertex buffer.
     vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
+    vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_model.size();
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
     vertexBufferDesc.MiscFlags = 0;
     vertexBufferDesc.StructureByteStride = 0;
 
     // Give the subresource structure a pointer to the vertex data.
-    vertexData.pSysMem = vertices;
+    vertexData.pSysMem = m_model.begin()._Ptr;
     vertexData.SysMemPitch = 0;
     vertexData.SysMemSlicePitch = 0;
 
@@ -131,14 +131,14 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
     // Set up the description of the static index buffer.
     indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
+    indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indices.size();
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
     indexBufferDesc.MiscFlags = 0;
     indexBufferDesc.StructureByteStride = 0;
 
     // Give the subresource structure a pointer to the index data.
-    indexData.pSysMem = indices;
+    indexData.pSysMem = m_indices.begin()._Ptr;
     indexData.SysMemPitch = 0;
     indexData.SysMemSlicePitch = 0;
 
@@ -150,11 +150,11 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
     }
 
     // Release the arrays now that the vertex and index buffers have been created and loaded.
-    delete[] vertices;
-    vertices = 0;
+    //delete[] vertices;
+    //vertices = 0;
 
-    delete[] indices;
-    indices = 0;
+    //delete[] indices;
+    //indices = 0;
 
     return true;
 }
@@ -206,9 +206,9 @@ bool ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceCo
 
 
 	// Create and initialize the texture object.
-	m_Texture = new TextureClass;
+	m_texture = new TextureClass;
 
-	result = m_Texture->Initialize(device, deviceContext, filename);
+	result = m_texture->Initialize(device, deviceContext, filename);
 	if (!result)
 	{
 		return false;
@@ -220,11 +220,11 @@ bool ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceCo
 void ModelClass::ReleaseTexture()
 {
 	// Release the texture object.
-	if (m_Texture)
+	if (m_texture)
 	{
-		m_Texture->Shutdown();
-		delete m_Texture;
-		m_Texture = 0;
+		m_texture->Shutdown();
+		delete m_texture;
+		m_texture = 0;
 	}
 
 	return;
@@ -244,7 +244,7 @@ bool ModelClass::LoadModel(char* filename)
 	else if (strcmp(extend, ".obj") == 0)
 	{
         ObjLoader objLoader;
-        return objLoader.Load(filename, m_model);
+        //return objLoader.Load(filename, m_model, m_vertexCount, m_indexCount);
 	}
 	else
 	{
@@ -255,6 +255,7 @@ bool ModelClass::LoadModel(char* filename)
 
 bool ModelClass::LoadTxtModel(char* filename) {
 
+    unsigned long vertexCount, indexCount;
     ifstream fin;
     char input;
     int i;
@@ -276,13 +277,14 @@ bool ModelClass::LoadTxtModel(char* filename) {
     }
 
     // Read in the vertex count.
-    fin >> m_vertexCount;
+    fin >> vertexCount;
 
     // Set the number of indices to be the same as the vertex count.
-    m_indexCount = m_vertexCount;
+    indexCount = vertexCount;
 
     // Create the model using the vertex count that was read in.
-    m_model.resize(m_vertexCount);
+    m_model.resize(vertexCount);
+    m_indices.resize(indexCount);
 
     // Read up to the beginning of the data.
     fin.get(input);
@@ -294,11 +296,12 @@ bool ModelClass::LoadTxtModel(char* filename) {
     fin.get(input);
 
     // Read in the vertex data.
-    for (i = 0; i < m_vertexCount; i++)
+    for (i = 0; i < vertexCount; i++)
     {
         fin >> m_model[i].x >> m_model[i].y >> m_model[i].z;
         fin >> m_model[i].tu >> m_model[i].tv;
         fin >> m_model[i].nx >> m_model[i].ny >> m_model[i].nz;
+        m_indices[i] = i;
     }
 
     // Close the model file.

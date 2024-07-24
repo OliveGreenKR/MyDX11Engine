@@ -1,2 +1,12 @@
-﻿  Applicationclass.cpp
+﻿  Modelclass.cpp
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(156,36): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(157,31): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\Modelclass.cpp(71,23): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\Modelclass.cpp(114,53): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\Modelclass.cpp(134,55): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\Modelclass.cpp(86,9): warning C4101: 'i': unreferenced local variable
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\Modelclass.cpp(246,19): warning C4101: 'objLoader': unreferenced local variable
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\Modelclass.cpp(299,19): warning C4018: '<': signed/unsigned mismatch
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\Modelclass.cpp(254,1): warning C4715: 'ModelClass::LoadModel': not all control paths return a value
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\Modelclass.cpp(310,1): warning C4715: 'ModelClass::LoadTxtModel': not all control paths return a value
   MyDX11Engine.vcxproj -> C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\x64\Debug\MyDX11Engine.exe
