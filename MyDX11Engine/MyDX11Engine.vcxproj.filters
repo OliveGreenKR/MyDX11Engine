@@ -30,22 +30,22 @@
     <ClInclude Include="D3dclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ColorShaderclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Modelclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Cameraclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TextureShaderclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Define.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Textureclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LightShaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LightClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -65,19 +65,19 @@
     <ClCompile Include="D3dclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ColorShaderclass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Modelclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Cameraclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextureShaderclass.cpp">
+    <ClCompile Include="Textureclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Textureclass.cpp">
+    <ClCompile Include="LightShaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LightClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,16 +98,10 @@
     <None Include="..\.gitignore" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="psColor.fx">
+    <FxCompile Include="vsLight.fx">
       <Filter>Resource Files\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="vsColor.fx">
-      <Filter>Resource Files\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="vsTexture.fx">
-      <Filter>Resource Files\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="psTexture.fx">
+    <FxCompile Include="psLight.fx">
       <Filter>Resource Files\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
