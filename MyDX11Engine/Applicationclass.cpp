@@ -39,10 +39,10 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera = new CameraClass;
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -1115.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -15.0f);
 
 	// Set the file name of the model.
-	strcpy_s(modelFilename, MODEL_CAT_PATH);
+	strcpy_s(modelFilename, MODEL_SPHERE_PATH);
 
 	// Set the name of the texture file that we will be loading.
 	strcpy_s(textureFilename, TEXTURE_STONE01_PATH);

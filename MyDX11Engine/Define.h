@@ -6,7 +6,7 @@
 #define PS_PATH L"../MyDX11Engine/psLight.fx"
 
 #define MODEL_CUBE_PATH "../MyDx11Engine/data/Cube.txt"
-#define MODEL_CAT_PATH "../MyDx11Engine/data/cat.obj"
+#define MODEL_SPHERE_PATH "../MyDx11Engine/data/sphere.obj"
 
 #define TEXTURE_STONE01_PATH "../MyDX11Engine/data/stone01.tga"
 
