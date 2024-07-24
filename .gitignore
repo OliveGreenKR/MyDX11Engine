@@ -40,6 +40,5 @@
 *.pdb
 *.idb
 *.ilk
-*.ds_store
-*.tlog
-*/Debug/*
+# Ignore the build directory and all its contents
+/MyDX11Engine/x64/Debug
