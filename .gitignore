@@ -34,3 +34,12 @@
 *.exe
 *.out
 *.app
+
+# Debug files
+*.dSYM/
+*.pdb
+*.idb
+*.ilk
+*.ds_store
+*.tlog
+*/Debug/*
