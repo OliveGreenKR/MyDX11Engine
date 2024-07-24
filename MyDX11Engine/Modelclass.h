@@ -5,6 +5,7 @@
 #include <d3d11.h>
 #include <directxmath.h>
 #include <fstream>
+#include <vector>
 using namespace DirectX;
 using namespace std;
 
@@ -59,7 +60,7 @@ private:
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
 	int m_vertexCount, m_indexCount;
 	TextureClass* m_Texture;
-	VertexInfo* m_model;
+	vector<VertexInfo> m_model;
 };
 
 #endif

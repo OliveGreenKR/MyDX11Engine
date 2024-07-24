@@ -176,7 +176,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="data\Cube.txt.txt" />
+    <Text Include="data\Cube.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

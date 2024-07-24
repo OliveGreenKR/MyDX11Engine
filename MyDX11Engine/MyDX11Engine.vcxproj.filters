@@ -118,7 +118,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="data\Cube.txt.txt">
+    <Text Include="data\Cube.txt">
       <Filter>data</Filter>
     </Text>
   </ItemGroup>

@@ -6,7 +6,7 @@ ModelClass::ModelClass()
 	m_vertexBuffer = nullptr;
 	m_indexBuffer = nullptr;
 	m_Texture = nullptr;
-    m_model = nullptr;
+    m_model = vector<VertexInfo>();
 }
 
 ModelClass::ModelClass(const ModelClass& other)
@@ -241,11 +241,11 @@ bool ModelClass::LoadModel(char* filename)
 	{
 		return LoadTxtModel(filename);
 	}
-	//else if (strcmp(extend, ".obj") == 0)
-	//{
- //       ObjLoader objLoader;
- //       return objLoader.Load(filename, m_model);
-	//}
+	else if (strcmp(extend, ".obj") == 0)
+	{
+        ObjLoader objLoader;
+        return objLoader.Load(filename, m_model);
+	}
 	else
 	{
 		return false;
@@ -282,7 +282,7 @@ bool ModelClass::LoadTxtModel(char* filename) {
     m_indexCount = m_vertexCount;
 
     // Create the model using the vertex count that was read in.
-    m_model = new VertexInfo[m_vertexCount];
+    m_model.resize(m_vertexCount);
 
     // Read up to the beginning of the data.
     fin.get(input);
@@ -308,10 +308,10 @@ bool ModelClass::LoadTxtModel(char* filename) {
 
 void ModelClass::ReleaseModel()
 {
-    if (m_model)
+    if (!m_model.empty())
     {
-        delete[] m_model;
-        m_model = 0;
+        m_model.clear();
+        m_model.shrink_to_fit();
     }
 
     return;

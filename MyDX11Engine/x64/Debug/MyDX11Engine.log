@@ -1,12 +1,2 @@
 ﻿  Applicationclass.cpp
-  Modelclass.cpp
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(110,53): warning C4267: '=': conversion from 'size_t' to '_Ty', possible loss of data
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(110,53): warning C4267:         with
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(110,53): warning C4267:         [
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(110,53): warning C4267:             _Ty=int
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(110,53): warning C4267:         ]
-  Systemclass.cpp
-  main.cpp
-  Generating Code...
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\Modelclass.cpp(307,1): warning C4715: 'ModelClass::LoadTxtModel': not all control paths return a value
   MyDX11Engine.vcxproj -> C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\x64\Debug\MyDX11Engine.exe
