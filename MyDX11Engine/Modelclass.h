@@ -51,6 +51,8 @@ private:
 	void ReleaseTexture();
 
 	bool LoadModel(char*);
+	
+	bool LoadTxtModel(char*);
 	void ReleaseModel();
 
 private:

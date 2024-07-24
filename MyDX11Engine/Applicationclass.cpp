@@ -24,7 +24,7 @@ ApplicationClass::~ApplicationClass()
 
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
-	std::string cwd = CWD;
+	char modelFilename[128];
 	char textureFilename[128];
 	bool result;
 
@@ -41,12 +41,16 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 
+	// Set the file name of the model.
+	strcpy_s(modelFilename, MODEL_CUBE_PATH);
+
+	// Set the name of the texture file that we will be loading.
+	strcpy_s(textureFilename, TEXTURE_STONE01_PATH);
+
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
-	// Set the name of the texture file that we will be loading.
-	strcpy_s(textureFilename, (cwd + "/data/stone01.tga").c_str());
 
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), textureFilename, ModelClass::MeshShape::Triangle);
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(),modelFilename, textureFilename);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);

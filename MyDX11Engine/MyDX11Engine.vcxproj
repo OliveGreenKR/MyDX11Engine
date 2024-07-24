@@ -157,6 +157,8 @@
     <ResourceCompile Include="MyDX11Engine.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="data\stone01.tga" />
+    <Image Include="data\stone02.tga" />
     <Image Include="MyDX11Engine.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
@@ -172,6 +174,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="data\Cube.txt.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

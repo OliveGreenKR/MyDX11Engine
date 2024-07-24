@@ -16,6 +16,9 @@
     <Filter Include="Resource Files\HLSL">
       <UniqueIdentifier>{9d6d28a1-f86e-4eef-ab98-e6f9d487f137}</UniqueIdentifier>
     </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{d2c457db-4379-480b-b06f-2c41ab49d6b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Systemclass.h">
@@ -96,6 +99,12 @@
     <Image Include="MyDX11Engine.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="data\stone01.tga">
+      <Filter>data</Filter>
+    </Image>
+    <Image Include="data\stone02.tga">
+      <Filter>data</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.gitignore" />
@@ -107,5 +116,10 @@
     <FxCompile Include="psLight.fx">
       <Filter>Resource Files\HLSL</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="data\Cube.txt.txt">
+      <Filter>data</Filter>
+    </Text>
   </ItemGroup>
 </Project>

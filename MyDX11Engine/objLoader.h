@@ -7,21 +7,28 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-//#include <directxmath.h>
 
 #include "Modelclass.h"
 
 using namespace DirectX;
 using namespace std;
 
-
 class ObjLoader
 {
     using VertexInfo = ModelClass::VertexInfo;
 
-public:
+private:
 
-    bool Load(const string& filename, VertexInfo* mesh)
+    __forceinline int GetVertexIndex(const string& indexStr)
+	{
+		int result = stoi(indexStr);
+
+        return result < 0 ? result : result - 1;
+	}
+
+public:
+    
+    bool Load(const string& filename, OUT VertexInfo* mesh)
     {
         ifstream file(filename);
         if (!file.is_open())
@@ -29,12 +36,11 @@ public:
             cerr << "Failed to open file: " << filename << endl;
             return false;
         }
-        vector<VertexInfo> vertices;
 
         vector<XMFLOAT3> positions;
         vector<XMFLOAT2> texCoords;
         vector<XMFLOAT3> normals;
-        vector<unsigned int> positionIndices, texCoordIndices, normalIndices;
+        vector<int> positionIndices, texCoordIndices, normalIndices;
 
         string line;
         while (getline(file, line))
@@ -43,7 +49,6 @@ public:
             string prefix;
             iss >> prefix;
 
-            VertexInfo vertex;
             if (prefix == "v")
             {
                 XMFLOAT3 position;
@@ -70,10 +75,10 @@ public:
                     iss >> vertexData;
                     istringstream viss(vertexData);
                     string index;
-                    unsigned int posIndex = 0, texIndex = 0, normIndex = 0;
+                    int posIndex = 0, texIndex = 0, normIndex = 0;
 
                     getline(viss, index, '/');
-                    posIndex = stoi(index) - 1;
+                    posIndex = GetVertexIndex(index);
 
                     if (getline(viss, index, '/'))
                     {
@@ -97,26 +102,34 @@ public:
             }
         }
 
+        mesh = new VertexInfo[positionIndices.size()];
+
         for (size_t i = 0; i < positionIndices.size(); ++i)
         {
-            Vertex vertex;
-            vertex.position = positions[positionIndices[i]];
+            
+            positionIndices[i] = positionIndices[i] < 0 ? positionIndices[i] + positions.size() : positionIndices[i];
+
+            XMFLOAT3 position = positions[positionIndices[i]];
+            XMFLOAT2 texCoord;
+            XMFLOAT3 normal;
+
+            mesh[i].x = position.x;
+            mesh[i].x = position.x;
+            mesh[i].x = position.x;
+
             if (!texCoords.empty())
             {
-                vertex.texCoord = texCoords[texCoordIndices[i]];
+                texCoord = texCoords[texCoordIndices[i]];
+                mesh[i].tu = texCoord.x;
+                mesh[i].tv = texCoord.y;
             }
             if (!normals.empty())
             {
-                vertex.normal = normals[normalIndices[i]];
+                normal = normals[normalIndices[i]];
+                mesh[i].nx = normal.x;
+                mesh[i].ny = normal.y;
+                mesh[i].nz = normal.z;
             }
-            mesh[i].x = vertex.position.x;
-            mesh[i].x = vertex.position.x;
-            mesh[i].x = vertex.position.x;
-			mesh[i].tu = vertex.texCoord.x;
-			mesh[i].tv = vertex.texCoord.y;
-			mesh[i].nx = vertex.normal.x;
-			mesh[i].ny = vertex.normal.y;
-			mesh[i].nz = vertex.normal.z;
         }
 
         return true;

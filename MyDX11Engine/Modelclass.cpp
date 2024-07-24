@@ -233,26 +233,31 @@ void ModelClass::ReleaseTexture()
 
 bool ModelClass::LoadModel(char* filename)
 {
-    ifstream fin;
-    char input;
-    int i;
-
     char* extend;
 
     extend = strrchr(filename, '.');
+
     if (strcmp(extend, ".txt") == 0)
 	{
 		return LoadTxtModel(filename);
 	}
-	else if (strcmp(extend, ".obj") == 0)
-	{
-        ObjLoader objLoader;
-        return objLoader.Load(filename, m_model, m_vertexCount, m_indexCount);
-	}
+	//else if (strcmp(extend, ".obj") == 0)
+	//{
+ //       ObjLoader objLoader;
+ //       return objLoader.Load(filename, m_model);
+	//}
 	else
 	{
 		return false;
 	}
+
+}
+
+bool ModelClass::LoadTxtModel(char* filename) {
+
+    ifstream fin;
+    char input;
+    int i;
 
     // Open the model file.
     fin.open(filename);
@@ -277,7 +282,7 @@ bool ModelClass::LoadModel(char* filename)
     m_indexCount = m_vertexCount;
 
     // Create the model using the vertex count that was read in.
-    m_model = new ModelType[m_vertexCount];
+    m_model = new VertexInfo[m_vertexCount];
 
     // Read up to the beginning of the data.
     fin.get(input);
@@ -299,7 +304,17 @@ bool ModelClass::LoadModel(char* filename)
     // Close the model file.
     fin.close();
 
-    return true;
+}
+
+void ModelClass::ReleaseModel()
+{
+    if (m_model)
+    {
+        delete[] m_model;
+        m_model = 0;
+    }
+
+    return;
 }
 
 
