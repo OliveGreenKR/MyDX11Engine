@@ -1,29 +1,7 @@
 ﻿  Modelclass.cpp
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(162,25): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(191,76): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(191,58): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(191,38): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(192,88): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(192,66): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(192,42): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(193,88): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(193,66): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(193,42): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(195,17): warning C4267: '=': conversion from 'size_t' to '_Ty', possible loss of data
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(195,17): warning C4267:         with
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(195,17): warning C4267:         [
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(195,17): warning C4267:             _Ty=unsigned long
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(195,17): warning C4267:         ]
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(196,23): warning C4267: '=': conversion from 'size_t' to '_Ty', possible loss of data
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(196,23): warning C4267:         with
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(196,23): warning C4267:         [
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(196,23): warning C4267:             _Ty=unsigned long
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(196,23): warning C4267:         ]
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(197,23): warning C4267: '=': conversion from 'size_t' to '_Ty', possible loss of data
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(197,23): warning C4267:         with
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(197,23): warning C4267:         [
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(197,23): warning C4267:             _Ty=unsigned long
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(197,23): warning C4267:         ]
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(157,17): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(158,17): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\objLoader.h(159,18): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\Modelclass.cpp(71,23): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\Modelclass.cpp(88,53): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\Modelclass.cpp(108,55): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data

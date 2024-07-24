@@ -73,10 +73,8 @@ private:
 
 public:
 
-	bool Load(const string& filename, OUT vector<VertexInfo>& verteces, OUT vector<unsigned long>& indices)
+	bool Load(const string& filename, OUT vector<VertexInfo>& vertices, OUT vector<unsigned long>& indices)
 	{
-		size_t vertexCount, indexCount;
-
 		ifstream file(filename);
 		if (!file.is_open())
 		{
@@ -117,7 +115,6 @@ public:
 			else if (prefix == "f")
 			{
 				string vertexData;
-				//get vertex data in CW order
 				for (int i = 0; i < 3; ++i)
 				{
 					iss >> vertexData;
@@ -126,9 +123,8 @@ public:
 					int vertexIndex = 0, texIndex = 0, normIndex = 0;
 
 					getline(viss, index, '/');
-					vertexIndex = stoi(index);
-					vertexIndex < 0 ? vertexIndex : --vertexIndex;
-	
+					vertexIndex = stoi(index) - 1;
+
 					if (getline(viss, index, '/'))
 					{
 						if (!index.empty())
@@ -151,55 +147,45 @@ public:
 			}
 		}
 
-		indexCount = vertexIndices.size();
-		vertexCount = positions.size();
+		size_t vertexCount = vertexIndices.size();
+		vertices.resize(vertexCount);
+		indices.resize(vertexCount);
 
-		verteces.resize(vertexCount);
-		indices.resize(indexCount);
-
-		auto setVertex = [&](VertexInfo& vertex, int posIndex, int texIndex, int normIndex)
-			{
-				posIndex = posIndex < 0 ? posIndex+vertexCount : posIndex;
-
-				vertex.x = positions[posIndex].x;
-				vertex.y = positions[posIndex].y;
-				vertex.z = positions[posIndex].z;
-
-				if (!texCoords.empty()) {
-					vertex.tu = texCoords[texIndex].x;
-					vertex.tv = texCoords[texIndex].y;
-				}
-				else {
-					vertex.tu = 0.0f;
-					vertex.tv = 0.0f;
-				}
-				
-				if (!normals.empty()) {
-					vertex.nx = normals[normIndex].x;
-					vertex.ny = normals[normIndex].y;
-					vertex.nz = normals[normIndex].z;
-				}
-			};
-
-		// Adding vertices in clockwise order
-		for (size_t i = 0; i < indexCount; i += 3)
+		for (size_t i = 0; i < vertexCount; ++i)
 		{
-			VertexInfo& vertex1 = verteces[vertexIndices[i]];
-			VertexInfo& vertex2 = verteces[vertexIndices[i + 1]];
-			VertexInfo& vertex3 = verteces[vertexIndices[i + 2]];
+			VertexInfo& vertex = vertices[i];
+			int posIndex = vertexIndices[i];
+			int texIndex = texCoordIndices[i];
+			int normIndex = normalIndices[i];
 
-			setVertex(vertex1, vertexIndices[i], texCoordIndices[i], normalIndices[i]);
-			setVertex(vertex2, vertexIndices[i + 1], texCoordIndices[i + 1], normalIndices[i + 1]);
-			setVertex(vertex3, vertexIndices[i + 2], texCoordIndices[i + 2], normalIndices[i + 2]);
+			vertex.x = positions[posIndex].x;
+			vertex.y = positions[posIndex].y;
+			vertex.z = positions[posIndex].z;
 
-			indices[i] = i;
-			indices[i + 1] = i + 1;
-			indices[i + 2] = i + 2;
+			if (!texCoords.empty())
+			{
+				vertex.tu = texCoords[texIndex].x;
+				vertex.tv = texCoords[texIndex].y;
+			}
+			else
+			{
+				vertex.tu = 0.0f;
+				vertex.tv = 0.0f;
+			}
+
+			if (!normals.empty())
+			{
+				vertex.nx = normals[normIndex].x;
+				vertex.ny = normals[normIndex].y;
+				vertex.nz = normals[normIndex].z;
+			}
+
+			indices[i] = static_cast<unsigned long>(i);
 		}
 
 		if (normals.empty())
 		{
-			CalculateNormals(vertexIndices, verteces);
+			CalculateNormals(vertexIndices, vertices);
 		}
 
 		return true;
