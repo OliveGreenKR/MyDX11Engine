@@ -1,11 +1,12 @@
 #include "Modelclass.h"
+#include "objLoader.h"
 
 ModelClass::ModelClass()
 {
-	m_vertexBuffer = 0;
-	m_indexBuffer = 0;
-	m_Texture = 0;
-	m_shape = Triangle;
+	m_vertexBuffer = nullptr;
+	m_indexBuffer = nullptr;
+	m_Texture = nullptr;
+    m_model = nullptr;
 }
 
 ModelClass::ModelClass(const ModelClass& other)
@@ -16,13 +17,19 @@ ModelClass::~ModelClass()
 {
 }
 
-bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename, MeshShape shape = Triangle)
+bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* textureFilename )
 {
 	bool result;
 
+    // Load in the model data.
+    result = LoadModel(modelFilename);
+    if (!result)
+    {
+        return false;
+    }
 
 	// Initialize the vertex and index buffers.
-	result = InitializeBuffers(device, shape);
+	result = InitializeBuffers(device);
 	if (!result)
 	{
 		return false;
@@ -45,6 +52,9 @@ void ModelClass::Shutdown()
 	// Shutdown the vertex and index buffers.
 	ShutdownBuffers();
 
+    // Release the model
+    ReleaseModel();
+
 	return;
 }
 
@@ -66,26 +76,14 @@ ID3D11ShaderResourceView* ModelClass::GetTexture()
 	return m_Texture->GetTexture();
 }
 
-bool ModelClass::InitializeBuffers(ID3D11Device* device, MeshShape shape)
+bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
     VertexType* vertices;
     unsigned long* indices;
     D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
     HRESULT result;
-
-    m_shape = shape;
-
-    switch (m_shape) {
-        case Triangle:
-            m_vertexCount = 3;
-            m_indexCount = 3;
-            break;
-        case Quad:
-            m_vertexCount = 4;
-            m_indexCount = 6;
-            break;
-    }
+    int i;
 
     // Create the vertex array.
     vertices = new VertexType[m_vertexCount];
@@ -101,57 +99,14 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device, MeshShape shape)
         return false;
     }
 
-    switch (m_shape) {
-        case Triangle:
-        {
-            // Load the vertex array with data.
-            vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-            vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
-            vertices[0].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
+	// Load the vertex array and index array with data.
+    for (i = 0; i < m_vertexCount; i++)
+    {
+        vertices[i].position = XMFLOAT3(m_model[i].x, m_model[i].y, m_model[i].z);
+        vertices[i].texture = XMFLOAT2(m_model[i].tu, m_model[i].tv);
+        vertices[i].normal = XMFLOAT3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
 
-            vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // Top middle.
-            vertices[1].texture = XMFLOAT2(0.5f, 0.0f);
-            vertices[1].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-            vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
-            vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
-            vertices[2].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-            // Load the index array with data.
-            indices[0] = 0;  // Top middle.
-            indices[1] = 1;  // Bottom left.
-            indices[2] = 2;  // Bottom right.
-        }
-        break;
-        case Quad:
-        {
-            // Load the vertex array with data.
-            vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // bottom-left
-            vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
-            vertices[0].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-            vertices[1].position = XMFLOAT3(-1.0f, 1.0f, 0.0f);  // top-left
-            vertices[1].texture = XMFLOAT2(0.0f, 0.0f);
-            vertices[1].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-            vertices[2].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // top-right
-            vertices[2].texture = XMFLOAT2(1.0f, 0.0f);
-            vertices[2].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-            vertices[3].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // bottom-right
-            vertices[3].texture = XMFLOAT2(1.0f, 1.0f);
-            vertices[3].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-            // Load the index array with data.
-            indices[0] = 0;  // Bottom left.
-            indices[1] = 1;  // Top left
-            indices[2] = 2;  // Top Right
-
-            indices[3] = 2;  // Top Right
-            indices[4] = 3;  // Bottom Right
-            indices[5] = 0;  // Bottom left
-        }
-        break;
+        indices[i] = i;
     }
 
     // Set up the description of the static vertex buffer.
@@ -274,3 +229,78 @@ void ModelClass::ReleaseTexture()
 
 	return;
 }
+
+
+bool ModelClass::LoadModel(char* filename)
+{
+    ifstream fin;
+    char input;
+    int i;
+
+    char* extend;
+
+    extend = strrchr(filename, '.');
+    if (strcmp(extend, ".txt") == 0)
+	{
+		return LoadTxtModel(filename);
+	}
+	else if (strcmp(extend, ".obj") == 0)
+	{
+        ObjLoader objLoader;
+        return objLoader.Load(filename, m_model, m_vertexCount, m_indexCount);
+	}
+	else
+	{
+		return false;
+	}
+
+    // Open the model file.
+    fin.open(filename);
+
+    // If it could not open the file then exit.
+    if (fin.fail())
+    {
+        return false;
+    }
+
+    // Read up to the value of vertex count.
+    fin.get(input);
+    while (input != ':')
+    {
+        fin.get(input);
+    }
+
+    // Read in the vertex count.
+    fin >> m_vertexCount;
+
+    // Set the number of indices to be the same as the vertex count.
+    m_indexCount = m_vertexCount;
+
+    // Create the model using the vertex count that was read in.
+    m_model = new ModelType[m_vertexCount];
+
+    // Read up to the beginning of the data.
+    fin.get(input);
+    while (input != ':')
+    {
+        fin.get(input);
+    }
+    fin.get(input);
+    fin.get(input);
+
+    // Read in the vertex data.
+    for (i = 0; i < m_vertexCount; i++)
+    {
+        fin >> m_model[i].x >> m_model[i].y >> m_model[i].z;
+        fin >> m_model[i].tu >> m_model[i].tv;
+        fin >> m_model[i].nx >> m_model[i].ny >> m_model[i].nz;
+    }
+
+    // Close the model file.
+    fin.close();
+
+    return true;
+}
+
+
+

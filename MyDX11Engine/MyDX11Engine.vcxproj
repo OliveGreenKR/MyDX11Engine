@@ -137,6 +137,7 @@
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="LightShaderclass.h" />
     <ClInclude Include="Modelclass.h" />
+    <ClInclude Include="objLoader.h" />
     <ClInclude Include="Systemclass.h" />
     <ClInclude Include="Textureclass.h" />
   </ItemGroup>
