@@ -39,10 +39,11 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera = new CameraClass;
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -15.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 
 	// Set the file name of the model.
-	strcpy_s(modelFilename, MODEL_SPHERE_PATH);
+	//strcpy_s(modelFilename, MODEL_SPHERE_PATH);
+	strcpy_s(modelFilename, MODEL_CUBE_PATH);
 
 	// Set the name of the texture file that we will be loading.
 	strcpy_s(textureFilename, TEXTURE_STONE01_PATH);
@@ -148,7 +149,7 @@ bool ApplicationClass::Frame()
 
 bool ApplicationClass::Render(float rotation)
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
 	bool result;
 
 
@@ -163,8 +164,32 @@ bool ApplicationClass::Render(float rotation)
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
-	// Rotate the world matrix by the rotation value so that the triangle will spin.
-	worldMatrix = XMMatrixRotationY(rotation);
+	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
+	translateMatrix = XMMatrixTranslation(-2.0f, 0.0f, 0.0f);  // Build the translation matrix.
+
+	// Multiply them together to create the final world transformation matrix.
+	//worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+	worldMatrix = XMMatrixMultiply(translateMatrix, rotateMatrix);
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(),
+		m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	if (!result)
+	{
+		return false;
+	}
+
+	scaleMatrix = XMMatrixScaling(1.5f, 1.25f, 0.5f);  // Build the scaling matrix.
+	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
+	translateMatrix = XMMatrixTranslation(2.0f, 0.0f, 0.0f);  // Build the translation matrix.
+
+	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+	//worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+	worldMatrix = XMMatrixMultiply(translateMatrix, srMatrix);
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
