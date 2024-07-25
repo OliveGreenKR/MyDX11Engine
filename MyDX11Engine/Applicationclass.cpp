@@ -39,11 +39,11 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera = new CameraClass;
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 
 	// Set the file name of the model.
-	//strcpy_s(modelFilename, MODEL_SPHERE_PATH);
-	strcpy_s(modelFilename, MODEL_CUBE_PATH);
+	strcpy_s(modelFilename, MODEL_SPHERE_PATH);
+	//strcpy_s(modelFilename, MODEL_CUBE_PATH);
 
 	// Set the name of the texture file that we will be loading.
 	strcpy_s(textureFilename, TEXTURE_STONE01_PATH);
@@ -73,7 +73,9 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(1.0f, 0.0f, 0.0f);
+	m_Light->SetDirection(1.0f, 0.0f, 1.0f);
+	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Light->SetSpecularPower(32.0f);
 	
 	return true;
 
@@ -174,9 +176,20 @@ bool ApplicationClass::Render(float rotation)
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
+	LightShaderClass::ShaderParameters shaderParameters;
+	shaderParameters.texture = m_Model->GetTexture();
+	shaderParameters.world = worldMatrix;
+	shaderParameters.view = viewMatrix;
+	shaderParameters.projection = projectionMatrix;
+	shaderParameters.ambientColor = m_Light->GetAmbientColor();
+	shaderParameters.diffuseColor = m_Light->GetDiffuseColor();
+	shaderParameters.lightDirection = m_Light->GetDirection();
+	shaderParameters.specularPower = m_Light->GetSpecularPower();
+	shaderParameters.specularColor = m_Light->GetSpecularColor();
+	shaderParameters.cameraPosition = m_Camera->GetPosition();
+
 	// Render the model using the light shader.
-	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(),
-		m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
+	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), shaderParameters);
 	if (!result)
 	{
 		return false;

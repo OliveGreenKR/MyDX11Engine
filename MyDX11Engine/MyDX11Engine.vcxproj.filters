@@ -121,5 +121,8 @@
     <Text Include="data\Cube.txt">
       <Filter>data</Filter>
     </Text>
+    <Text Include="data\sphere.txt">
+      <Filter>data</Filter>
+    </Text>
   </ItemGroup>
 </Project>
