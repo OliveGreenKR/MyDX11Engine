@@ -168,8 +168,7 @@ bool ApplicationClass::Render(float rotation)
 	translateMatrix = XMMatrixTranslation(-2.0f, 0.0f, 0.0f);  // Build the translation matrix.
 
 	// Multiply them together to create the final world transformation matrix.
-	//worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
-	worldMatrix = XMMatrixMultiply(translateMatrix, rotateMatrix);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
@@ -182,14 +181,13 @@ bool ApplicationClass::Render(float rotation)
 		return false;
 	}
 
-	scaleMatrix = XMMatrixScaling(1.5f, 1.25f, 0.5f);  // Build the scaling matrix.
+	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);  // Build the scaling matrix.
 	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
 	translateMatrix = XMMatrixTranslation(2.0f, 0.0f, 0.0f);  // Build the translation matrix.
 
 	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
 	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
-	//worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
-	worldMatrix = XMMatrixMultiply(translateMatrix, srMatrix);
+	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
