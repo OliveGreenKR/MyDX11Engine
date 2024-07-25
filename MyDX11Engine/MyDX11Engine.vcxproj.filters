@@ -19,6 +19,9 @@
     <Filter Include="data">
       <UniqueIdentifier>{d2c457db-4379-480b-b06f-2c41ab49d6b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Git">
+      <UniqueIdentifier>{c46f3d13-65c9-4047-a8ad-2dd0e665cc67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Systemclass.h">
@@ -107,7 +110,12 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\.gitignore" />
+    <None Include="..\.gitignore">
+      <Filter>Git</Filter>
+    </None>
+    <None Include="..\.git\config">
+      <Filter>Git</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="vsLight.fx">
