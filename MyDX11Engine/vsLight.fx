@@ -44,6 +44,7 @@ PixelInputType LightVertexShader(VertexInputType input)
 {
     PixelInputType output;
     float4 worldPosition;
+    int i;
     
     // Change the position vector to be 4 units for proper matrix calculations.
     input.position.w = 1.0f;
@@ -68,7 +69,6 @@ PixelInputType LightVertexShader(VertexInputType input)
 	
     // Normalize the viewing direction vector.
     output.view = normalize(output.view);
-    
     
     return output;
 }

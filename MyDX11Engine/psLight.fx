@@ -10,7 +10,6 @@ cbuffer LightBuffer
     float4 specularColor;
 };
 
-
 struct PixelInputType
 {
     float4 position : SV_POSITION;
