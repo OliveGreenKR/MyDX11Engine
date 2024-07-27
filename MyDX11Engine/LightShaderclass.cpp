@@ -385,30 +385,6 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, O
     // Now set the constant buffer in the vertex shader with the updated values.
     deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
 #pragma endregion
-#pragma region vs_Sub[1]:Camera
-    // Lock the camera constant buffer so it can be written to.
-    result = deviceContext->Map(m_cameraBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    if (FAILED(result))
-    {
-        return false;
-    }
-
-    // Get a pointer to the data in the constant buffer.
-    dataPtr3 = (CameraBufferType*)mappedResource.pData;
-
-    // Copy the camera position into the constant buffer.
-    dataPtr3->cameraPosition = parameters.cameraPosition;
-    dataPtr3->padding = 0.0f;
-
-	// Unlock the camera constant buffer.
-	deviceContext->Unmap(m_cameraBuffer, 0);
-
-	// Set the position of the camera constant buffer in the vertex shader.
-	bufferNumber = 1;
-
-    // Now set the camera constant buffer in the vertex shader with the updated values.
-    deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_cameraBuffer);
-#pragma endregion
 #pragma region ps_R[0]: Texture
     // Set shader texture resource in the pixel shader.
     deviceContext->PSSetShaderResources(0, 1, &parameters.texture);
@@ -427,7 +403,7 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, O
     // Copy the lighting variables into the constant buffer.
     dataPtr2->ambientColor = parameters.ambientColor;
     dataPtr2->diffuseColor = parameters.diffuseColor;
-    dataPtr2->lightDirection = parameters.lightDirection;
+    dataPtr2->lightPosition = parameters.lightPosition;
     dataPtr2->specularColor = parameters.specularColor;
     dataPtr2->specularPower = parameters.specularPower;
 
@@ -439,6 +415,30 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, O
 
     // Finally set the light constant buffer in the pixel shader with the updated values.
     deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_lightBuffer);
+#pragma endregion
+#pragma region ps_Sub[1]:Camera
+    // Lock the camera constant buffer so it can be written to.
+    result = deviceContext->Map(m_cameraBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    if (FAILED(result))
+    {
+        return false;
+    }
+
+    // Get a pointer to the data in the constant buffer.
+    dataPtr3 = (CameraBufferType*)mappedResource.pData;
+
+    // Copy the camera position into the constant buffer.
+    dataPtr3->cameraPosition = parameters.cameraPosition;
+    dataPtr3->padding = 0.0f;
+
+    // Unlock the camera constant buffer.
+    deviceContext->Unmap(m_cameraBuffer, 0);
+
+    // Set the position of the camera constant buffer in the vertex shader.
+    bufferNumber = 1;
+
+    // Now set the camera constant buffer in the vertex shader with the updated values.
+    deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_cameraBuffer);
 #pragma endregion
     return true;
 }

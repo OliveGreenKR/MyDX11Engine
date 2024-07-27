@@ -39,7 +39,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera = new CameraClass;
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+	m_Camera->SetPosition(0.0f, 1.0f, -10.0f);
 
 	// Set the file name of the model.
 	strcpy_s(modelFilename, MODEL_SPHERE_PATH);
@@ -73,7 +73,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(1.0f, 0.0f, 1.0f);
+	m_Light->SetWorldPosition(5.0f, 0.0f, -5.0f);
 	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetSpecularPower(32.0f);
 	
@@ -183,7 +183,7 @@ bool ApplicationClass::Render(float rotation)
 	shaderParameters.projection = projectionMatrix;
 	shaderParameters.ambientColor = m_Light->GetAmbientColor();
 	shaderParameters.diffuseColor = m_Light->GetDiffuseColor();
-	shaderParameters.lightDirection = m_Light->GetDirection();
+	shaderParameters.lightPosition = m_Light->GetWorldPosition();
 	shaderParameters.specularPower = m_Light->GetSpecularPower();
 	shaderParameters.specularColor = m_Light->GetSpecularColor();
 	shaderParameters.cameraPosition = m_Camera->GetPosition();
