@@ -1,6 +1,7 @@
 #pragma once
 #ifndef _LIGHTSHADERCLASS_H_
 #define _LIGHTSHADERCLASS_H_
+#define NUM_LIGHTS 4
 
 #include <d3d11.h>
 #include <d3dcompiler.h>
@@ -13,8 +14,10 @@ using namespace std;
 
 class LightShaderClass
 {
-private:
+
 #pragma pack(push, 16)
+private:
+
     struct MatrixBufferType
     {
         XMMATRIX world;
@@ -22,13 +25,18 @@ private:
         XMMATRIX projection;
     };
 
-    struct LightBufferType
+    struct Light
     {
         XMFLOAT4 ambientColor;
         XMFLOAT4 diffuseColor;
         XMFLOAT3 lightPosition;
         float specularPower;
         XMFLOAT4 specularColor;
+    };
+
+    struct LightBufferType
+    {
+		Light light[NUM_LIGHTS];
     };
 
     struct CameraBufferType
@@ -47,14 +55,13 @@ public:
         XMMATRIX view;
         XMMATRIX projection;
 
-        XMFLOAT4 ambientColor;
-        XMFLOAT4 diffuseColor;
-        XMFLOAT3 lightPosition;
-
-        float specularPower;
-        XMFLOAT4 specularColor;
-
         XMFLOAT3 cameraPosition;
+
+        XMFLOAT4 ambientColor[NUM_LIGHTS];
+        XMFLOAT4 diffuseColor[NUM_LIGHTS];
+        XMFLOAT3 lightPosition[NUM_LIGHTS];
+        float specularPower[NUM_LIGHTS];
+        XMFLOAT4 specularColor[NUM_LIGHTS];
     };
 
 public:
@@ -84,6 +91,4 @@ private:
     ID3D11Buffer* m_cameraBuffer;   
 
 };
-
-
 #endif

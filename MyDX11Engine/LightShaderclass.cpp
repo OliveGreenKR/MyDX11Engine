@@ -400,12 +400,15 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, O
     // Get a pointer to the data in the constant buffer.
     dataPtr2 = (LightBufferType*)mappedResource.pData;
 
-    // Copy the lighting variables into the constant buffer.
-    dataPtr2->ambientColor = parameters.ambientColor;
-    dataPtr2->diffuseColor = parameters.diffuseColor;
-    dataPtr2->lightPosition = parameters.lightPosition;
-    dataPtr2->specularColor = parameters.specularColor;
-    dataPtr2->specularPower = parameters.specularPower;
+    for (int i = 0; i < NUM_LIGHTS; i++) 
+    {
+        // Copy the lighting variables into the constant buffer.
+		dataPtr2->light[i].ambientColor = parameters.ambientColor[i];
+		dataPtr2->light[i].diffuseColor = parameters.diffuseColor[i];
+		dataPtr2->light[i].lightPosition = parameters.lightPosition[i];
+		dataPtr2->light[i].specularPower = parameters.specularPower[i];
+		dataPtr2->light[i].specularColor = parameters.specularColor[i];
+    }
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_lightBuffer, 0);

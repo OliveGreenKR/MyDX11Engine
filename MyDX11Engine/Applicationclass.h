@@ -11,6 +11,7 @@
 #include "modelclass.h"
 #include "LightShaderclass.h"
 #include "LightClass.h"
+#include <vector>
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -36,7 +37,7 @@ private:
 	CameraClass* m_Camera;
 	ModelClass* m_Model;
 	LightShaderClass* m_LightShader;
-	LightClass* m_Light;
+	vector<LightClass> m_Lights;
 };
 
 #endif

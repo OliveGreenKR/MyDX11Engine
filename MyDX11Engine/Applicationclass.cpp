@@ -8,7 +8,6 @@ ApplicationClass::ApplicationClass()
 	m_Camera = 0;
 	m_Model = 0;
 	m_LightShader = nullptr;
-	m_Light = nullptr;
 }
 
 
@@ -69,14 +68,41 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Create and initialize the light object.
-	m_Light = new LightClass;
 
-	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
-	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetWorldPosition(5.0f, 0.0f, -5.0f);
-	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetSpecularPower(32.0f);
-	
+	m_Lights = vector<LightClass>(NUM_LIGHTS);
+
+	float r, g, b;
+	r = g = b = 1.f;
+	m_Lights[0].SetDiffuseColor(r, g, b, 1.0f);
+	m_Lights[0].SetAmbientColor(0.15f * r, 0.15f * g, 0.15f * b, 1.0f);
+	m_Lights[0].SetWorldPosition(5.0f, 0.0f, -5.0f);
+	m_Lights[0].SetSpecularColor(r, g, b, 1.0f);
+	m_Lights[0].SetSpecularPower(32.0f);
+
+	r = 1.f;
+	g = b = 0.f;
+	m_Lights[1].SetDiffuseColor(r, g, b, 1.0f);
+	m_Lights[1].SetAmbientColor(0.15f * r, 0.15f * g, 0.15f * b, 1.0f);
+	m_Lights[1].SetWorldPosition(5.0f, 5.0f, -5.0f);
+	m_Lights[1].SetSpecularColor(r, g, b, 1.0f);
+	m_Lights[1].SetSpecularPower(16.0f);
+
+	g = 1.f;
+	r = b = 0.f;
+	m_Lights[2].SetDiffuseColor(r, g, b, 1.0f);
+	m_Lights[2].SetAmbientColor(0.15f * r, 0.15f * g, 0.15f * b, 1.0f);
+	m_Lights[2].SetWorldPosition(-5.0f, -5.0f, -5.0f);
+	m_Lights[2].SetSpecularColor(r, g, b, 1.0f);
+	m_Lights[2].SetSpecularPower(1.0f);
+
+	b = 1.f;
+	r = g = 0.f;
+	m_Lights[3].SetDiffuseColor(r, g, b, 1.0f);
+	m_Lights[3].SetAmbientColor(0.15f * r, 0.15f * g, 0.15f * b, 1.0f);
+	m_Lights[3].SetWorldPosition(-5.0f, 5.0f, -5.0f);
+	m_Lights[3].SetSpecularColor(r, g, b, 1.0f);
+	m_Lights[3].SetSpecularPower(32.0f);
+
 	return true;
 
 
@@ -85,10 +111,9 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 void ApplicationClass::Shutdown()
 {
 	// Release the light object.
-	if (m_Light)
+	if (!m_Lights.empty())
 	{
-		delete m_Light;
-		m_Light = 0;
+		m_Lights.clear();
 	}
 
 	// Release the light shader object.
@@ -181,12 +206,16 @@ bool ApplicationClass::Render(float rotation)
 	shaderParameters.world = worldMatrix;
 	shaderParameters.view = viewMatrix;
 	shaderParameters.projection = projectionMatrix;
-	shaderParameters.ambientColor = m_Light->GetAmbientColor();
-	shaderParameters.diffuseColor = m_Light->GetDiffuseColor();
-	shaderParameters.lightPosition = m_Light->GetWorldPosition();
-	shaderParameters.specularPower = m_Light->GetSpecularPower();
-	shaderParameters.specularColor = m_Light->GetSpecularColor();
 	shaderParameters.cameraPosition = m_Camera->GetPosition();
+
+	for (int i = 0; i < NUM_LIGHTS; i++)
+	{
+		shaderParameters.ambientColor[i] = m_Lights[i].GetAmbientColor();
+		shaderParameters.diffuseColor[i] = m_Lights[i].GetDiffuseColor();
+		shaderParameters.lightPosition[i] = m_Lights[i].GetWorldPosition();
+		shaderParameters.specularPower[i] = m_Lights[i].GetSpecularPower();
+		shaderParameters.specularColor[i] = m_Lights[i].GetSpecularColor();
+	}
 
 	// Render the model using the light shader.
 	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), shaderParameters);
