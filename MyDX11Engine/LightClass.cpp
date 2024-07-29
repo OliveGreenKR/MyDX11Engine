@@ -46,6 +46,17 @@ void LightClass::SetSpecularPower(float power)
     return;
 }
 
+void LightClass::SetAttenuation(float x, float y, float z)
+{
+    m_attenuation = XMFLOAT3(x, y, z);
+}
+
+void LightClass::SetRange(float range)
+{
+    m_range = range;
+    return;
+}
+
 
 XMFLOAT4 LightClass::GetAmbientColor()
 {
@@ -71,4 +82,14 @@ XMFLOAT4 LightClass::GetSpecularColor()
 float LightClass::GetSpecularPower()
 {
     return m_specularPower;
+}
+
+XMFLOAT3 LightClass::GetAttenuation()
+{
+    return m_attenuation;
+}
+
+float LightClass::GetRange()
+{
+    return m_range;
 }

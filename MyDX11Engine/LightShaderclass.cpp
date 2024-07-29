@@ -408,6 +408,8 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, O
 		dataPtr2->light[i].lightPosition = parameters.lightPosition[i];
 		dataPtr2->light[i].specularPower = parameters.specularPower[i];
 		dataPtr2->light[i].specularColor = parameters.specularColor[i];
+		dataPtr2->light[i].attenuation = parameters.attenuation[i];
+		dataPtr2->light[i].range = parameters.range[i];
     }
 
     // Unlock the constant buffer.

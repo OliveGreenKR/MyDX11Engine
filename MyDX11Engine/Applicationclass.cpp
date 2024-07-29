@@ -42,6 +42,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Set the file name of the model.
 	strcpy_s(modelFilename, MODEL_SPHERE_PATH);
+	//strcpy_s(modelFilename, MODEL_PLANE_PATH);
 	//strcpy_s(modelFilename, MODEL_CUBE_PATH);
 
 	// Set the name of the texture file that we will be loading.
@@ -78,6 +79,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Lights[0].SetWorldPosition(5.0f, 0.0f, -5.0f);
 	m_Lights[0].SetSpecularColor(r, g, b, 1.0f);
 	m_Lights[0].SetSpecularPower(32.0f);
+	m_Lights[0].SetAttenuation(1,0,0);
+	m_Lights[0].SetRange(20.f);
 
 	r = 1.f;
 	g = b = 0.f;
@@ -85,23 +88,32 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Lights[1].SetAmbientColor(0.15f * r, 0.15f * g, 0.15f * b, 1.0f);
 	m_Lights[1].SetWorldPosition(5.0f, 5.0f, -5.0f);
 	m_Lights[1].SetSpecularColor(r, g, b, 1.0f);
-	m_Lights[1].SetSpecularPower(16.0f);
+	m_Lights[1].SetSpecularPower(32.0f);
+	m_Lights[1].SetAttenuation(0.5f, 0, 0);
+	m_Lights[1].SetRange(20.f);
+
 
 	g = 1.f;
 	r = b = 0.f;
 	m_Lights[2].SetDiffuseColor(r, g, b, 1.0f);
 	m_Lights[2].SetAmbientColor(0.15f * r, 0.15f * g, 0.15f * b, 1.0f);
-	m_Lights[2].SetWorldPosition(-5.0f, -5.0f, -5.0f);
+	m_Lights[2].SetWorldPosition(-5.0f, -2.0f, -5.0f);
 	m_Lights[2].SetSpecularColor(r, g, b, 1.0f);
-	m_Lights[2].SetSpecularPower(1.0f);
+	m_Lights[2].SetSpecularPower(32.0f);
+	m_Lights[2].SetAttenuation(0.2f, 0.0f, 0);
+	m_Lights[2].SetRange(20.f);
+
 
 	b = 1.f;
 	r = g = 0.f;
 	m_Lights[3].SetDiffuseColor(r, g, b, 1.0f);
 	m_Lights[3].SetAmbientColor(0.15f * r, 0.15f * g, 0.15f * b, 1.0f);
-	m_Lights[3].SetWorldPosition(-5.0f, 5.0f, -5.0f);
+	m_Lights[3].SetWorldPosition(-15.0f, 15.0f, -15.0f);
 	m_Lights[3].SetSpecularColor(r, g, b, 1.0f);
 	m_Lights[3].SetSpecularPower(32.0f);
+	m_Lights[3].SetAttenuation(0, 0, 1);
+	m_Lights[3].SetRange(20.f);
+
 
 	return true;
 
@@ -215,6 +227,8 @@ bool ApplicationClass::Render(float rotation)
 		shaderParameters.lightPosition[i] = m_Lights[i].GetWorldPosition();
 		shaderParameters.specularPower[i] = m_Lights[i].GetSpecularPower();
 		shaderParameters.specularColor[i] = m_Lights[i].GetSpecularColor();
+		shaderParameters.attenuation[i] = m_Lights[i].GetAttenuation();
+		shaderParameters.range[i] = m_Lights[i].GetRange();
 	}
 
 	// Render the model using the light shader.

@@ -18,12 +18,16 @@ public:
     void SetWorldPosition(float, float, float);
     void SetSpecularColor(float, float, float, float);
     void SetSpecularPower(float);
+	void SetAttenuation(float, float, float);
+    void SetRange(float range);
 
     XMFLOAT4 GetAmbientColor();
     XMFLOAT4 GetDiffuseColor();
     XMFLOAT3 GetWorldPosition();
     XMFLOAT4 GetSpecularColor();
     float GetSpecularPower();
+    XMFLOAT3 GetAttenuation();
+    float GetRange();
 
 private:
     XMFLOAT4 m_ambientColor;
@@ -31,6 +35,8 @@ private:
     XMFLOAT3 m_worldPosition;
     XMFLOAT4 m_specularColor;
     float m_specularPower;
+    XMFLOAT3 m_attenuation;
+    float m_range;
 };
 
 #endif

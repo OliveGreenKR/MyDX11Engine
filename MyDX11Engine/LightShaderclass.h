@@ -1,7 +1,8 @@
 #pragma once
 #ifndef _LIGHTSHADERCLASS_H_
 #define _LIGHTSHADERCLASS_H_
-#define NUM_LIGHTS 4
+
+const int NUM_LIGHTS = 4;
 
 #include <d3d11.h>
 #include <d3dcompiler.h>
@@ -32,6 +33,8 @@ private:
         XMFLOAT3 lightPosition;
         float specularPower;
         XMFLOAT4 specularColor;
+        XMFLOAT3 attenuation;
+        float range;
     };
 
     struct LightBufferType
@@ -62,6 +65,8 @@ public:
         XMFLOAT3 lightPosition[NUM_LIGHTS];
         float specularPower[NUM_LIGHTS];
         XMFLOAT4 specularColor[NUM_LIGHTS];
+        XMFLOAT3 attenuation[NUM_LIGHTS];
+        float range[NUM_LIGHTS];
     };
 
 public:

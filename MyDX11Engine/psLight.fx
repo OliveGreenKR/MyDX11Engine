@@ -10,6 +10,8 @@ struct Light
     float3 lightPosition;
     float specularPower;
     float4 specularColor;
+    float3 attenuation;
+    float range;
 };
 
 cbuffer LightBufferType
@@ -40,6 +42,8 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
     float3 reflection;
     float4 specular;
     float4 color;
+    float attenuation;
+    float distance;
 
     // Sample the pixel color from the texture using the sampler at this texture coordinate location.
     textureColor = shaderTexture.Sample(SampleType, input.tex);
@@ -55,23 +59,33 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
         Light light = lights[i];
         // Set the default output color to the ambient light value for all pixels.
         color += light.ambientColor;
- 
-        lightDir = normalize(light.lightPosition - input.worldPosition);
+        
+        float3 lightvector = light.lightPosition - input.worldPosition;
+        distance = length(lightvector);
+        lightDir = normalize(lightvector);
         viewDir = normalize(cameraPosition - input.worldPosition);
-    
+        
+        if(distance > light.range)
+        {
+            continue;
+        }
+        
+        //calculate the attenuation factor
+        attenuation = 1.0f / dot(light.attenuation, float3(1.0f, distance, distance * distance));
+        //attenuation = 1.0f;
         // Calculate the amount of light on this pixel.
         lightIntensity = saturate(dot(input.normal, lightDir));
-    
+  
         if (lightIntensity > 0.0f)
         {
             // Determine the final diffuse color based on the diffuse color and the amount of light intensity.
-            color += (light.diffuseColor * lightIntensity);
+            color += light.diffuseColor * lightIntensity * attenuation ;
         
             // Calculate the reflection vector based on the light intensity, normal vector, and light direction.
             reflection = normalize(2.0f * lightIntensity * input.normal - lightDir);
         
             // Determine the amount of specular light based on the reflection vector, viewing direction, and specular power.
-            specular += light.specularColor * pow(saturate(dot(reflection, viewDir)), light.specularPower);
+            specular += light.specularColor * pow(saturate(dot(reflection, viewDir)), light.specularPower) * attenuation;
         }
     }
     // Multiply the texture pixel and the final diffuse color to get the final pixel color result.
