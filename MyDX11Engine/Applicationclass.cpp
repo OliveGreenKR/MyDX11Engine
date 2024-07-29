@@ -76,7 +76,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	r = g = b = 1.f;
 	m_Lights[0].SetDiffuseColor(r, g, b, 1.0f);
 	m_Lights[0].SetAmbientColor(0.15f * r, 0.15f * g, 0.15f * b, 1.0f);
-	m_Lights[0].SetWorldPosition(5.0f, 0.0f, -5.0f);
+	m_Lights[0].SetWorldPosition(3.0f, 0.0f, -3.0f);
 	m_Lights[0].SetSpecularColor(r, g, b, 1.0f);
 	m_Lights[0].SetSpecularPower(32.0f);
 	m_Lights[0].SetAttenuation(0,0.f,0);
@@ -86,7 +86,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	g = b = 0.f;
 	m_Lights[1].SetDiffuseColor(r, g, b, 1.0f);
 	m_Lights[1].SetAmbientColor(0.15f * r, 0.15f * g, 0.15f * b, 1.0f);
-	m_Lights[1].SetWorldPosition(5.0f, 5.0f, -5.0f);
+	m_Lights[1].SetWorldPosition(3.0f, 3.0f, -3.0f);
 	m_Lights[1].SetSpecularColor(r, g, b, 1.0f);
 	m_Lights[1].SetSpecularPower(32.0f);
 	m_Lights[1].SetAttenuation(0.5f, 0, 0);
@@ -97,7 +97,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	r = b = 0.f;
 	m_Lights[2].SetDiffuseColor(r, g, b, 1.0f);
 	m_Lights[2].SetAmbientColor(0.15f * r, 0.15f * g, 0.15f * b, 1.0f);
-	m_Lights[2].SetWorldPosition(-5.0f, -2.0f, -5.0f);
+	m_Lights[2].SetWorldPosition(-3.0f, -2.0f, -3.0f);
 	m_Lights[2].SetSpecularColor(r, g, b, 1.0f);
 	m_Lights[2].SetSpecularPower(32.0f);
 	m_Lights[2].SetAttenuation(0.2f, 0.0f, 0);
@@ -108,11 +108,11 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	r = g = 0.f;
 	m_Lights[3].SetDiffuseColor(r, g, b, 1.0f);
 	m_Lights[3].SetAmbientColor(0.15f * r, 0.15f * g, 0.15f * b, 1.0f);
-	m_Lights[3].SetWorldPosition(-15.0f, 15.0f, -15.0f);
+	m_Lights[3].SetWorldPosition(0.0f, 15.0f, -15.0f);
 	m_Lights[3].SetSpecularColor(r, g, b, 1.0f);
 	m_Lights[3].SetSpecularPower(32.0f);
-	m_Lights[3].SetAttenuation(0, 0, 1);
-	m_Lights[3].SetRange(20.f);
+	m_Lights[3].SetAttenuation(0, 0, 0);
+	m_Lights[3].SetRange(5.f);
 
 
 	return true;
