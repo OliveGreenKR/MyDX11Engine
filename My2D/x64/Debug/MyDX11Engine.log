@@ -1,0 +1,5 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (MyDX11Engine.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Applicationclass.cpp
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\Applicationclass.cpp(192,98): warning C4101: 'srMatrix': unreferenced local variable
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\MyDX11Engine\Applicationclass.cpp(192,85): warning C4101: 'scaleMatrix': unreferenced local variable
+  MyDX11Engine.vcxproj -> C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\x64\Debug\My3D.exe

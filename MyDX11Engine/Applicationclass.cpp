@@ -38,7 +38,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera = new CameraClass;
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 1.0f, -10.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 
 	// Set the file name of the model.
 	strcpy_s(modelFilename, MODEL_SPHERE_PATH);

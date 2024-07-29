@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <FxCompile Include="psLight.fx">
+      <Filter>Resources\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="vsLight.fx">
+      <Filter>Resources\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="psTexture.fx">
+      <Filter>Resources\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="vsTexture.fx">
+      <Filter>Resources\HLSL</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Applicationclass.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Cameraclass.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D3dclass.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Inputclass.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Systemclass.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Textureclass.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="BitmapClass.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="textureshaderclass.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Cameraclass.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Applicationclass.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D3dclass.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Define.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Inputclass.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Textureclass.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Systemclass.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapClass.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="textureshaderclass.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\stone02.tga">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="data\stone01.tga">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="MyDX11Engine.ico">
+      <Filter>Resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{21bf87c0-080e-48dd-b57d-4f112cc4de11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{c9b3950e-0531-4fc7-8e08-805a2ff3c1e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{c99b65e9-5a19-4603-8f92-7cda4d3b2716}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\HLSL">
+      <UniqueIdentifier>{1154c8ca-63ef-4680-bc02-65e4cb3c5825}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MyDX11Engine.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

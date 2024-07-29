@@ -24,6 +24,7 @@
     <ProjectGuid>{5a5bd893-94c9-4fdc-80ec-9755731aa47f}</ProjectGuid>
     <RootNamespace>MyDX11Engine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>My3D</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
