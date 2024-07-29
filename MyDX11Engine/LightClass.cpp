@@ -48,7 +48,10 @@ void LightClass::SetSpecularPower(float power)
 
 void LightClass::SetAttenuation(float x, float y, float z)
 {
-    m_attenuation = XMFLOAT3(x, y, z);
+    XMFLOAT3 attenuation = XMFLOAT3(x, y, z);
+    XMVECTOR vector = XMLoadFloat3(&attenuation);
+    vector = XMVector3Normalize(vector);
+    XMStoreFloat3(&m_attenuation, vector);
 }
 
 void LightClass::SetRange(float range)

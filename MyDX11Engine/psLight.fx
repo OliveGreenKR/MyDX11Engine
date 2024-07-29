@@ -57,6 +57,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
         color = saturate(color);
         
         Light light = lights[i];
+    
         // Set the default output color to the ambient light value for all pixels.
         color += light.ambientColor;
         
@@ -71,7 +72,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
         }
         
         //calculate the attenuation factor
-        attenuation = 1.0f / dot(light.attenuation, float3(1.0f, distance, distance * distance));
+        attenuation = min(1.0f, (1.0f / dot(light.attenuation, float3(1.0f, distance, distance * distance))) );
         //attenuation = 1.0f;
         // Calculate the amount of light on this pixel.
         lightIntensity = saturate(dot(input.normal, lightDir));

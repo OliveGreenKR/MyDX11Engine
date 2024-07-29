@@ -79,8 +79,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Lights[0].SetWorldPosition(5.0f, 0.0f, -5.0f);
 	m_Lights[0].SetSpecularColor(r, g, b, 1.0f);
 	m_Lights[0].SetSpecularPower(32.0f);
-	m_Lights[0].SetAttenuation(1,0,0);
-	m_Lights[0].SetRange(20.f);
+	m_Lights[0].SetAttenuation(0,0.f,0);
+	m_Lights[0].SetRange(120.f);
 
 	r = 1.f;
 	g = b = 0.f;
