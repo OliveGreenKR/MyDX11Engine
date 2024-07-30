@@ -134,9 +134,12 @@
     <ClInclude Include="Cameraclass.h" />
     <ClInclude Include="D3dclass.h" />
     <ClInclude Include="Define.h" />
+    <ClInclude Include="FontClass.h" />
+    <ClInclude Include="fontshaderclass.h" />
     <ClInclude Include="Inputclass.h" />
     <ClInclude Include="SpriteClass.h" />
     <ClInclude Include="Systemclass.h" />
+    <ClInclude Include="TextClass.h" />
     <ClInclude Include="Textureclass.h" />
     <ClInclude Include="textureshaderclass.h" />
     <ClInclude Include="TimerClass.h" />
@@ -145,10 +148,13 @@
     <ClCompile Include="Applicationclass.cpp" />
     <ClCompile Include="Cameraclass.cpp" />
     <ClCompile Include="D3dclass.cpp" />
+    <ClCompile Include="FontClass.cpp" />
+    <ClCompile Include="fontshaderclass.cpp" />
     <ClCompile Include="Inputclass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SpriteClass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
+    <ClCompile Include="TextClass.cpp" />
     <ClCompile Include="Textureclass.cpp" />
     <ClCompile Include="textureshaderclass.cpp" />
     <ClCompile Include="TimerClass.cpp" />
@@ -163,7 +169,13 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="psFont.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="psLight.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="vsFont.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="vsLight.fx">

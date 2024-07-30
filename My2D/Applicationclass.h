@@ -12,6 +12,9 @@
 #include "textureshaderclass.h"
 #include "spriteclass.h"
 #include "TimerClass.h"
+#include "fontshaderclass.h"
+#include "FontClass.h"
+#include "TextClass.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -38,6 +41,9 @@ private:
 	TextureShaderClass* m_TextureShader;
 	SpriteClass* m_Sprite;
 	TimerClass* m_Timer;
+	FontShaderClass* m_FontShader;
+	FontClass* m_Font;
+	TextClass* m_TextString1, * m_TextString2;
 };
 
 #endif
