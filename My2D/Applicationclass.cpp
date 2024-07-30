@@ -95,6 +95,15 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+
+	 int fontHeight = m_Font->GetFontHeight();
+	 int pixelLength1 = m_Font->GetSentencePixelLength(testString1);
+	 int pixelLength2 = m_Font->GetSentencePixelLength(testString2);
+
+
+	 int centerX = screenWidth / 2 - pixelLength1 / 2;
+	 int centerY = screenHeight / 2 - fontHeight / 2;
+
 	// Create and initialize the first text object.
 	m_TextString1 = new TextClass;
 	result = m_TextString1->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, testString1, 10, 10, 0.0f, 1.0f, 0.0f);
@@ -105,7 +114,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Create and initialize the second text object.
 	m_TextString2 = new TextClass;
-	result = m_TextString2->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, testString2, 10, 50, 1.0f, 1.0f, 0.0f);
+	result = m_TextString2->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, testString2, centerX, centerY, 1.0f, 1.0f, 0.0f);
 	if (!result)
 	{
 		return false;
@@ -191,22 +200,37 @@ bool ApplicationClass::Frame()
 {
 	float frameTime;
 	static float renderX =  m_Sprite->GetRenderX();
-	static float speed = 50.f;
+	static float speed = 150.f;
 	bool result;
+
+
+	static float time = 0;
+	static float cycle = 0.5f;
 
 	// Update the system stats.
 	m_Timer->Frame();
 
-	int renderY =  m_Sprite->GetRenderY();
-
 	// Get the current frame time.
 	frameTime = m_Timer->GetTime();
+	time += frameTime;
+
+	if(time > cycle)
+	{
+		time = 0;
+		auto now1 = m_TextString1->GetPixelColor();
+		m_TextString1->SetPixelColor(now1.y, now1.z, now1.x);
+
+		auto now2 = m_TextString2->GetPixelColor();
+		m_TextString2->SetPixelColor(now2.y, now2.z, now2.x);
+	}
 
 	renderX += speed * frameTime;
-
+	if (renderX > DEFAULT_WINDOW_WIDTH || renderX < 0)
+		speed *= -1;
 	// Update the sprite object using the frame time.
-	m_Sprite->SetRenderLocation((int)(renderX), renderY);
+	m_Sprite->SetRenderLocation((int)(renderX), m_Sprite->GetRenderY());
 	m_Sprite->Update(frameTime);
+
 
 	// Render the graphics scene.
 	result = Render();

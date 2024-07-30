@@ -248,3 +248,8 @@ XMFLOAT4 TextClass::GetPixelColor()
 {
     return m_pixelColor;
 }
+
+void TextClass::SetPixelColor(float r, float g, float b)
+{
+    m_pixelColor =  XMFLOAT4(r, g, b, 1.0f);
+}
