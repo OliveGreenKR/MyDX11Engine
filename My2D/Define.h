@@ -10,6 +10,8 @@
 
 #define TEXTURE_STONE01_PATH "../My2D/data/stone01.tga"
 
+#define SPRITE_DATA01_PATH "../My2D/data/sprite_data_01.txt"
+
 #define RAD_TO_DEG (57.2957795131f)	
 #define DEG_TO_RAD (0.01745329251f)
 

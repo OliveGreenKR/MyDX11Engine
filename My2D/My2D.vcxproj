@@ -131,25 +131,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Applicationclass.h" />
-    <ClInclude Include="BitmapClass.h" />
     <ClInclude Include="Cameraclass.h" />
     <ClInclude Include="D3dclass.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="Inputclass.h" />
+    <ClInclude Include="SpriteClass.h" />
     <ClInclude Include="Systemclass.h" />
     <ClInclude Include="Textureclass.h" />
     <ClInclude Include="textureshaderclass.h" />
+    <ClInclude Include="TimerClass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Applicationclass.cpp" />
-    <ClCompile Include="BitmapClass.cpp" />
     <ClCompile Include="Cameraclass.cpp" />
     <ClCompile Include="D3dclass.cpp" />
     <ClCompile Include="Inputclass.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SpriteClass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
     <ClCompile Include="Textureclass.cpp" />
     <ClCompile Include="textureshaderclass.cpp" />
+    <ClCompile Include="TimerClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MyDX11Engine.rc" />

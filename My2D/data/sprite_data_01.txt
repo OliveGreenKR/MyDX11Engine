@@ -1,0 +1,6 @@
+4
+../My2D/data/sprite01.tga
+../My2D/data/sprite02.tga
+../My2D/data/sprite03.tga
+../My2D/data/sprite04.tga
+250

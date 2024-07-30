@@ -36,10 +36,13 @@
     <ClCompile Include="Textureclass.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="BitmapClass.cpp">
+    <ClCompile Include="textureshaderclass.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="textureshaderclass.cpp">
+    <ClCompile Include="TimerClass.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteClass.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,10 +68,13 @@
     <ClInclude Include="Systemclass.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="BitmapClass.h">
+    <ClInclude Include="textureshaderclass.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="textureshaderclass.h">
+    <ClInclude Include="SpriteClass.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerClass.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
