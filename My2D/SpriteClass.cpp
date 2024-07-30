@@ -93,6 +93,7 @@ void SpriteClass::Update(float frameTime)
 
         m_currentTexture++;
 
+
         // If we are at the last sprite texture then go back to the beginning of the texture array to the first texture again.
         if (m_currentTexture == m_textureCount)
         {

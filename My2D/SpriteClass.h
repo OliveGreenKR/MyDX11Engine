@@ -33,6 +33,9 @@ public:
 	int GetIndexCount();
 	ID3D11ShaderResourceView* GetTexture();
 
+	int GetRenderX() { return m_renderX; }
+	int GetRenderY() { return m_renderY; }
+
 	void SetRenderLocation(int, int);
 	void SetBitmapSize(int width, int height);
 private:

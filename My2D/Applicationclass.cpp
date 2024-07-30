@@ -117,17 +117,22 @@ void ApplicationClass::Shutdown()
 bool ApplicationClass::Frame()
 {
 	float frameTime;
-	static float rotation = 360.0f;
-	static float speed = 0.5f;
+	static float renderX =  m_Sprite->GetRenderX();
+	static float speed = 50.f;
 	bool result;
 
 	// Update the system stats.
 	m_Timer->Frame();
 
+	int renderY =  m_Sprite->GetRenderY();
+
 	// Get the current frame time.
 	frameTime = m_Timer->GetTime();
 
+	renderX += speed * frameTime;
+
 	// Update the sprite object using the frame time.
+	m_Sprite->SetRenderLocation((int)(renderX), renderY);
 	m_Sprite->Update(frameTime);
 
 	// Render the graphics scene.
@@ -144,7 +149,6 @@ bool ApplicationClass::Render()
 {
 	XMMATRIX worldMatrix, viewMatrix, orthoMatrix;
 	bool result;
-
 
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
