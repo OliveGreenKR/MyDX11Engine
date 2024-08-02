@@ -46,6 +46,8 @@ private:
 	SpriteClass* m_Sprite;
 	TimerClass* m_Timer;
 
+	SpriteClass* m_Cursor;
+
 	FontShaderClass* m_FontShader;
 	FontClass* m_Font;
 	FpsClass* m_Fps;

@@ -9,6 +9,7 @@ ApplicationClass::ApplicationClass()
 	m_TextureShader = 0;
 	m_Sprite = nullptr;
 	m_Timer = nullptr;
+	m_Cursor = nullptr;
 	m_FontShader = nullptr;
 	m_Font = nullptr;
 	m_Fps = nullptr;
@@ -32,6 +33,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	char fpsString[32];
 	char mouseString1[32], mouseString2[32], mouseString3[32];
+	char cursorFilename[128];
 	char spriteFilename[128];
 	bool result;
 
@@ -74,16 +76,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 	
-	strcpy_s(spriteFilename, SPRITE_DATA01_PATH);
-
-	m_Sprite = new SpriteClass;
-	int renderX = 50 , renderY = 50;
-	result = m_Sprite->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, spriteFilename, renderX, renderY);
-	if (!result)
-	{
-		return false;
-	}
-
 	// Create and initialize the timer object.
 	m_Timer = new TimerClass;
 
@@ -92,7 +84,29 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
+#pragma region Animated Sprite
+	//Create and initialize the sprite object.
+	strcpy_s(spriteFilename, SPRITE_DATA01_PATH);
 
+	m_Sprite = new SpriteClass;
+	int renderX = 50, renderY = 50;
+	result = m_Sprite->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, spriteFilename, renderX, renderY);
+	if (!result)
+	{
+		return false;
+	}
+#pragma endregion
+#pragma region Mouse Cursor
+	strcpy_s(cursorFilename, TEXTURE_STONE01_PATH);
+
+	m_Cursor = new SpriteClass;
+	result = m_Cursor->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, cursorFilename, 0, 0);
+	if (!result)
+	{
+		return false;
+	}
+	m_Cursor->SetBitmapSize(16, 16);
+#pragma endregion
 #pragma region Fps
 	// Create and initialize the fps object.
 	m_Fps = new FpsClass();
@@ -255,6 +269,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	}
 	// Get the location of the mouse from the input object,
 	Input->GetMouseLocation(mouseX, mouseY);
+	m_Cursor->SetRenderLocation(mouseX, mouseY);	
 
 	// Check if the mouse has been pressed.
 	mouseDown = Input->IsMousePressed();
@@ -316,6 +331,19 @@ bool ApplicationClass::Render()
 
 	// Render the sprite with the texture shader.
 	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Sprite->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Sprite->GetTexture());
+	if (!result)
+	{
+		return false;
+	}
+
+	result = m_Cursor->Render(m_Direct3D->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Render the sprite with the texture shader.
+	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Cursor->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Cursor->GetTexture());
 	if (!result)
 	{
 		return false;

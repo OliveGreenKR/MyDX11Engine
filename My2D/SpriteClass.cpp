@@ -82,8 +82,15 @@ bool SpriteClass::Render(ID3D11DeviceContext* deviceContext)
 
 void SpriteClass::Update(float frameTime)
 {
+    
+    if(m_cycleTime < 0.001f)
+	{
+		return;
+	}
+
     // Increment the frame time each frame.
     m_frameTime += frameTime;
+
 
     // Check if the frame time has reached the cycle time.
     if (m_frameTime >= m_cycleTime)
@@ -329,53 +336,72 @@ bool SpriteClass::LoadTextures(ID3D11Device* device, ID3D11DeviceContext* device
     char input;
     bool result;
 
+    char* extension;
 
-    // Open the sprite info data file.
-    fin.open(filename);
-    if (fin.fail())
+    extension = strrchr(filename, '.') + 1;
+
+    if (strcmp(extension, "tga") == 0)
     {
-        return false;
-    }
-
-    // Read in the number of textures.
-    fin >> m_textureCount;
-
-    // Create and initialize the texture array with the texture count from the file.
-    m_Textures = new TextureClass[m_textureCount];
-
-    // Read to start of next line.
-    fin.get(input);
-
-    // Read in each texture file name.
-    for (i = 0; i < m_textureCount; i++)
-    {
-        j = 0;
-        fin.get(input);
-        while (input != '\n')
-        {
-            textureFilename[j] = input;
-            j++;
-            fin.get(input);
-        }
-        textureFilename[j] = '\0';
-
-        // Once you have the filename then load the texture in the texture array.
-        result = m_Textures[i].Initialize(device, deviceContext, textureFilename);
+        m_textureCount = 1;
+        m_cycleTime = 0.0f;
+        m_Textures = new TextureClass[m_textureCount];
+        result = m_Textures[0].Initialize(device, deviceContext, filename);
         if (!result)
         {
             return false;
         }
     }
 
-    // Read in the cycle time.
-    fin >> m_cycleTime;
+    else if(strcmp(extension, "txt") == 0)
+    {
+        // Open the sprite info data file.
+        fin.open(filename);
+        if (fin.fail())
+        {
+            return false;
+        }
 
-    // Convert the integer milliseconds to float representation.
-    m_cycleTime = m_cycleTime * 0.001f;
+        // Read in the number of textures.
+        fin >> m_textureCount;
 
-    // Close the file.
-    fin.close();
+        // Create and initialize the texture array with the texture count from the file.
+        m_Textures = new TextureClass[m_textureCount];
 
+        // Read to start of next line.
+        fin.get(input);
+
+        // Read in each texture file name.
+        for (i = 0; i < m_textureCount; i++)
+        {
+            j = 0;
+            fin.get(input);
+            while (input != '\n')
+            {
+                textureFilename[j] = input;
+                j++;
+                fin.get(input);
+            }
+            textureFilename[j] = '\0';
+
+            result = m_Textures[i].Initialize(device, deviceContext, textureFilename);
+            if (!result)
+            {
+                return false;
+            }
+        }
+
+
+        // Read in the cycle time.
+        fin >> m_cycleTime;
+
+        // Convert the integer milliseconds to float representation.
+        m_cycleTime = m_cycleTime * 0.001f;
+
+        // Close the file.
+        fin.close();
+    }
+
+    
     // Get the dimensions of the first texture and use that as the dimensions of the 2D sprite images.
     m_bitmapWidth = m_Textures[0].GetWidth();
     m_bitmapHeight = m_Textures[0].GetHeight();
