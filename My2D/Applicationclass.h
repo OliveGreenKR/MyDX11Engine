@@ -37,7 +37,7 @@ public:
 private:
 	bool Render();
 	bool UpdateFps();
-	bool UpdateMouseStrings(int, int, bool);
+	bool UpdateMouseStrings(int, int, bool, char key = '\0');
 
 private:
 	D3DClass* m_Direct3D;
@@ -54,7 +54,7 @@ private:
 
 	TextClass* m_FpsString;
 	int m_previousFps;
-	TextClass* m_MouseStrings;
+	TextClass* m_LeftUpperStrings;
 };
 
 #endif

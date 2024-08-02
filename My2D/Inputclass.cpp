@@ -241,3 +241,41 @@ bool InputClass::IsMousePressed()
 
     return false;
 }
+
+unsigned char InputClass::GetPressedKeyCode()
+{
+    for (int i = 0; i < sizeof(m_keyboardState); ++i) {
+        if (IsKeyPressed(i)) {
+            return static_cast<unsigned char>(i);
+        }
+    }
+    return 0;
+}
+
+char InputClass::ConvertKeyToAscii(unsigned char keycode) {
+    static std::unordered_map<unsigned char, char> keyMap = {
+        { DIK_A, 'a' }, { DIK_B, 'b' }, { DIK_C, 'c' }, { DIK_D, 'd' },
+        { DIK_E, 'e' }, { DIK_F, 'f' }, { DIK_G, 'g' }, { DIK_H, 'h' },
+        { DIK_I, 'i' }, { DIK_J, 'j' }, { DIK_K, 'k' }, { DIK_L, 'l' },
+        { DIK_M, 'm' }, { DIK_N, 'n' }, { DIK_O, 'o' }, { DIK_P, 'p' },
+        { DIK_Q, 'q' }, { DIK_R, 'r' }, { DIK_S, 's' }, { DIK_T, 't' },
+        { DIK_U, 'u' }, { DIK_V, 'v' }, { DIK_W, 'w' }, { DIK_X, 'x' },
+        { DIK_Y, 'y' }, { DIK_Z, 'z' }, { DIK_0, '0' }, { DIK_1, '1' },
+        { DIK_2, '2' }, { DIK_3, '3' }, { DIK_4, '4' }, { DIK_5, '5' },
+        { DIK_6, '6' }, { DIK_7, '7' }, { DIK_8, '8' }, { DIK_9, '9' },
+        { DIK_SPACE, ' ' }, { DIK_RETURN, '\n' }, { DIK_TAB, '\t' }
+        // 필요한 다른 키들을 추가
+    };
+
+    bool shiftPressed = IsKeyPressed(DIK_LSHIFT) || IsKeyPressed(DIK_RSHIFT);
+
+    if (keyMap.find(keycode) != keyMap.end()) {
+        char asciiChar = keyMap[keycode];
+        if (shiftPressed && asciiChar >= 'a' && asciiChar <= 'z') {
+            asciiChar = asciiChar - 'a' + 'A'; // 소문자를 대문자로 변환
+        }
+        return asciiChar;
+    }
+
+    return '\0'; // 매핑되지 않은 키는 널 문자 반환
+}

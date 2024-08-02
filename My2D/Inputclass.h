@@ -5,6 +5,7 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
+#include <unordered_map>
 #include <dinput.h>
 
 class InputClass
@@ -21,6 +22,8 @@ public:
     bool IsEscapePressed();
     void GetMouseLocation(OUT int&, OUT int&);
     bool IsMousePressed();
+    unsigned char GetPressedKeyCode();
+    char ConvertKeyToAscii(unsigned char keycode);
 
     __forceinline bool IsKeyPressed(unsigned char keycode) { return m_keyboardState[keycode] & 0x80; }
 
