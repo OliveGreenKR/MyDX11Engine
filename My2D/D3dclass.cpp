@@ -654,3 +654,9 @@ void D3DClass::DisableAlphaBlending()
 
 	return;
 }
+
+void D3DClass::SetVsync(bool)
+{
+	m_vsync_enabled = true;
+	return;
+}

@@ -136,6 +136,7 @@
     <ClInclude Include="Define.h" />
     <ClInclude Include="FontClass.h" />
     <ClInclude Include="fontshaderclass.h" />
+    <ClInclude Include="FpsClass.h" />
     <ClInclude Include="Inputclass.h" />
     <ClInclude Include="SpriteClass.h" />
     <ClInclude Include="Systemclass.h" />
@@ -150,6 +151,7 @@
     <ClCompile Include="D3dclass.cpp" />
     <ClCompile Include="FontClass.cpp" />
     <ClCompile Include="fontshaderclass.cpp" />
+    <ClCompile Include="FpsClass.cpp" />
     <ClCompile Include="Inputclass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SpriteClass.cpp" />

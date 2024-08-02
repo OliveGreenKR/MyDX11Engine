@@ -60,6 +60,9 @@
     <ClCompile Include="TextClass.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="FpsClass.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cameraclass.h">
@@ -99,6 +102,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="TextClass.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="FpsClass.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

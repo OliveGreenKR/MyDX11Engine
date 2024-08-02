@@ -15,6 +15,7 @@
 #include "fontshaderclass.h"
 #include "FontClass.h"
 #include "TextClass.h"
+#include "fpsclass.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -31,6 +32,7 @@ public:
 	bool Initialize(int, int, HWND);
 	void Shutdown();
 	bool Frame();
+	bool UpdateFps();
 
 private:
 	bool Render();
@@ -43,7 +45,9 @@ private:
 	TimerClass* m_Timer;
 	FontShaderClass* m_FontShader;
 	FontClass* m_Font;
-	TextClass* m_TextString1, * m_TextString2;
+	FpsClass* m_Fps;
+	TextClass* m_FpsString;
+	int m_previousFps;
 };
 
 #endif
