@@ -30,6 +30,11 @@ bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
     // Store the maximum length of the sentence.
     m_maxLength = maxLength;
 
+    if (positionX < 0) 
+        positionX += screenWidth;
+    if (positionY < 0) 
+        positionY += screenHeight;
+
     // Initalize the sentence.
     result = InitializeBuffers(device, deviceContext, Font, text, positionX, positionY, red, green, blue);
     if (!result)
@@ -192,6 +197,11 @@ bool TextClass::UpdateText(ID3D11DeviceContext* deviceContext, FontClass* Font, 
 
     // Initialize vertex array to zeros at first.
     memset(vertices, 0, (sizeof(VertexType) * m_vertexCount));
+
+    if(positionX < 0) 
+        positionX += m_screenWidth;
+    if(positionY < 0)
+        positionY += m_screenHeight;
 
     // Calculate the X and Y pixel position on the screen to start drawing to.
     drawX = (float)(((m_screenWidth / 2) * -1) + positionX);

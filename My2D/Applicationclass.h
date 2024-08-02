@@ -7,6 +7,7 @@
 #define DEFAULT_WINDOW_HEIGHT (600)
 
 #include "d3dclass.h"
+#include "inputclass.h"
 #include "cameraclass.h"
 
 #include "textureshaderclass.h"
@@ -31,11 +32,12 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame();
-	bool UpdateFps();
+	bool Frame(InputClass*);
 
 private:
 	bool Render();
+	bool UpdateFps();
+	bool UpdateMouseStrings(int, int, bool);
 
 private:
 	D3DClass* m_Direct3D;
@@ -43,11 +45,14 @@ private:
 	TextureShaderClass* m_TextureShader;
 	SpriteClass* m_Sprite;
 	TimerClass* m_Timer;
+
 	FontShaderClass* m_FontShader;
 	FontClass* m_Font;
 	FpsClass* m_Fps;
+
 	TextClass* m_FpsString;
 	int m_previousFps;
+	TextClass* m_MouseStrings;
 };
 
 #endif
