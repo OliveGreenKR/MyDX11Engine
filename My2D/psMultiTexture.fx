@@ -1,7 +1,11 @@
-Texture2D shaderTexture1 : register(t0);
-Texture2D shaderTexture2 : register(t1);
+Texture2D shaderTextures[4] : register(t0); 
 SamplerState SampleType : register(s0);
 
+
+cbuffer ConstantBuffer : register(b0)
+{
+    int textureCount;
+};
 
 struct PixelInputType
 {
@@ -12,18 +16,19 @@ struct PixelInputType
 
 float4 MultiTexturePixelShader(PixelInputType input) : SV_TARGET
 {
-    float4 color1;
-    float4 color2;
-    float4 blendColor;
-    
-    // Sample the pixel color from the textures using the sampler at this texture coordinate location.
-    color1 = shaderTexture1.Sample(SampleType, input.tex);
-    color2 = shaderTexture2.Sample(SampleType, input.tex);
-	
-    // Combine the two textures together.
-    blendColor = color1 * color2 * 2.0;
 
-    // Saturate the final color.
+    float4 blendColor = float4(1,1,1,1);
+    
+    // Loop through each texture and sample the color
+    for (int i = 0; i < textureCount; ++i)
+    {
+        blendColor *= shaderTextures[i].Sample(SampleType, input.tex);
+    }
+
+    // Normalize the color by the number of textures
+    blendColor = pow(blendColor, 1.0 / textureCount);
+
+    // Saturate the final color
     blendColor = saturate(blendColor);
 
     return blendColor;

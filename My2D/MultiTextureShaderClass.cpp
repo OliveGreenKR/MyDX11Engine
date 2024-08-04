@@ -60,13 +60,13 @@ void MultiTextureShaderClass::Shutdown()
 }
 
 bool MultiTextureShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-                                     XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture1, ID3D11ShaderResourceView* texture2)
+                                     XMMATRIX projectionMatrix,int textureCount, ID3D11ShaderResourceView** textures)
 {
     bool result;
 
 
     // Set the shader parameters that it will use for rendering.
-    result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture1, texture2);
+    result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, textureCount, textures);
     if (!result)
     {
         return false;
@@ -86,7 +86,7 @@ bool MultiTextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, 
     ID3D10Blob* pixelShaderBuffer;
     D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
     unsigned int numElements;
-    D3D11_BUFFER_DESC matrixBufferDesc;
+    D3D11_BUFFER_DESC matrixBufferDesc, constantBufferDesc;
     D3D11_SAMPLER_DESC samplerDesc;
 
 
@@ -197,8 +197,21 @@ bool MultiTextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, 
     matrixBufferDesc.MiscFlags = 0;
     matrixBufferDesc.StructureByteStride = 0;
 
+    constantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    constantBufferDesc.ByteWidth = sizeof(ConstantBufferType);
+    constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    constantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    constantBufferDesc.MiscFlags = 0;
+    constantBufferDesc.StructureByteStride = 0;
+
     // Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
     result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
+    if (FAILED(result))
+    {
+        return false;
+    }
+
+    result = device->CreateBuffer(&constantBufferDesc, NULL, &m_constantBuffer);
     if (FAILED(result))
     {
         return false;
@@ -305,11 +318,12 @@ void MultiTextureShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage,
 }
 
 bool MultiTextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-                                                  XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture1, ID3D11ShaderResourceView* texture2)
+                                                  XMMATRIX projectionMatrix,int textureCount, ID3D11ShaderResourceView** textures)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     MatrixBufferType* dataPtr;
+    ConstantBufferType* dataPtr2;
     unsigned int bufferNumber;
 
 
@@ -318,6 +332,7 @@ bool MultiTextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceCon
     viewMatrix = XMMatrixTranspose(viewMatrix);
     projectionMatrix = XMMatrixTranspose(projectionMatrix);
 
+#pragma region MarixBuffer
     // Lock the constant buffer so it can be written to.
     result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
@@ -335,17 +350,34 @@ bool MultiTextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceCon
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_matrixBuffer, 0);
+#pragma endregion
+#pragma region ConstantBuffer
+    result = deviceContext->Map(m_constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    if (FAILED(result))
+    {
+        return false;
+    }
 
+    // Get a pointer to the data in the constant buffer.
+    dataPtr2 = (ConstantBufferType*)mappedResource.pData;
+    dataPtr2->textureCount =  textureCount;
+
+    // Unlock the constant buffer.
+    deviceContext->Unmap(m_constantBuffer, 0);
+#pragma endregion
     // Set the position of the constant buffer in the vertex shader.
     bufferNumber = 0;
 
     // Finally set the constant buffer in the vertex shader with the updated values.
     deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
 
-    // Set shader texture resources in the pixel shader.
-    deviceContext->PSSetShaderResources(0, 1, &texture1);
-    deviceContext->PSSetShaderResources(1, 1, &texture2);
+    deviceContext->PSSetConstantBuffers(0, 1, &m_constantBuffer);
 
+    // Set shader texture resources in the pixel shader.
+    for(int i = 0; i < textureCount; i++)
+	{
+		deviceContext->PSSetShaderResources(i, 1, &textures[i]);
+	}
     return true;
 }
 

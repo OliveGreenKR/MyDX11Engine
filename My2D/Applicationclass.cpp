@@ -28,7 +28,8 @@ ApplicationClass::~ApplicationClass()
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	char fpsString[32];
-	char modelFilename[128], textureFilename1[128], textureFilename2[128];
+	char modelFilename[128], textureFilename1[128], textureFilename2[128], textureFilename3[128];
+	char* textureFilenames[8];
 	bool result;
 
 	m_Direct3D = new D3DClass;
@@ -77,11 +78,16 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Set the file name of the textures.
 	strcpy_s(textureFilename1, TEXTURE_STONE01_PATH);
 	strcpy_s(textureFilename2, TEXTURE_DIRT01_PATH);
+	strcpy_s(textureFilename3, TEXTURE_SPRITE01_PATH);
+
+	textureFilenames[0] = textureFilename1;
+	textureFilenames[1] = textureFilename2;
+	textureFilenames[2] = textureFilename3;
 
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
 
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2);
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 2, textureFilenames);
 	if (!result)
 	{
 		return false;
@@ -224,7 +230,7 @@ bool ApplicationClass::Render()
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-										  m_Model->GetTexture(0), m_Model->GetTexture(1));
+										  m_Model->GetTextureCount(), m_Model->GetTextures());
 	if (!result)
 	{
 		return false;

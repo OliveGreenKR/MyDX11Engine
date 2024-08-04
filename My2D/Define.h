@@ -17,6 +17,7 @@
 
 #define TEXTURE_STONE01_PATH "../My2D/data/stone01.tga"
 #define TEXTURE_DIRT01_PATH "../My2D/data/dirt01.tga"
+#define TEXTURE_SPRITE01_PATH "../My2D/data/sprite01.tga"
 
 #define SPRITE_DATA01_PATH "../My2D/data/sprite_data_01.txt"
 
