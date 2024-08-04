@@ -186,6 +186,12 @@ bool ApplicationClass::Frame(InputClass* Input)
 		return false;
 	}
 #pragma endregion
+#pragma region Input
+	if(Input->IsEscapePressed())
+	{
+		return false;
+	}
+#pragma endregion
 	// Render the graphics scene.
 	result = Render();
 	if (!result)
@@ -198,7 +204,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 bool ApplicationClass::Render()
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	bool result;
 	int i;
 
@@ -209,7 +215,11 @@ bool ApplicationClass::Render()
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+	m_Direct3D->GetOrthoMatrix(orthoMatrix);
 
+	m_Direct3D->EnableAlphaBlending();
+
+#pragma region Contents
 	// Render the model using the multitexture shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
@@ -220,19 +230,20 @@ bool ApplicationClass::Render()
 		return false;
 	}
 
-	//for Font
-	m_Direct3D->EnableAlphaBlending();
 #pragma region Fps
 	// Render the fps text string using the font shader.
 	m_FpsString->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_FpsString->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_FpsString->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix,
 								  m_Font->GetTexture(), m_FpsString->GetPixelColor());
 	if (!result)
 	{
 		return false;
 	}
 #pragma endregion
+
+#pragma endregion
+
 	m_Direct3D->DisableAlphaBlending();
 	// Present the rendered scene to the screen.
 	m_Direct3D->EndScene();
