@@ -1,8 +1,5 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (My3D.vcxproj, MyDX11Engine.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Applicationclass.cpp
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\Applicationclass.cpp(258,16): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-  Inputclass.cpp
-  Systemclass.cpp
-  main.cpp
-  Generating Code...
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\Applicationclass.cpp(180,8): warning C4101: 'frameTime': unreferenced local variable
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\Applicationclass.cpp(203,6): warning C4101: 'i': unreferenced local variable
   My2D.vcxproj -> C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\x64\Debug\My2D.exe

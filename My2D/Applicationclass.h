@@ -17,6 +17,8 @@
 #include "FontClass.h"
 #include "TextClass.h"
 #include "fpsclass.h"
+#include "multitextureshaderclass.h"
+#include "modelclass.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -37,24 +39,23 @@ public:
 private:
 	bool Render();
 	bool UpdateFps();
-	bool UpdateMouseStrings(int, int, bool, char key = '\0');
 
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
-	TextureShaderClass* m_TextureShader;
-	SpriteClass* m_Sprite;
-	TimerClass* m_Timer;
 
-	SpriteClass* m_Cursor;
+	MultiTextureShaderClass* m_MultiTextureShader;
+	ModelClass* m_Model;
 
 	FontShaderClass* m_FontShader;
 	FontClass* m_Font;
-	FpsClass* m_Fps;
 
+	FpsClass* m_Fps;
 	TextClass* m_FpsString;
 	int m_previousFps;
-	TextClass* m_LeftUpperStrings;
+
+	
+
 };
 
 #endif

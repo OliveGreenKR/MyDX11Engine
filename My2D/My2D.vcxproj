@@ -138,6 +138,8 @@
     <ClInclude Include="fontshaderclass.h" />
     <ClInclude Include="FpsClass.h" />
     <ClInclude Include="Inputclass.h" />
+    <ClInclude Include="ModelClass.h" />
+    <ClInclude Include="MultiTextureShaderClass.h" />
     <ClInclude Include="SpriteClass.h" />
     <ClInclude Include="Systemclass.h" />
     <ClInclude Include="TextClass.h" />
@@ -154,6 +156,8 @@
     <ClCompile Include="FpsClass.cpp" />
     <ClCompile Include="Inputclass.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ModelClass.cpp" />
+    <ClCompile Include="MultiTextureShaderClass.cpp" />
     <ClCompile Include="SpriteClass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
     <ClCompile Include="TextClass.cpp" />
@@ -177,6 +181,9 @@
     <FxCompile Include="psLight.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="psMultiTexture.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="vsFont.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
@@ -192,6 +199,9 @@
     <FxCompile Include="psTexture.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <FileType>Document</FileType>
+    </FxCompile>
+    <FxCompile Include="vsMultiTexture.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="vsTexture.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
