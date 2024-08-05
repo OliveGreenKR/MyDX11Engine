@@ -25,6 +25,12 @@
     <FxCompile Include="psMultiTexture.fx">
       <Filter>Resources\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="psAlphaMap.fx">
+      <Filter>Resources\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="psLightMap.fx">
+      <Filter>Resources\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Applicationclass.cpp">

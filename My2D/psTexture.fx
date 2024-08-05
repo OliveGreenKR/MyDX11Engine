@@ -2,7 +2,6 @@
 Texture2D shaderTexture : register(t0);
 SamplerState SampleType : register(s0);
 
-
 struct PixelInputType
 {
     float4 position : SV_POSITION;

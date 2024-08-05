@@ -35,7 +35,7 @@ bool MultiTextureShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     }
 
     // Set the filename of the pixel shader.
-    error = wcscpy_s(psFilename, 128, PS_MULTITEX_PATH);
+    error = wcscpy_s(psFilename, 128, PS_LIGHTMAP_PATH);
     if (error != 0)
     {
         return false;

@@ -13,7 +13,6 @@ struct PixelInputType
     float2 tex : TEXCOORD0;
 };
 
-
 float4 MultiTexturePixelShader(PixelInputType input) : SV_TARGET
 {
 
@@ -25,7 +24,7 @@ float4 MultiTexturePixelShader(PixelInputType input) : SV_TARGET
         Color *= shaderTextures[i].Sample(SampleType, input.tex);
     }
     // Normalize the color by the number of textures
-    //Color = pow(Color, 1.0 / textureCount);
+    Color = pow(Color, 1.0 / textureCount);
     // Saturate the final color
     Color = saturate(Color) ;
 
