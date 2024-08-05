@@ -27,6 +27,7 @@
 #define FONT01_TEXTURE_PATH "../My2D/data/font/font01.tga"
 
 #define LIGHTMAP_SPOTLIGHT_PATH "../My2D/data/lightmap/light01.tga"
+#define	ALPHAMAP01_PATH "../My2D/data/alphamap/alpha01.tga"
 
 #define RAD_TO_DEG (57.2957795131f)	
 #define DEG_TO_RAD (0.01745329251f)
