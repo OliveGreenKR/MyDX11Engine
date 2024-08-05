@@ -78,10 +78,10 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Set the file name of the textures.
 	strcpy_s(textureFilename1, TEXTURE_STONE01_PATH);
 	strcpy_s(textureFilename2, TEXTURE_DIRT01_PATH);
-	strcpy_s(textureFilename3, TEXTURE_SPRITE01_PATH);
+	strcpy_s(textureFilename3, LIGHTMAP_SPOTLIGHT_PATH);
 
 	textureFilenames[0] = textureFilename1;
-	textureFilenames[1] = textureFilename2;
+	textureFilenames[1] = textureFilename3;
 	textureFilenames[2] = textureFilename3;
 
 	// Create and initialize the model object.

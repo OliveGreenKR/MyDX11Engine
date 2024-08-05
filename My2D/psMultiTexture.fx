@@ -17,19 +17,17 @@ struct PixelInputType
 float4 MultiTexturePixelShader(PixelInputType input) : SV_TARGET
 {
 
-    float4 blendColor = float4(1,1,1,1);
+    float4 Color = float4(1,1,1,1);
     
     // Loop through each texture and sample the color
     for (int i = 0; i < textureCount; ++i)
     {
-        blendColor *= shaderTextures[i].Sample(SampleType, input.tex);
+        Color *= shaderTextures[i].Sample(SampleType, input.tex);
     }
-
     // Normalize the color by the number of textures
-    blendColor = pow(blendColor, 1.0 / textureCount);
-
+    //Color = pow(Color, 1.0 / textureCount);
     // Saturate the final color
-    blendColor = saturate(blendColor);
+    Color = saturate(Color) ;
 
-    return blendColor;
+    return Color;
 }
