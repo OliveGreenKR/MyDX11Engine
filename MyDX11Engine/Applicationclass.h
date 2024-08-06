@@ -37,7 +37,7 @@ private:
 	CameraClass* m_Camera;
 	ModelClass* m_Model;
 	LightShaderClass* m_LightShader;
-	vector<LightClass> m_Lights;
+	vector<PointLightClass> m_Lights;
 };
 
 #endif

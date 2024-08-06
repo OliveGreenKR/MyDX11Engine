@@ -12,6 +12,7 @@ ApplicationClass::ApplicationClass()
 	m_Font = nullptr;
 	m_Fps = nullptr;
 	m_FpsString = nullptr;
+	m_Light = nullptr;
 }
 
 
@@ -73,21 +74,19 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 #pragma region Model
 	// Set the file name of the model.
-	strcpy_s(modelFilename, MODEL_SQUARE_PATH);
+	strcpy_s(modelFilename, MODEL_CUBE_PATH);
 
 	// Set the file name of the textures.
 	strcpy_s(textureFilename1, TEXTURE_STONE01_PATH);
-	strcpy_s(textureFilename2, TEXTURE_DIRT01_PATH);
-	strcpy_s(textureFilename3, ALPHAMAP01_PATH);
+	strcpy_s(textureFilename2, NORMALMAP_STONE01_PATH);
 
 	textureFilenames[0] = textureFilename1;
 	textureFilenames[1] = textureFilename2;
-	textureFilenames[2] = textureFilename3;
 
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
 
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 3, textureFilenames);
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 2, textureFilenames);
 	if (!result)
 	{
 		return false;
@@ -112,13 +111,22 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 #pragma endregion
-
+#pragma region Light
+	m_Light = new LightClass;
+	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
+#pragma endregion
 	return true;
 
 }
 
 void ApplicationClass::Shutdown()
 {
+	if(m_Light) 
+	{
+		delete m_Light;
+		m_Light = nullptr;
+	}
 	// Release the model object.
 	if (m_Model)
 	{
@@ -185,6 +193,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 {
 	float frameTime;
 	bool result;
+	static float rotation = 360.f;
 #pragma region Fps
 	result = UpdateFps();
 	if (!result)
@@ -198,8 +207,16 @@ bool ApplicationClass::Frame(InputClass* Input)
 		return false;
 	}
 #pragma endregion
+
+	// Update the rotation variable each frame.
+	rotation -= DEG_TO_RAD * 0.25f;
+	if (rotation <= 0.0f)
+	{
+		rotation += 360.0f;
+	}
+
 	// Render the graphics scene.
-	result = Render();
+	result = Render(rotation);
 	if (!result)
 	{
 		return false;
@@ -208,7 +225,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	return true;
 }
 
-bool ApplicationClass::Render()
+bool ApplicationClass::Render(float rotation)
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	bool result;
@@ -225,12 +242,15 @@ bool ApplicationClass::Render()
 
 	m_Direct3D->EnableAlphaBlending();
 
+	//rotate
+	worldMatrix = XMMatrixRotationY(rotation);
+
 #pragma region Contents
 	// Render the model using the multitexture shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-										  m_Model->GetTextureCount(), m_Model->GetTextures());
+										  m_Model->GetTextureCount(), m_Model->GetTextures(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
 	if (!result)
 	{
 		return false;

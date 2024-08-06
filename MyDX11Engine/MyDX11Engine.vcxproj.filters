@@ -51,7 +51,7 @@
     <ClInclude Include="LightShaderclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LightClass.h">
+    <ClInclude Include="PointLightClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="objLoader.h">
@@ -86,7 +86,7 @@
     <ClCompile Include="LightShaderclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LightClass.cpp">
+    <ClCompile Include="PointLightClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

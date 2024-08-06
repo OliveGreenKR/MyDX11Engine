@@ -28,9 +28,9 @@ void LightClass::SetDiffuseColor(float red, float green, float blue, float alpha
 }
 
 
-void LightClass::SetWorldPosition(float x, float y, float z)
+void LightClass::SetDirection(float x, float y, float z)
 {
-    m_worldPosition = XMFLOAT3(x, y, z);
+    m_direction = XMFLOAT3(x, y, z);
     return;
 }
 
@@ -46,20 +46,6 @@ void LightClass::SetSpecularPower(float power)
     return;
 }
 
-void LightClass::SetAttenuation(float x, float y, float z)
-{
-    XMFLOAT3 attenuation = XMFLOAT3(x, y, z);
-    XMVECTOR vector = XMLoadFloat3(&attenuation);
-    vector = XMVector3Normalize(vector);
-    XMStoreFloat3(&m_attenuation, vector);
-}
-
-void LightClass::SetRange(float range)
-{
-    m_range = range;
-    return;
-}
-
 
 XMFLOAT4 LightClass::GetAmbientColor()
 {
@@ -72,9 +58,9 @@ XMFLOAT4 LightClass::GetDiffuseColor()
 }
 
 
-XMFLOAT3 LightClass::GetWorldPosition()
+XMFLOAT3 LightClass::GetDirection()
 {
-    return m_worldPosition;
+    return m_direction;
 }
 
 XMFLOAT4 LightClass::GetSpecularColor()
@@ -85,14 +71,4 @@ XMFLOAT4 LightClass::GetSpecularColor()
 float LightClass::GetSpecularPower()
 {
     return m_specularPower;
-}
-
-XMFLOAT3 LightClass::GetAttenuation()
-{
-    return m_attenuation;
-}
-
-float LightClass::GetRange()
-{
-    return m_range;
 }

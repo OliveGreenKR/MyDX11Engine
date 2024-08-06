@@ -9,17 +9,20 @@
 #define PS_MULTITEX_PATH L"../My2D/psMultiTexture.fx"
 #define PS_LIGHTMAP_PATH L"../My2D/psLightMap.fx"
 #define PS_ALPHAMAP_PATH L"../My2D/psAlphaMap.fx"
+#define PS_NORMALMAP_PATH L"../My2D/psNormalmap.fx"
 
 #define VS_FONT_PATH L"../My2D/vsFont.fx"
 #define PS_FONT_PATH L"../My2D/psFont.fx"
 
-#define MODEL_CUBE_PATH "../My2D/data/Cube.txt"
+#define MODEL_CUBE_PATH "../My2D/data/cube.txt"
 //#define MODEL_SPHERE_PATH "../MyDx11Engine/data/sphere.obj"
 #define MODEL_SQUARE_PATH "../My2D/data/square.txt"
 
 #define TEXTURE_STONE01_PATH "../My2D/data/stone01.tga"
 #define TEXTURE_DIRT01_PATH "../My2D/data/dirt01.tga"
 #define TEXTURE_SPRITE01_PATH "../My2D/data/sprite01.tga"
+
+#define NORMALMAP_STONE01_PATH "../My2D/data/stone01_normal.tga"
 
 #define SPRITE_DATA01_PATH "../My2D/data/sprite_data_01.txt"
 

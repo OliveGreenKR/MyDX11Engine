@@ -10,9 +10,6 @@ struct VertexInputType
     float4 position : POSITION;
     float2 tex : TEXCOORD0;
     float3 normal : NORMAL;
-    //float3 tangent : TANGENT; // 탄젠트 벡터
-    //float3 binormal : BINORMAL; // 바이노멀 벡터
-    //float4 color : COLOR; // 정점 색상
 };
 
 struct PixelInputType
@@ -21,8 +18,6 @@ struct PixelInputType
     float2 tex : TEXCOORD0; // 텍스처 좌표
     float3 normal : NORMAL; // 법선 벡터
     float4 worldPosition : TEXCOORD1; // 정점 위치 (월드 공간)
-    //float3 view : TEXCOORD1; // 뷰 벡터
-    //float4 color : COLOR; // 정점 색상
 };
 
 PixelInputType LightVertexShader(VertexInputType input)

@@ -19,6 +19,8 @@
 #include "fpsclass.h"
 #include "multitextureshaderclass.h"
 #include "modelclass.h"
+#include "LightClass.h"
+
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -37,7 +39,7 @@ public:
 	bool Frame(InputClass*);
 
 private:
-	bool Render();
+	bool Render(float);
 	bool UpdateFps();
 
 private:
@@ -54,7 +56,7 @@ private:
 	TextClass* m_FpsString;
 	int m_previousFps;
 
-	
+	LightClass* m_Light;
 
 };
 

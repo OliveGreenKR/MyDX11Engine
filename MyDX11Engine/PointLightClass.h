@@ -1,17 +1,15 @@
 #pragma once
-#ifndef _LIGHTCLASS_H_
-#define _LIGHTCLASS_H_
 
 #include <directxmath.h>
 
 using namespace DirectX;
 
-class LightClass
+class PointLightClass
 {
 public:
-    LightClass();
-    LightClass(const LightClass&);
-    ~LightClass();
+    PointLightClass();
+    PointLightClass(const PointLightClass&);
+    ~PointLightClass();
 
     void SetAmbientColor(float, float, float, float);
     void SetDiffuseColor(float, float, float, float);
@@ -38,5 +36,3 @@ private:
     XMFLOAT3 m_attenuation;
     float m_range;
 };
-
-#endif

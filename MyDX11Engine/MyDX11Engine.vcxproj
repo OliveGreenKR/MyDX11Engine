@@ -135,7 +135,7 @@
     <ClInclude Include="D3dclass.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="Inputclass.h" />
-    <ClInclude Include="LightClass.h" />
+    <ClInclude Include="PointLightClass.h" />
     <ClInclude Include="LightShaderclass.h" />
     <ClInclude Include="Modelclass.h" />
     <ClInclude Include="objLoader.h" />
@@ -147,7 +147,7 @@
     <ClCompile Include="Cameraclass.cpp" />
     <ClCompile Include="D3dclass.cpp" />
     <ClCompile Include="Inputclass.cpp" />
-    <ClCompile Include="LightClass.cpp" />
+    <ClCompile Include="PointLightClass.cpp" />
     <ClCompile Include="LightShaderclass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Modelclass.cpp" />

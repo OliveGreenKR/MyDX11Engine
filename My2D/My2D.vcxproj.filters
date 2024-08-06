@@ -31,6 +31,9 @@
     <FxCompile Include="psLightMap.fx">
       <Filter>Resources\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="psNormalmap.fx">
+      <Filter>Resources\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Applicationclass.cpp">
@@ -81,6 +84,9 @@
     <ClCompile Include="ModelClass.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="LightClass.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cameraclass.h">
@@ -129,6 +135,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="ModelClass.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="LightClass.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
