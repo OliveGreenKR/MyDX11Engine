@@ -74,19 +74,21 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 #pragma region Model
 	// Set the file name of the model.
-	strcpy_s(modelFilename, MODEL_SPHERE_PATH);
+	strcpy_s(modelFilename, MODEL_CUBE_PATH);
 
 	// Set the file name of the textures.
-	strcpy_s(textureFilename1, TEXTURE_STONE01_PATH);
-	strcpy_s(textureFilename2, NORMALMAP_STONE01_PATH);
+	strcpy_s(textureFilename1, TEXTURE_STONE03_PATH);
+	strcpy_s(textureFilename2, NORMALMAP_STONE03_PATH);
+	strcpy_s(textureFilename3, SPEC_STONE03_PATH);
 
 	textureFilenames[0] = textureFilename1;
 	textureFilenames[1] = textureFilename2;
+	textureFilenames[2] = textureFilename3;
 
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
 
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 2, textureFilenames);
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 3, textureFilenames);
 	if (!result)
 	{
 		return false;
@@ -115,6 +117,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light = new LightClass;
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
+	m_Light->SetSpecularColor(1.0f,1.0f,1.0f,1.0f);
+	m_Light->SetSpecularPower(16.0f);
 #pragma endregion
 	return true;
 
@@ -240,21 +244,7 @@ bool ApplicationClass::Render(float rotation)
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
 
-	m_Direct3D->EnableAlphaBlending();
-
-	//rotate
-	worldMatrix = XMMatrixRotationY(rotation);
-
-#pragma region Contents
-	// Render the model using the multitexture shader.
-	m_Model->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-										  m_Model->GetTextureCount(), m_Model->GetTextures(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
-	if (!result)
-	{
-		return false;
-	}
+	//m_Direct3D->EnableAlphaBlending();
 
 #pragma region Fps
 	// Render the fps text string using the font shader.
@@ -268,9 +258,27 @@ bool ApplicationClass::Render(float rotation)
 	}
 #pragma endregion
 
+#pragma region Contents
+
+	//rotate
+	worldMatrix = XMMatrixRotationY(rotation);
+
+	// Render the model using the multitexture shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+										  m_Model->GetTextureCount(),m_Camera->GetPosition(), m_Model->GetTextures(), 
+										  m_Light->GetDirection(), m_Light->GetDiffuseColor(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+
+
 #pragma endregion
 
-	m_Direct3D->DisableAlphaBlending();
+	//m_Direct3D->DisableAlphaBlending();
 	// Present the rendered scene to the screen.
 	m_Direct3D->EndScene();
 

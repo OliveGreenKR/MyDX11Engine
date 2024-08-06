@@ -1,17 +1,19 @@
-Texture2D shaderTextures[2] : register(t0);
+Texture2D shaderTextures[3] : register(t0);
 SamplerState SampleType : register(s0);
 
 
 cbuffer ConstantBuffer : register(b0)
 {
     int textureCount;
+    float3 CameraPosition;
 };
 
-cbuffer LightBuffer
+cbuffer LightBuffer : register(b1)
 {
     float4 diffuseColor;
     float3 lightDirection;
-    float padding;
+    float4 specularColor;
+    float specularPower;
 };
 
 struct PixelInputType
@@ -21,6 +23,7 @@ struct PixelInputType
     float3 normal : NORMAL;
     float3 tangent : TANGENT;
     float3 binormal : BINORMAL;
+    float3 worldPosition : TEXCOORD1;
 };
 
 float4 MultiTexturePixelShader(PixelInputType input) : SV_TARGET
@@ -31,6 +34,13 @@ float4 MultiTexturePixelShader(PixelInputType input) : SV_TARGET
     float3 lightDir;
     float lightIntensity;
     float4 color;
+    float4 specularIntensity;
+    float3 reflection;
+    float4 specular;
+    
+    float3 viewDirection;
+    
+    viewDirection =  normalize(CameraPosition - input.worldPosition);
 
 	
     // Sample the pixel color from the color texture at this location.
@@ -59,6 +69,15 @@ float4 MultiTexturePixelShader(PixelInputType input) : SV_TARGET
 
     // Combine the final light color with the texture color.
     color = color * textureColor;
-
+    
+    //if (lightIntensity > 0.0f)
+    //{
+    //    specularIntensity = shaderTextures[2].Sample(SampleType, input.tex);
+    //    reflection = normalize(2 * lightIntensity * bumpNormal - lightDir);
+    //    specular = pow(saturate(dot(reflection, viewDirection)), specularPower);
+        
+    //    specular = specular * specularIntensity;
+    //    color = saturate(color + specular);
+    //}
     return color;
 }

@@ -61,14 +61,16 @@ void MultiTextureShaderClass::Shutdown()
     return;
 }
 
-bool MultiTextureShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-                                     XMMATRIX projectionMatrix,int textureCount, ID3D11ShaderResourceView** textures, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor)
+bool MultiTextureShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
+                                     int textureCount,XMFLOAT3 cameraPosition, ID3D11ShaderResourceView** textures,
+                                     XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor, XMFLOAT4 specularColor, float specularPower)
 {
     bool result;
 
 
     // Set the shader parameters that it will use for rendering.
-    result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, textureCount, textures, lightDirection, diffuseColor);
+    result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, textureCount, cameraPosition, textures,
+                                 lightDirection, diffuseColor, specularColor, specularPower);
     if (!result)
     {
         return false;
@@ -361,8 +363,9 @@ void MultiTextureShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage,
     return;
 }
 
-bool MultiTextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-                                                  XMMATRIX projectionMatrix,int textureCount, ID3D11ShaderResourceView** textures, XMFLOAT3 lightdDirection, XMFLOAT4 diffuseColor)
+bool MultiTextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,XMMATRIX projectionMatrix,
+                                                  int textureCount, XMFLOAT3 cameraPosition, ID3D11ShaderResourceView** textures,
+                                                  XMFLOAT3 lightdDirection, XMFLOAT4 diffuseColor, XMFLOAT4 specularColor, float specularPower)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -406,6 +409,7 @@ bool MultiTextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceCon
     // Get a pointer to the data in the constant buffer.
     dataPtr2 = (ConstantBufferType*)mappedResource.pData;
     dataPtr2->textureCount =  textureCount;
+    dataPtr2->CameraPosition = cameraPosition;
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_constantBuffer, 0);
@@ -423,7 +427,8 @@ bool MultiTextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceCon
 	// Copy the lighting variables into the constant buffer.
 	dataPtr3->diffuseColor = diffuseColor;
 	dataPtr3->lightDirection = lightdDirection;
-	dataPtr3->padding = 0.0f;
+    dataPtr3->specularColor = specularColor;
+    dataPtr3->specularPower = specularPower;
 
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_lightBuffer, 0);
