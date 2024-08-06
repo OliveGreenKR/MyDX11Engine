@@ -63,14 +63,14 @@ void MultiTextureShaderClass::Shutdown()
 
 bool MultiTextureShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
                                      int textureCount,XMFLOAT3 cameraPosition, ID3D11ShaderResourceView** textures,
-                                     XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor, XMFLOAT4 specularColor, float specularPower)
+                                     XMFLOAT4 diffuseColor, XMFLOAT4 specularColor, float specularPower, XMFLOAT3 lightDirection)
 {
     bool result;
 
 
     // Set the shader parameters that it will use for rendering.
     result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, textureCount, cameraPosition, textures,
-                                 lightDirection, diffuseColor, specularColor, specularPower);
+                                 diffuseColor,specularColor,specularPower,lightDirection);
     if (!result)
     {
         return false;
@@ -365,7 +365,7 @@ void MultiTextureShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage,
 
 bool MultiTextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,XMMATRIX projectionMatrix,
                                                   int textureCount, XMFLOAT3 cameraPosition, ID3D11ShaderResourceView** textures,
-                                                  XMFLOAT3 lightdDirection, XMFLOAT4 diffuseColor, XMFLOAT4 specularColor, float specularPower)
+                                                  XMFLOAT4 diffuseColor, XMFLOAT4 specularColor, float specularPower, XMFLOAT3 lightDirection)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -426,7 +426,7 @@ bool MultiTextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceCon
 
 	// Copy the lighting variables into the constant buffer.
 	dataPtr3->diffuseColor = diffuseColor;
-	dataPtr3->lightDirection = lightdDirection;
+	dataPtr3->lightDirection = lightDirection;
     dataPtr3->specularColor = specularColor;
     dataPtr3->specularPower = specularPower;
 

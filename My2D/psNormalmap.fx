@@ -11,9 +11,9 @@ cbuffer ConstantBuffer : register(b0)
 cbuffer LightBuffer : register(b1)
 {
     float4 diffuseColor;
-    float3 lightDirection;
     float4 specularColor;
     float specularPower;
+    float3 lightDirection;
 };
 
 struct PixelInputType
@@ -70,14 +70,14 @@ float4 MultiTexturePixelShader(PixelInputType input) : SV_TARGET
     // Combine the final light color with the texture color.
     color = color * textureColor;
     
-    //if (lightIntensity > 0.0f)
-    //{
-    //    specularIntensity = shaderTextures[2].Sample(SampleType, input.tex);
-    //    reflection = normalize(2 * lightIntensity * bumpNormal - lightDir);
-    //    specular = pow(saturate(dot(reflection, viewDirection)), specularPower);
+    if (lightIntensity > 0.0f)
+    {
+        specularIntensity = shaderTextures[2].Sample(SampleType, input.tex);
+        reflection = normalize(2 * lightIntensity * bumpNormal - lightDir);
+        specular = pow(saturate(dot(reflection, viewDirection)), specularPower);
         
-    //    specular = specular * specularIntensity;
-    //    color = saturate(color + specular);
-    //}
+        specular = specular * specularIntensity;
+        color = saturate(color + specular);
+    }
     return color;
 }

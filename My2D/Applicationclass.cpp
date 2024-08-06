@@ -33,6 +33,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	char* textureFilenames[8];
 	bool result;
 
+#pragma region base
 	m_Direct3D = new D3DClass;
 	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 	if (!result) {
@@ -72,27 +73,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-#pragma region Model
-	// Set the file name of the model.
-	strcpy_s(modelFilename, MODEL_CUBE_PATH);
-
-	// Set the file name of the textures.
-	strcpy_s(textureFilename1, TEXTURE_STONE03_PATH);
-	strcpy_s(textureFilename2, NORMALMAP_STONE03_PATH);
-	strcpy_s(textureFilename3, SPEC_STONE03_PATH);
-
-	textureFilenames[0] = textureFilename1;
-	textureFilenames[1] = textureFilename2;
-	textureFilenames[2] = textureFilename3;
-
-	// Create and initialize the model object.
-	m_Model = new ModelClass;
-
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 3, textureFilenames);
-	if (!result)
-	{
-		return false;
-	}
 #pragma endregion
 #pragma region Fps
 	// Create and initialize the fps object.
@@ -113,11 +93,34 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 #pragma endregion
+#pragma region Model
+	// Set the file name of the model.
+	strcpy_s(modelFilename, MODEL_SPHERE_PATH);
+
+	// Set the file name of the textures.
+	strcpy_s(textureFilename1, TEXTURE_STONE03_PATH);
+	strcpy_s(textureFilename2, NORMALMAP_STONE03_PATH);
+	strcpy_s(textureFilename3, SPEC_STONE03_PATH);
+
+	textureFilenames[0] = textureFilename1;
+	textureFilenames[1] = textureFilename2;
+	textureFilenames[2] = textureFilename3;
+
+	// Create and initialize the model object.
+	m_Model = new ModelClass;
+
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 3, textureFilenames);
+	if (!result)
+	{
+		return false;
+	}
+#pragma endregion
+
 #pragma region Light
 	m_Light = new LightClass;
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
-	m_Light->SetSpecularColor(1.0f,1.0f,1.0f,1.0f);
+	m_Light->SetSpecularColor(1.0f,0.0f,1.0f,1.0f);
 	m_Light->SetSpecularPower(16.0f);
 #pragma endregion
 	return true;
@@ -268,7 +271,7 @@ bool ApplicationClass::Render(float rotation)
 
 	result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
 										  m_Model->GetTextureCount(),m_Camera->GetPosition(), m_Model->GetTextures(), 
-										  m_Light->GetDirection(), m_Light->GetDiffuseColor(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+										  m_Light->GetDiffuseColor(), m_Light->GetSpecularColor(),m_Light->GetSpecularPower(), m_Light->GetDirection());
 	if (!result)
 	{
 		return false;
