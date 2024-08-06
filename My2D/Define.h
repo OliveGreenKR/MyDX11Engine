@@ -16,6 +16,7 @@
 
 #define MODEL_CUBE_PATH "../My2D/data/cube.txt"
 //#define MODEL_SPHERE_PATH "../MyDx11Engine/data/sphere.obj"
+#define MODEL_SPHERE_PATH "../My2D/data/sphere.txt"
 #define MODEL_SQUARE_PATH "../My2D/data/square.txt"
 
 #define TEXTURE_STONE01_PATH "../My2D/data/stone01.tga"

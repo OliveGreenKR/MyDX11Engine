@@ -299,8 +299,8 @@ bool ModelClass::LoadModel(char* filename)
     fin.close();
 
     return true;
-}
 
+}
 
 void ModelClass::ReleaseModel()
 {

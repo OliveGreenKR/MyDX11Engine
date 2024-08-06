@@ -74,7 +74,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 #pragma region Model
 	// Set the file name of the model.
-	strcpy_s(modelFilename, MODEL_CUBE_PATH);
+	strcpy_s(modelFilename, MODEL_SPHERE_PATH);
 
 	// Set the file name of the textures.
 	strcpy_s(textureFilename1, TEXTURE_STONE01_PATH);

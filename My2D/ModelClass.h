@@ -9,6 +9,7 @@ using namespace std;
 
 class ModelClass
 {
+
 private:
     struct VertexType
     {
