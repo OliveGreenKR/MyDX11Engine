@@ -17,9 +17,10 @@
 #include "FontClass.h"
 #include "TextClass.h"
 #include "fpsclass.h"
-#include "multitextureshaderclass.h"
 #include "modelclass.h"
 #include "LightClass.h"
+
+#include "NormalMapShaderClass.h"
 
 
 const bool FULL_SCREEN = false;
@@ -46,7 +47,7 @@ private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
 
-	MultiTextureShaderClass* m_MultiTextureShader;
+	NormalMapShaderClass* m_mainShader;
 	ModelClass* m_Model;
 
 	FontShaderClass* m_FontShader;

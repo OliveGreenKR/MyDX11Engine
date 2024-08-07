@@ -12,9 +12,10 @@ struct NormalMapShaderParameters
 
 	XMFLOAT4 diffuseColor;
 	XMFLOAT3 lightDirection;
+
 };
 
-class NormalMapShaderClass : ShaderClass<NormalMapShaderParameters>
+class NormalMapShaderClass : public ShaderClass<NormalMapShaderParameters>
 
 {
 private:
@@ -36,19 +37,18 @@ private:
 public:
 	NormalMapShaderClass();
 	NormalMapShaderClass(const NormalMapShaderClass&) = delete;
-	~NormalMapShaderClass() { Shutdown(); };
+	~NormalMapShaderClass();
 
+	void Shutdown() override;
 	bool Initialize(ID3D11Device* device, HWND hwnd) override;
 
 private:
-	void Shutdown() override;
 	bool InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsfilename, WCHAR* psfilename) override;
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, NormalMapShaderParameters parameters) override;
-	void ShutdownShader() override;
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, NormalMapShaderParameters& parameters) override;
+	void ShutdownShader();
 
 private:
 	ID3D11Buffer* m_matrixBuffer;
-	ID3D11Buffer* m_constantBuffer;
 	ID3D11Buffer* m_lightBuffer;
 };
 

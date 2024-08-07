@@ -1,8 +1,8 @@
 Texture2D shaderTexture1 : register(t0);
-Texture2D shaderTexture2 : register(t0);
+Texture2D shaderTexture2 : register(t1);
 SamplerState SampleType : register(s0);
 
-cbuffer LightBuffer : register(b1)
+cbuffer LightBuffer : register(b0)
 {
     float4 diffuseColor;
     float3 lightDirection;
@@ -46,8 +46,8 @@ float4 main(PixelInputType input) : SV_TARGET
     lightDir = -lightDirection;
 
     // Calculate the amount of light on this pixel based on the normal map value.
-    lightIntensity = saturate(dot(bumpNormal, lightDir));
-
+    lightIntensity = max(saturate(dot(bumpNormal, lightDir)), 0.1f);
+    
     // Determine the final amount of diffuse color based on the diffuse color combined with the light intensity.
     color = saturate(diffuseColor * lightIntensity);
 

@@ -2,11 +2,11 @@
 #include "Define.h"
 #include <string>
 
-ApplicationClass::ApplicationClass()
+ApplicationClass::ApplicationClass() : m_mainShader(nullptr)
 {
 	m_Direct3D = 0;
 	m_Camera = 0;
-	m_MultiTextureShader = nullptr;
+	m_mainShader = nullptr;
 	m_Model = nullptr;
 	m_FontShader = nullptr;
 	m_Font = nullptr;
@@ -33,7 +33,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	char* textureFilenames[8];
 	bool result;
 
-#pragma region base
+#pragma region core
 	m_Direct3D = new D3DClass;
 	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 	if (!result) {
@@ -46,16 +46,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 	m_Camera->Render();
-
-	// Create and initialize the multitexture shader object.
-	m_MultiTextureShader = new MultiTextureShaderClass;
-
-	result = m_MultiTextureShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the multitexture shader object.", L"Error", MB_OK);
-		return false;
-	}
 
 	// Create and initialize the font shader object.
 	m_FontShader = new FontShaderClass;
@@ -93,13 +83,24 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 #pragma endregion
+#pragma region MainShader
+	// Create and initialize the multitexture shader object.
+	m_mainShader = new NormalMapShaderClass;
+
+	result = m_mainShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the multitexture shader object.", L"Error", MB_OK);
+		return false;
+	}
+#pragma endregion
 #pragma region Model
 	// Set the file name of the model.
-	strcpy_s(modelFilename, MODEL_SPHERE_PATH);
+	strcpy_s(modelFilename, MODEL_CUBE_PATH);
 
 	// Set the file name of the textures.
-	strcpy_s(textureFilename1, TEXTURE_STONE03_PATH);
-	strcpy_s(textureFilename2, NORMALMAP_STONE03_PATH);
+	strcpy_s(textureFilename1, TEXTURE_STONE01_PATH);
+	strcpy_s(textureFilename2, NORMALMAP_STONE01_PATH);
 	strcpy_s(textureFilename3, SPEC_STONE03_PATH);
 
 	textureFilenames[0] = textureFilename1;
@@ -109,13 +110,12 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
 
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 3, textureFilenames);
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 2, textureFilenames);
 	if (!result)
 	{
 		return false;
 	}
 #pragma endregion
-
 #pragma region Light
 	m_Light = new LightClass;
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -142,12 +142,12 @@ void ApplicationClass::Shutdown()
 		m_Model = 0;
 	}
 
-	// Release the multitexture shader object.
-	if (m_MultiTextureShader)
+	// Release the shader object.
+	if (m_mainShader)
 	{
-		m_MultiTextureShader->Shutdown();
-		delete m_MultiTextureShader;
-		m_MultiTextureShader = 0;
+		m_mainShader->Shutdown();
+		delete m_mainShader;
+		m_mainShader = 0;
 	}
 
 	// Release the text object for the fps string.
@@ -198,7 +198,6 @@ void ApplicationClass::Shutdown()
 
 bool ApplicationClass::Frame(InputClass* Input)
 {
-	float frameTime;
 	bool result;
 	static float rotation = 360.f;
 #pragma region Fps
@@ -269,15 +268,21 @@ bool ApplicationClass::Render(float rotation)
 	// Render the model using the multitexture shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-										  m_Model->GetTextureCount(),m_Camera->GetPosition(), m_Model->GetTextures(), 
-										  m_Light->GetDiffuseColor(), m_Light->GetSpecularColor(),m_Light->GetSpecularPower(), m_Light->GetDirection());
+	NormalMapShaderParameters parameters;
+
+	parameters.baseTexture = m_Model->GetTexture(0);
+	parameters.normalMap = m_Model->GetTexture(1);
+	parameters.world = worldMatrix;
+	parameters.view = viewMatrix;
+	parameters.projection = projectionMatrix;
+	parameters.diffuseColor = m_Light->GetDiffuseColor();
+	parameters.lightDirection = m_Light->GetDirection();
+
+	result = m_mainShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), parameters );
 	if (!result)
 	{
 		return false;
 	}
-
-
 
 #pragma endregion
 

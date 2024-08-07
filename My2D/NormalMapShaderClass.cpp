@@ -4,9 +4,14 @@
 NormalMapShaderClass::NormalMapShaderClass() : ShaderClass()
 {
 	m_matrixBuffer = nullptr;
-	m_constantBuffer = nullptr;
 	m_lightBuffer = nullptr;
 }
+
+NormalMapShaderClass::~NormalMapShaderClass()
+{
+    Shutdown();
+}
+
 
 bool NormalMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
@@ -39,10 +44,12 @@ bool NormalMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     return true;
 }
 
+
+
 void NormalMapShaderClass::Shutdown()
 {
     ShutdownShader();
-}
+} 
 
 bool NormalMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
@@ -226,7 +233,7 @@ bool NormalMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
     return true;
 }
 
-bool NormalMapShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, NormalMapShaderParameters parameters)
+bool NormalMapShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, NormalMapShaderParameters& parameters)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -275,9 +282,7 @@ bool NormalMapShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContex
 #pragma endregion
 
     deviceContext->VSSetConstantBuffers(0, 1, &m_matrixBuffer);
-
-    deviceContext->PSSetConstantBuffers(0, 1, &m_constantBuffer);
-    deviceContext->PSSetConstantBuffers(1, 1, &m_lightBuffer);
+    deviceContext->PSSetConstantBuffers(0, 1, &m_lightBuffer);
 
     // Set shader texture resources in the pixel shader.
     deviceContext->PSSetShaderResources(0, 1, &parameters.baseTexture);
@@ -289,5 +294,16 @@ bool NormalMapShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContex
 void NormalMapShaderClass::ShutdownShader() 
 {
     ShaderClass::ShutdownShader();
+
+    if (m_matrixBuffer)
+	{
+		m_matrixBuffer->Release();
+		m_matrixBuffer = nullptr;
+	}
+	if (m_lightBuffer)
+	{
+		m_lightBuffer->Release();
+		m_lightBuffer = nullptr;
+	}
     return;
 }

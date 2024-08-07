@@ -30,7 +30,7 @@ bool TextureShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 
 
 	// Set the filename of the vertex shader.
-	error = wcscpy_s(vsFilename, 128, VS_PATH);
+	error = wcscpy_s(vsFilename, 128, VS_POSUV_PATH);
 	if(error != 0)
 	{
 		return false;

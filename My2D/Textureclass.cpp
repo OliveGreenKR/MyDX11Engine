@@ -18,7 +18,6 @@ TextureClass::~TextureClass()
 bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename)
 {
 	bool result;
-	int height, width;
 	D3D11_TEXTURE2D_DESC textureDesc;
 	HRESULT hResult;
 	unsigned int rowPitch;
@@ -118,7 +117,7 @@ ID3D11ShaderResourceView* TextureClass::GetTexture()
 
 bool TextureClass::LoadTarga(char* filename)
 {
-	int error, bpp, imageSize, index, i, j, k;
+	int error, bpp, imageSize;
 	FILE* filePtr;
 	unsigned int count;
 	TargaHeader targaFileHeader;
