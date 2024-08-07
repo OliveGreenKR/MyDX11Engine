@@ -2,17 +2,19 @@
 #include "Define.h"
 #include <string>
 
-ApplicationClass::ApplicationClass() : m_mainShader(nullptr)
+ApplicationClass::ApplicationClass() 
 {
 	m_Direct3D = 0;
 	m_Camera = 0;
 	m_mainShader = nullptr;
+	m_pointLightShader = nullptr;
 	m_Model = nullptr;
 	m_FontShader = nullptr;
 	m_Font = nullptr;
 	m_Fps = nullptr;
 	m_FpsString = nullptr;
 	m_Light = nullptr;
+	m_PointLight = nullptr;
 }
 
 
@@ -83,11 +85,18 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 #pragma endregion
-#pragma region MainShader
+#pragma region Shader
 	// Create and initialize the multitexture shader object.
 	m_mainShader = new NormalMapShaderClass;
+	m_pointLightShader = new PointLightShaderClass;
 
 	result = m_mainShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the multitexture shader object.", L"Error", MB_OK);
+		return false;
+	}
+	result = m_pointLightShader->Initialize(m_Direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the multitexture shader object.", L"Error", MB_OK);
@@ -116,12 +125,21 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 #pragma endregion
-#pragma region Light
+#pragma region Lights
 	m_Light = new LightClass;
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
 	m_Light->SetSpecularColor(1.0f,0.0f,1.0f,1.0f);
 	m_Light->SetSpecularPower(16.0f);
+	
+	m_PointLight = new PointLightClass;
+	m_PointLight->SetDiffuseColor(1.0f, 0.0f, 1.0f, 1.0f);
+	m_PointLight->SetPosition(0.0f, 0.0f, 1.0f);
+	m_PointLight->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
+	m_PointLight->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_PointLight->SetSpecularPower(32.0f);
+	m_PointLight->SetAttenuation(0.0f, 0.1f, 0.0f);
+	m_PointLight->SetRange(10.0f);
 #pragma endregion
 	return true;
 
@@ -279,6 +297,30 @@ bool ApplicationClass::Render(float rotation)
 	parameters.lightDirection = m_Light->GetDirection();
 
 	result = m_mainShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), parameters );
+	if (!result)
+	{
+		return false;
+	}
+
+	PointLightShaderParameters plParameters;
+	worldMatrix =  worldMatrix + XMMatrixTranslation(1.0f, 0.0f, 0.0f);
+	plParameters.world = worldMatrix;
+	plParameters.view = viewMatrix;
+	plParameters.projection = projectionMatrix;
+	plParameters.cameraPosition = m_Camera->GetPosition();
+	plParameters.lightCount = 1;
+
+	for (int i = 0; i < plParameters.lightCount; i++) {
+		plParameters.ambientColor[i] = m_PointLight->GetAmbientColor();
+		plParameters.diffuseColor[i] = m_PointLight->GetDiffuseColor();
+		plParameters.lightPosition[i] = m_PointLight->GetPosition();
+		plParameters.specularPower[i] = m_PointLight->GetSpecularPower();
+		plParameters.specularColor[i] = m_PointLight->GetSpecularColor();
+		plParameters.attenuation[i] = m_PointLight->GetAttenuation();
+		plParameters.range[i] = m_PointLight->GetRange();
+	}
+
+	result = m_pointLightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), plParameters);
 	if (!result)
 	{
 		return false;

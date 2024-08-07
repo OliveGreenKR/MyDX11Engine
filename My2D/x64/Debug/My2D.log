@@ -1,4 +1,29 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (My3D.vcxproj, MyDX11Engine.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Applicationclass.cpp
-C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\Applicationclass.cpp(239,6): warning C4101: 'i': unreferenced local variable
-  My2D.vcxproj -> C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\x64\Debug\My2D.exe
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\Applicationclass.cpp(256,6): warning C4101: 'i': unreferenced local variable
+  Cameraclass.cpp
+  D3dclass.cpp
+  FontClass.cpp
+  fontshaderclass.cpp
+  FpsClass.cpp
+  Inputclass.cpp
+  LightClass.cpp
+  PointLightClass.cpp
+  PointLightShaderClass.cpp
+  main.cpp
+  ModelClass.cpp
+  MultiTextureShaderClass.cpp
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\MultiTextureShaderClass.cpp(375,18): warning C4101: 'bufferNumber': unreferenced local variable
+  NormalMapShaderClass.cpp
+  ShaderManagerClass.cpp
+  SpriteClass.cpp
+  Systemclass.cpp
+  TextClass.cpp
+  Textureclass.cpp
+  textureshaderclass.cpp
+  Generating Code...
+  Compiling...
+  TimerClass.cpp
+  Generating Code...
+Applicationclass.obj : error LNK2019: unresolved external symbol "public: __cdecl PointLightClass::PointLightClass(void)" (??0PointLightClass@@QEAA@XZ) referenced in function "public: bool __cdecl ApplicationClass::Initialize(int,int,struct HWND__ *)" (?Initialize@ApplicationClass@@QEAA_NHHPEAUHWND__@@@Z)
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\x64\Debug\My2D.exe : fatal error LNK1120: 1 unresolved externals

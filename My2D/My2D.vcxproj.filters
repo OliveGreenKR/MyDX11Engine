@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <FxCompile Include="psLight.fx">
+    <FxCompile Include="psPointLight.fx">
       <Filter>Resources\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="vsLight.fx">
+    <FxCompile Include="vsPointLight.fx">
       <Filter>Resources\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="psTexture.fx">
@@ -93,6 +93,12 @@
     <ClCompile Include="NormalMapShaderClass.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="PointLightShaderClass.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLightClass.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MultiTextureShaderClass.h">
@@ -134,9 +140,6 @@
     <ClInclude Include="FpsClass.h">
       <Filter>Headers\Core\Text</Filter>
     </ClInclude>
-    <ClInclude Include="LightClass.h">
-      <Filter>Headers\Core</Filter>
-    </ClInclude>
     <ClInclude Include="ModelClass.h">
       <Filter>Headers\Core\Model</Filter>
     </ClInclude>
@@ -153,6 +156,15 @@
       <Filter>Headers\Core\Shader</Filter>
     </ClInclude>
     <ClInclude Include="NormalMapShaderClass.h">
+      <Filter>Headers\Core\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="LightClass.h">
+      <Filter>Headers\Core\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightClass.h">
+      <Filter>Headers\Core\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightShaderClass.h">
       <Filter>Headers\Core\Shader</Filter>
     </ClInclude>
   </ItemGroup>
@@ -197,6 +209,9 @@
     </Filter>
     <Filter Include="Headers\Core\Model">
       <UniqueIdentifier>{21aa4265-3bd4-455a-87f4-8add9db1900a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Core\Light">
+      <UniqueIdentifier>{e68e3bbe-bb68-4396-b324-c43f602acf8a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

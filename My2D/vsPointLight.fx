@@ -20,7 +20,7 @@ struct PixelInputType
     float4 worldPosition : TEXCOORD1; // 정점 위치 (월드 공간)
 };
 
-PixelInputType LightVertexShader(VertexInputType input)
+PixelInputType main(VertexInputType input)
 {
     PixelInputType output;
     float4 worldPosition;

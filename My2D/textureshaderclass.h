@@ -12,12 +12,14 @@ using namespace std;
 class TextureShaderClass
 {
 private:
+#pragma pack(push, 16)
 	struct MatrixBufferType
 	{
 		XMMATRIX world;
 		XMMATRIX view;
 		XMMATRIX projection;
 	};
+#pragma pack(pop)
 
 public:
 	TextureShaderClass();

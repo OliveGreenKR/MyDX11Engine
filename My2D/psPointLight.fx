@@ -1,7 +1,7 @@
 Texture2D shaderTexture : register(t0);
 SamplerState SampleType : register(s0);
 
-#define NUM_LIGHTS 4
+#define MAX_LIGHTS 4
 
 struct Light
 {
@@ -16,13 +16,13 @@ struct Light
 
 cbuffer LightBufferType
 {
-    Light lights[NUM_LIGHTS];
+    Light lights[MAX_LIGHTS];
 };
 
-cbuffer CameraBuffer
+cbuffer ConstantBuffer
 {
     float3 cameraPosition;
-    float padding;
+    int lightCount;
 };
 
 struct PixelInputType
@@ -33,7 +33,7 @@ struct PixelInputType
     float3 worldPosition : TEXCOORD1; // 정점 위치 (월드 공간)
 };
 
-float4 LightPixelShader(PixelInputType input) : SV_TARGET
+float4 main(PixelInputType input) : SV_TARGET
 {
     float4 textureColor;
     float3 lightDir;
@@ -52,7 +52,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
     color = float4(0, 0, 0, 1.0f);
     
     
-    for (int i = 0; i < NUM_LIGHTS; i++)
+    for (int i = 0; i < lightCount; i++)
     {
         color = saturate(color);
         

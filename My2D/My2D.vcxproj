@@ -139,6 +139,8 @@
     <ClInclude Include="FpsClass.h" />
     <ClInclude Include="Inputclass.h" />
     <ClInclude Include="LightClass.h" />
+    <ClInclude Include="PointLightClass.h" />
+    <ClInclude Include="PointLightShaderClass.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="MultiTextureShaderClass.h" />
     <ClInclude Include="NormalMapShaderClass.h" />
@@ -160,6 +162,8 @@
     <ClCompile Include="FpsClass.cpp" />
     <ClCompile Include="Inputclass.cpp" />
     <ClCompile Include="LightClass.cpp" />
+    <ClCompile Include="PointLightClass.cpp" />
+    <ClCompile Include="PointLightShaderClass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="MultiTextureShaderClass.cpp" />
@@ -188,7 +192,7 @@
     <FxCompile Include="psFont.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="psLight.fx">
+    <FxCompile Include="psPointLight.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="psLightMap.fx">
@@ -206,7 +210,7 @@
     <FxCompile Include="vsFont.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="vsLight.fx">
+    <FxCompile Include="vsPointLight.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

@@ -19,8 +19,10 @@
 #include "fpsclass.h"
 #include "modelclass.h"
 #include "LightClass.h"
+#include "PointLightClass.h"
 
 #include "NormalMapShaderClass.h"
+#include "PointLightShaderClass.h"
 
 
 const bool FULL_SCREEN = false;
@@ -48,6 +50,7 @@ private:
 	CameraClass* m_Camera;
 
 	NormalMapShaderClass* m_mainShader;
+	PointLightShaderClass* m_pointLightShader;
 	ModelClass* m_Model;
 
 	FontShaderClass* m_FontShader;
@@ -58,6 +61,7 @@ private:
 	int m_previousFps;
 
 	LightClass* m_Light;
+	PointLightClass* m_PointLight;
 
 };
 

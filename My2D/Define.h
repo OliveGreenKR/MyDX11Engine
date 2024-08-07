@@ -11,6 +11,9 @@
 #define PS_LIGHTMAP_PATH L"../My2D/psLightMap.fx"
 #define PS_ALPHAMAP_PATH L"../My2D/psAlphaMap.fx"
 
+#define VS_POINTLIGHT_PATH L"../My2D/vsPointLight.fx"
+#define PS_POINTLIGHT_PATH L"../My2D/psPointLight.fx"
+
 #define VS_NORMALMAP_PATH L"../My2D/vsNormalmap.fx"
 #define PS_NORMALMAP_PATH L"../My2D/psNormalmap.fx"
 
