@@ -141,6 +141,9 @@
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="MultiTextureShaderClass.h" />
+    <ClInclude Include="ShaderClass.h" />
+    <ClInclude Include="ShaderManagerClass.h" />
+    <ClInclude Include="ShaderParameters.h" />
     <ClInclude Include="SpriteClass.h" />
     <ClInclude Include="Systemclass.h" />
     <ClInclude Include="TextClass.h" />
@@ -160,6 +163,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="MultiTextureShaderClass.cpp" />
+    <ClCompile Include="ShaderManagerClass.cpp" />
     <ClCompile Include="SpriteClass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
     <ClCompile Include="TextClass.cpp" />

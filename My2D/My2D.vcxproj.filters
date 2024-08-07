@@ -87,58 +87,70 @@
     <ClCompile Include="LightClass.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderManagerClass.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Cameraclass.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Applicationclass.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="D3dclass.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Define.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Inputclass.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Textureclass.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Systemclass.h">
-      <Filter>Headers</Filter>
+    <ClInclude Include="MultiTextureShaderClass.h">
+      <Filter>Headers\Core\Shader</Filter>
     </ClInclude>
     <ClInclude Include="textureshaderclass.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteClass.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="TimerClass.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="FontClass.h">
-      <Filter>Headers</Filter>
+      <Filter>Headers\Core\Shader</Filter>
     </ClInclude>
     <ClInclude Include="fontshaderclass.h">
-      <Filter>Headers</Filter>
+      <Filter>Headers\Core\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Define.h">
+      <Filter>Headers\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="D3dclass.h">
+      <Filter>Headers\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="FontClass.h">
+      <Filter>Headers\Core\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Applicationclass.h">
+      <Filter>Headers\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Cameraclass.h">
+      <Filter>Headers\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Inputclass.h">
+      <Filter>Headers\Core</Filter>
     </ClInclude>
     <ClInclude Include="TextClass.h">
-      <Filter>Headers</Filter>
+      <Filter>Headers\Core\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteClass.h">
+      <Filter>Headers\Core\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Textureclass.h">
+      <Filter>Headers\Core\Texture</Filter>
     </ClInclude>
     <ClInclude Include="FpsClass.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="MultiTextureShaderClass.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelClass.h">
-      <Filter>Headers</Filter>
+      <Filter>Headers\Core\Text</Filter>
     </ClInclude>
     <ClInclude Include="LightClass.h">
-      <Filter>Headers</Filter>
+      <Filter>Headers\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelClass.h">
+      <Filter>Headers\Core\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Systemclass.h">
+      <Filter>Headers\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerClass.h">
+      <Filter>Headers\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManagerClass.h">
+      <Filter>Headers\Core\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderParameters.h">
+      <Filter>Headers\Core\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderClass.h">
+      <Filter>Headers\Core\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -167,6 +179,21 @@
     </Filter>
     <Filter Include="Resources\HLSL">
       <UniqueIdentifier>{1154c8ca-63ef-4680-bc02-65e4cb3c5825}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Core">
+      <UniqueIdentifier>{d1f584b6-bbde-4d22-8b23-4d20636662fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Core\Shader">
+      <UniqueIdentifier>{197fcbb0-66c9-49e3-b750-bfc59eeeefcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Core\Text">
+      <UniqueIdentifier>{853f7b8c-54de-4393-9a24-044c117f0a76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Core\Texture">
+      <UniqueIdentifier>{ecf41d1a-87aa-48df-b148-ffdab14c6798}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Core\Model">
+      <UniqueIdentifier>{21aa4265-3bd4-455a-87f4-8add9db1900a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
