@@ -2,13 +2,16 @@
 #define CWD_W (L"../My2D")
 #define CWD ("../My2D")
 
-#define VS_PATH L"../My2D/vsTexture.fx"
+#define VS_POSUV_PATH L"../My2D/vsPosUV.fx"
 #define PS_PATH L"../My2D/psTexture.fx"
 
 #define VS_MULTITEX_PATH L"../My2D/vsMultiTexture.fx"
 #define PS_MULTITEX_PATH L"../My2D/psMultiTexture.fx"
+
 #define PS_LIGHTMAP_PATH L"../My2D/psLightMap.fx"
 #define PS_ALPHAMAP_PATH L"../My2D/psAlphaMap.fx"
+
+#define VS_NORMALMAP_PATH L"../My2D/vsNormalmap.fx"
 #define PS_NORMALMAP_PATH L"../My2D/psNormalmap.fx"
 
 #define VS_FONT_PATH L"../My2D/vsFont.fx"

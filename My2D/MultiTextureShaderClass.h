@@ -32,7 +32,6 @@ private:
         XMFLOAT3 lightDirection;
 
 	};
-
 #pragma pack(pop)
 public:
     MultiTextureShaderClass();

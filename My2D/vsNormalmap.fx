@@ -21,10 +21,9 @@ struct PixelInputType
     float3 normal : NORMAL;
     float3 tangent : TANGENT;
     float3 binormal : BINORMAL;
-    float3 worldPosition : TEXCOORD1;
 };
 
-PixelInputType MultiTextureVertexShader(VertexInputType input)
+PixelInputType main(VertexInputType input)
 {
     PixelInputType output;
     float4 worldPositoin;
@@ -51,8 +50,6 @@ PixelInputType MultiTextureVertexShader(VertexInputType input)
     // Calculate the binormal vector against the world matrix only and then normalize the final value.
     output.binormal = mul(input.binormal, (float3x3) worldMatrix);
     output.binormal = normalize(output.binormal);
-    
-    output.worldPosition = worldPositoin.xyz;
     
     return output;
 }

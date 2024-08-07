@@ -10,16 +10,13 @@
     <FxCompile Include="psTexture.fx">
       <Filter>Resources\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="vsTexture.fx">
-      <Filter>Resources\HLSL</Filter>
-    </FxCompile>
     <FxCompile Include="vsFont.fx">
       <Filter>Resources\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="psFont.fx">
       <Filter>Resources\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="vsMultiTexture.fx">
+    <FxCompile Include="vsNormalmap.fx">
       <Filter>Resources\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="psMultiTexture.fx">
@@ -32,6 +29,9 @@
       <Filter>Resources\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="psNormalmap.fx">
+      <Filter>Resources\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="vsPosUV.fx">
       <Filter>Resources\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
@@ -90,6 +90,9 @@
     <ClCompile Include="ShaderManagerClass.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="NormalMapShaderClass.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MultiTextureShaderClass.h">
@@ -146,10 +149,10 @@
     <ClInclude Include="ShaderManagerClass.h">
       <Filter>Headers\Core\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderParameters.h">
+    <ClInclude Include="ShaderClass.h">
       <Filter>Headers\Core\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderClass.h">
+    <ClInclude Include="NormalMapShaderClass.h">
       <Filter>Headers\Core\Shader</Filter>
     </ClInclude>
   </ItemGroup>
