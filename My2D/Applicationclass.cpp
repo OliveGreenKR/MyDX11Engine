@@ -46,7 +46,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Create the camera object.
 	m_Camera = new CameraClass;
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -15.0f);
 	m_Camera->Render();
 
 	// Create and initialize the font shader object.
@@ -290,7 +290,7 @@ bool ApplicationClass::Render(float rotation)
 
 	parameters.baseTexture = m_Model->GetTexture(0);
 	parameters.normalMap = m_Model->GetTexture(1);
-	parameters.world = worldMatrix;
+	parameters.world = XMMatrixMultiply(worldMatrix, XMMatrixTranslation(+3.1f, 0.0f, 0.f));
 	parameters.view = viewMatrix;
 	parameters.projection = projectionMatrix;
 	parameters.diffuseColor = m_Light->GetDiffuseColor();
@@ -304,8 +304,7 @@ bool ApplicationClass::Render(float rotation)
 
 	PointLightShaderParameters plParameters;
 	plParameters.baseTexture = m_Model->GetTexture(0);
-	worldMatrix =  worldMatrix;
-	plParameters.world = worldMatrix;
+	plParameters.world = XMMatrixMultiply(worldMatrix, XMMatrixTranslation(-3.1f, 0.0f, 0.f));
 	plParameters.view = viewMatrix;
 	plParameters.projection = projectionMatrix;
 	plParameters.cameraPosition = m_Camera->GetPosition();
