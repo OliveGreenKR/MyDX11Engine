@@ -10,7 +10,7 @@ public:
     PointLightClass();
     PointLightClass(const PointLightClass&);
     ~PointLightClass();
-
+public:
     XMFLOAT3 GetPosition() const { return m_position; }
     XMFLOAT4 GetAmbientColor() const { return m_ambientColor; }
     XMFLOAT4 GetDiffuseColor() const { return m_diffuseColor; }

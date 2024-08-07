@@ -134,11 +134,11 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	
 	m_PointLight = new PointLightClass;
 	m_PointLight->SetDiffuseColor(1.0f, 0.0f, 1.0f, 1.0f);
-	m_PointLight->SetPosition(0.0f, 0.0f, 1.0f);
+	m_PointLight->SetPosition(0.0f, 1.0f, -5.0f);
 	m_PointLight->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 	m_PointLight->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_PointLight->SetSpecularPower(32.0f);
-	m_PointLight->SetAttenuation(0.0f, 0.1f, 0.0f);
+	m_PointLight->SetAttenuation(1.0f, 0.1f, 0.0f);
 	m_PointLight->SetRange(10.0f);
 #pragma endregion
 	return true;
@@ -303,7 +303,8 @@ bool ApplicationClass::Render(float rotation)
 	}
 
 	PointLightShaderParameters plParameters;
-	worldMatrix =  worldMatrix + XMMatrixTranslation(1.0f, 0.0f, 0.0f);
+	plParameters.baseTexture = m_Model->GetTexture(0);
+	worldMatrix =  worldMatrix;
 	plParameters.world = worldMatrix;
 	plParameters.view = viewMatrix;
 	plParameters.projection = projectionMatrix;

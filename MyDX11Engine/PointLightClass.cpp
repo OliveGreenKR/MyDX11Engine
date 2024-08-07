@@ -1,9 +1,10 @@
 #include "PointLightClass.h"
+#include "PointLightClass.h"
 
 PointLightClass::PointLightClass()
 {
+    return;
 }
-
 
 PointLightClass::PointLightClass(const PointLightClass& other)
 {
