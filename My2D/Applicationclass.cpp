@@ -6,8 +6,7 @@ ApplicationClass::ApplicationClass()
 {
 	m_Direct3D = 0;
 	m_Camera = 0;
-	m_mainShader = nullptr;
-	m_pointLightShader = nullptr;
+	m_ShaderManager = nullptr;
 	m_Model = nullptr;
 	m_FontShader = nullptr;
 	m_Font = nullptr;
@@ -87,26 +86,11 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 #pragma endregion
 #pragma region Shader
 	// Create and initialize the multitexture shader object.
-	m_mainShader = new NormalMapShaderClass;
-	m_pointLightShader = new PointLightShaderClass;
-	m_TextureShader =  new TextureShaderClass;
-
-	result = m_mainShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
+	m_ShaderManager = new ShaderManagerClass;
+	result =  m_ShaderManager->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the multitexture shader object.", L"Error", MB_OK);
-		return false;
-	}
-	result = m_pointLightShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the multitexture shader object.", L"Error", MB_OK);
-		return false;
-	}
-	result = m_TextureShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the multitexture shader object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the shader manager object.", L"Error", MB_OK);
 		return false;
 	}
 #pragma endregion
@@ -168,11 +152,11 @@ void ApplicationClass::Shutdown()
 	}
 
 	// Release the shader object.
-	if (m_mainShader)
+	if (m_ShaderManager)
 	{
-		m_mainShader->Shutdown();
-		delete m_mainShader;
-		m_mainShader = 0;
+		m_ShaderManager->Shutdown();
+		delete m_ShaderManager;
+		m_ShaderManager = 0;
 	}
 
 	// Release the text object for the fps string.
@@ -302,7 +286,7 @@ bool ApplicationClass::Render(float rotation)
 	parameters.diffuseColor = m_Light->GetDiffuseColor();
 	parameters.lightDirection = m_Light->GetDirection();
 
-	result = m_mainShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), parameters );
+	result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), ShaderType::NORMAL_MAP, &parameters );
 	if (!result)
 	{
 		return false;
@@ -326,7 +310,7 @@ bool ApplicationClass::Render(float rotation)
 		plParameters.range[i] = m_PointLight->GetRange();
 	}
 
-	result = m_pointLightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), plParameters);
+	result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), ShaderType::POINT_LIGHT, &plParameters);
 	if (!result)
 	{
 		return false;
@@ -338,7 +322,7 @@ bool ApplicationClass::Render(float rotation)
 	tParameters.view = viewMatrix;
 	tParameters.projection = projectionMatrix;
 
-	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), tParameters);
+	result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), ShaderType::TEXTURE, &tParameters);
 	if (!result)
 	{
 		return false;

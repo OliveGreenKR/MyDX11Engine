@@ -20,11 +20,7 @@
 #include "modelclass.h"
 #include "LightClass.h"
 #include "PointLightClass.h"
-
-#include "textureshaderclass.h"
-#include "NormalMapShaderClass.h"
-#include "PointLightShaderClass.h"
-
+#include "ShaderManagerClass.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -50,9 +46,7 @@ private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
 
-	NormalMapShaderClass* m_mainShader;
-	PointLightShaderClass* m_pointLightShader;
-	TextureShaderClass* m_TextureShader;
+	ShaderManagerClass* m_ShaderManager;
 	ModelClass* m_Model;
 
 	FontShaderClass* m_FontShader;
