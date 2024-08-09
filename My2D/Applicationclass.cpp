@@ -89,6 +89,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Create and initialize the multitexture shader object.
 	m_mainShader = new NormalMapShaderClass;
 	m_pointLightShader = new PointLightShaderClass;
+	m_TextureShader =  new TextureShaderClass;
 
 	result = m_mainShader->Initialize(m_Direct3D->GetDevice(), hwnd);
 	if (!result)
@@ -97,6 +98,12 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 	result = m_pointLightShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the multitexture shader object.", L"Error", MB_OK);
+		return false;
+	}
+	result = m_TextureShader->Initialize(m_Direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the multitexture shader object.", L"Error", MB_OK);
@@ -287,7 +294,6 @@ bool ApplicationClass::Render(float rotation)
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	NormalMapShaderParameters parameters;
-
 	parameters.baseTexture = m_Model->GetTexture(0);
 	parameters.normalMap = m_Model->GetTexture(1);
 	parameters.world = XMMatrixMultiply(worldMatrix, XMMatrixTranslation(+3.1f, 0.0f, 0.f));
@@ -321,6 +327,18 @@ bool ApplicationClass::Render(float rotation)
 	}
 
 	result = m_pointLightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), plParameters);
+	if (!result)
+	{
+		return false;
+	}
+
+	TextureShaderParameters tParameters;
+	tParameters.baseTexture = m_Model->GetTexture(0);
+	tParameters.world = XMMatrixMultiply(worldMatrix, XMMatrixTranslation(0.0f, -1.5f, 0.f));
+	tParameters.view = viewMatrix;
+	tParameters.projection = projectionMatrix;
+
+	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), tParameters);
 	if (!result)
 	{
 		return false;

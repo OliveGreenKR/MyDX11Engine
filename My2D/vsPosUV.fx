@@ -1,4 +1,3 @@
-#pragma once
 cbuffer MatrixBuffer
 {
     matrix worldMatrix;
@@ -18,7 +17,7 @@ struct PixelInputType
     float2 tex : TEXCOORD0;
 };
 
-PixelInputType MultiTextureVertexShader(VertexInputType input)
+PixelInputType main(VertexInputType input)
 {
     PixelInputType output;
 

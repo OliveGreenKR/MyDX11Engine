@@ -21,6 +21,7 @@
 #include "LightClass.h"
 #include "PointLightClass.h"
 
+#include "textureshaderclass.h"
 #include "NormalMapShaderClass.h"
 #include "PointLightShaderClass.h"
 
@@ -51,6 +52,7 @@ private:
 
 	NormalMapShaderClass* m_mainShader;
 	PointLightShaderClass* m_pointLightShader;
+	TextureShaderClass* m_TextureShader;
 	ModelClass* m_Model;
 
 	FontShaderClass* m_FontShader;
