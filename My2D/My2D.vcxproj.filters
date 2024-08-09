@@ -36,17 +36,62 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Applicationclass.cpp">
-      <Filter>Sources</Filter>
+    <ClCompile Include="TextClass.cpp">
+      <Filter>Sources\Core\Text</Filter>
     </ClCompile>
-    <ClCompile Include="Cameraclass.cpp">
-      <Filter>Sources</Filter>
+    <ClCompile Include="Textureclass.cpp">
+      <Filter>Sources\Core\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="D3dclass.cpp">
-      <Filter>Sources</Filter>
+    <ClCompile Include="SpriteClass.cpp">
+      <Filter>Sources\Core\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="textureshaderclass.cpp">
+      <Filter>Sources\Core\Shader\private</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLightClass.cpp">
+      <Filter>Sources\Core\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLightShaderClass.cpp">
+      <Filter>Sources\Core\Shader\private</Filter>
+    </ClCompile>
+    <ClCompile Include="NormalMapShaderClass.cpp">
+      <Filter>Sources\Core\Shader\private</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiTextureShaderClass.cpp">
+      <Filter>Sources\Core\Shader\private</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelClass.cpp">
+      <Filter>Sources\Core\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="LightClass.cpp">
+      <Filter>Sources\Core\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="FrustumClass.cpp">
+      <Filter>Sources\Core\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="FontClass.cpp">
+      <Filter>Sources\Core\Text\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="fontshaderclass.cpp">
+      <Filter>Sources\Core\Text\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="FpsClass.cpp">
+      <Filter>Sources\Contents\Fps</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManagerClass.cpp">
+      <Filter>Sources\Core\Shader\private</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerClass.cpp">
+      <Filter>Sources\Core\Timer</Filter>
     </ClCompile>
     <ClCompile Include="Inputclass.cpp">
-      <Filter>Sources</Filter>
+      <Filter>Sources\Core\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Cameraclass.cpp">
+      <Filter>Sources\Core\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="D3dclass.cpp">
+      <Filter>Sources\Core\D3D</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Sources</Filter>
@@ -54,118 +99,79 @@
     <ClCompile Include="Systemclass.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="Textureclass.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="textureshaderclass.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="TimerClass.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteClass.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="FontClass.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="fontshaderclass.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="TextClass.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="FpsClass.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="MultiTextureShaderClass.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelClass.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="LightClass.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderManagerClass.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="NormalMapShaderClass.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="PointLightShaderClass.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="PointLightClass.cpp">
+    <ClCompile Include="Applicationclass.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MultiTextureShaderClass.h">
-      <Filter>Headers\Core\Shader</Filter>
+      <Filter>Sources\Core\Shader</Filter>
     </ClInclude>
     <ClInclude Include="textureshaderclass.h">
-      <Filter>Headers\Core\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="fontshaderclass.h">
-      <Filter>Headers\Core\Text</Filter>
+      <Filter>Sources\Core\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Define.h">
-      <Filter>Headers\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="D3dclass.h">
-      <Filter>Headers\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="FontClass.h">
-      <Filter>Headers\Core\Text</Filter>
-    </ClInclude>
-    <ClInclude Include="Applicationclass.h">
-      <Filter>Headers\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Cameraclass.h">
-      <Filter>Headers\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Inputclass.h">
-      <Filter>Headers\Core</Filter>
+      <Filter>Sources\Core</Filter>
     </ClInclude>
     <ClInclude Include="TextClass.h">
-      <Filter>Headers\Core\Text</Filter>
+      <Filter>Sources\Core\Text</Filter>
     </ClInclude>
     <ClInclude Include="SpriteClass.h">
-      <Filter>Headers\Core\Texture</Filter>
+      <Filter>Sources\Core\Texture</Filter>
     </ClInclude>
     <ClInclude Include="Textureclass.h">
-      <Filter>Headers\Core\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="FpsClass.h">
-      <Filter>Headers\Core\Text</Filter>
+      <Filter>Sources\Core\Texture</Filter>
     </ClInclude>
     <ClInclude Include="ModelClass.h">
-      <Filter>Headers\Core\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Systemclass.h">
-      <Filter>Headers\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="TimerClass.h">
-      <Filter>Headers\Core</Filter>
+      <Filter>Sources\Core\Model</Filter>
     </ClInclude>
     <ClInclude Include="ShaderManagerClass.h">
-      <Filter>Headers\Core\Shader</Filter>
+      <Filter>Sources\Core\Shader</Filter>
     </ClInclude>
     <ClInclude Include="ShaderClass.h">
-      <Filter>Headers\Core\Shader</Filter>
+      <Filter>Sources\Core\Shader</Filter>
     </ClInclude>
     <ClInclude Include="NormalMapShaderClass.h">
-      <Filter>Headers\Core\Shader</Filter>
+      <Filter>Sources\Core\Shader</Filter>
     </ClInclude>
     <ClInclude Include="LightClass.h">
-      <Filter>Headers\Core\Light</Filter>
+      <Filter>Sources\Core\Light</Filter>
     </ClInclude>
     <ClInclude Include="PointLightClass.h">
-      <Filter>Headers\Core\Light</Filter>
+      <Filter>Sources\Core\Light</Filter>
     </ClInclude>
     <ClInclude Include="PointLightShaderClass.h">
-      <Filter>Headers\Core\Shader</Filter>
+      <Filter>Sources\Core\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="FrustumClass.h">
+      <Filter>Sources\Core\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="FontClass.h">
+      <Filter>Sources\Core\Text\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="fontshaderclass.h">
+      <Filter>Sources\Core\Text\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="FpsClass.h">
+      <Filter>Sources\Contents\Fps</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerClass.h">
+      <Filter>Sources\Core\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Inputclass.h">
+      <Filter>Sources\Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Cameraclass.h">
+      <Filter>Sources\Core\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="D3dclass.h">
+      <Filter>Sources\Core\D3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Systemclass.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Applicationclass.h">
+      <Filter>Sources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -183,35 +189,56 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Headers">
-      <UniqueIdentifier>{21bf87c0-080e-48dd-b57d-4f112cc4de11}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources">
-      <UniqueIdentifier>{c9b3950e-0531-4fc7-8e08-805a2ff3c1e8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resources">
       <UniqueIdentifier>{c99b65e9-5a19-4603-8f92-7cda4d3b2716}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resources\HLSL">
       <UniqueIdentifier>{1154c8ca-63ef-4680-bc02-65e4cb3c5825}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Core">
+    <Filter Include="Sources">
+      <UniqueIdentifier>{21bf87c0-080e-48dd-b57d-4f112cc4de11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Core">
       <UniqueIdentifier>{d1f584b6-bbde-4d22-8b23-4d20636662fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Core\Shader">
+    <Filter Include="Sources\Core\Shader">
       <UniqueIdentifier>{197fcbb0-66c9-49e3-b750-bfc59eeeefcd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Core\Text">
+    <Filter Include="Sources\Core\Text">
       <UniqueIdentifier>{853f7b8c-54de-4393-9a24-044c117f0a76}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Core\Texture">
+    <Filter Include="Sources\Core\Texture">
       <UniqueIdentifier>{ecf41d1a-87aa-48df-b148-ffdab14c6798}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Core\Model">
+    <Filter Include="Sources\Core\Model">
       <UniqueIdentifier>{21aa4265-3bd4-455a-87f4-8add9db1900a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Core\Light">
+    <Filter Include="Sources\Core\Light">
       <UniqueIdentifier>{e68e3bbe-bb68-4396-b324-c43f602acf8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Core\Shader\private">
+      <UniqueIdentifier>{5a5fe00d-2ccb-4961-ae27-5fd0dc44228a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Core\Text\Font">
+      <UniqueIdentifier>{e1a7d60c-08ab-4f1b-8cd2-ca3e9c1431af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Contents">
+      <UniqueIdentifier>{53b446d9-82ff-4266-af0c-b024985fbc7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Contents\Fps">
+      <UniqueIdentifier>{980ecbc1-21bb-4417-af35-321f8b43dcf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Core\Timer">
+      <UniqueIdentifier>{7dbf2f3e-d57b-437e-8be2-db321dba3ee3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Core\Input">
+      <UniqueIdentifier>{6c57470f-c503-40c5-bfcb-13c00639d87a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Core\Camera">
+      <UniqueIdentifier>{7af57b39-412a-41d5-bf7b-58dfe2fa32b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Core\D3D">
+      <UniqueIdentifier>{5be5aebf-362c-4dd6-971e-8af39d2b143d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

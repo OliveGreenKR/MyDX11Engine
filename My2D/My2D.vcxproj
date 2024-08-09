@@ -137,6 +137,7 @@
     <ClInclude Include="FontClass.h" />
     <ClInclude Include="fontshaderclass.h" />
     <ClInclude Include="FpsClass.h" />
+    <ClInclude Include="FrustumClass.h" />
     <ClInclude Include="Inputclass.h" />
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="PointLightClass.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="FontClass.cpp" />
     <ClCompile Include="fontshaderclass.cpp" />
     <ClCompile Include="FpsClass.cpp" />
+    <ClCompile Include="FrustumClass.cpp" />
     <ClCompile Include="Inputclass.cpp" />
     <ClCompile Include="LightClass.cpp" />
     <ClCompile Include="PointLightClass.cpp" />
