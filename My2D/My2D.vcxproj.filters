@@ -66,9 +66,6 @@
     <ClCompile Include="LightClass.cpp">
       <Filter>Sources\Core\Light</Filter>
     </ClCompile>
-    <ClCompile Include="FrustumClass.cpp">
-      <Filter>Sources\Core\Model</Filter>
-    </ClCompile>
     <ClCompile Include="FontClass.cpp">
       <Filter>Sources\Core\Text\Font</Filter>
     </ClCompile>
@@ -101,6 +98,15 @@
     </ClCompile>
     <ClCompile Include="Applicationclass.cpp">
       <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="FrustumClass.cpp">
+      <Filter>Sources\Core\Frustum</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelListClass.cpp">
+      <Filter>Sources\Core\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="MovementClass.cpp">
+      <Filter>Sources\Contents\Movements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -143,9 +149,6 @@
     <ClInclude Include="PointLightShaderClass.h">
       <Filter>Sources\Core\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="FrustumClass.h">
-      <Filter>Sources\Core\Model</Filter>
-    </ClInclude>
     <ClInclude Include="FontClass.h">
       <Filter>Sources\Core\Text\Font</Filter>
     </ClInclude>
@@ -172,6 +175,18 @@
     </ClInclude>
     <ClInclude Include="Applicationclass.h">
       <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="FrustumClass.h">
+      <Filter>Sources\Core\Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelListClass.h">
+      <Filter>Sources\Core\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Sources\Core\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementClass.h">
+      <Filter>Sources\Contents\Movements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -239,6 +254,15 @@
     </Filter>
     <Filter Include="Sources\Core\D3D">
       <UniqueIdentifier>{5be5aebf-362c-4dd6-971e-8af39d2b143d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Core\Frustum">
+      <UniqueIdentifier>{cb868b0b-1650-44cb-8b16-d4c8d3adcd13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Core\Transform">
+      <UniqueIdentifier>{649d6c70-1327-46ff-a71f-0e52ff8f2052}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Contents\Movements">
+      <UniqueIdentifier>{58943b1c-c6d4-41a7-9857-6274b2b6a689}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
