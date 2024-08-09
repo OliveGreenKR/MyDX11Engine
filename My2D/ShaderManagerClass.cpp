@@ -82,7 +82,7 @@ bool ShaderManagerClass::RenderShader(ID3D11DeviceContext* deviceContext, int in
 		}
 		case NORMAL_MAP:
 		{
-			return m_TextureShader->Render(deviceContext, indexCount, *(TextureShaderParameters*)parameters);
+			return m_NormalMapShader->Render(deviceContext, indexCount, *(NormalMapShaderParameters*)parameters);
 		}
 		default:
 			return false;

@@ -96,7 +96,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 #pragma endregion
 #pragma region Model
 	// Set the file name of the model.
-	strcpy_s(modelFilename, MODEL_CUBE_PATH);
+	strcpy_s(modelFilename, MODEL_SPHERE_PATH);
 
 	// Set the file name of the textures.
 	strcpy_s(textureFilename1, TEXTURE_STONE01_PATH);
@@ -118,7 +118,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 #pragma endregion
 #pragma region Lights
 	m_Light = new LightClass;
-	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Light->SetDiffuseColor(0.3f, 0.5f, 1.0f, 1.0f);
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
 	m_Light->SetSpecularColor(1.0f,0.0f,1.0f,1.0f);
 	m_Light->SetSpecularPower(16.0f);
