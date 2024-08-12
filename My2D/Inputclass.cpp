@@ -213,33 +213,11 @@ void InputClass::ProcessInput()
     return;
 }
 
-bool InputClass::IsEscapePressed()
-{
-    // Do a bitwise and on the keyboard state to check if the escape key is currently being pressed.
-    if (IsKeyPressed(DIK_ESCAPE))
-    {
-        return true;
-    }
-
-    return false;
-}
-
 void InputClass::GetMouseLocation(OUT int& mouseX, OUT int& mouseY)
 {
     mouseX = m_mouseX;
     mouseY = m_mouseY;
     return;
-}
-
-bool InputClass::IsMousePressed()
-{
-    // Check the left mouse button state.
-    if (m_mouseState.rgbButtons[0] & 0x80)
-    {
-        return true;
-    }
-
-    return false;
 }
 
 unsigned char InputClass::GetPressedKeyCode()

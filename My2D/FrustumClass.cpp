@@ -12,7 +12,6 @@ FrustumClass::FrustumClass(const FrustumClass& other)
 	return;
 }
 
-
 FrustumClass::~FrustumClass()
 {
 }

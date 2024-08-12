@@ -21,6 +21,10 @@
 #include "LightClass.h"
 #include "PointLightClass.h"
 #include "ShaderManagerClass.h"
+#include "FrustumClass.h"
+#include "Transform.h"
+#include "ModelListClass.h"
+#include "MovementClass.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -39,8 +43,9 @@ public:
 	bool Frame(InputClass*);
 
 private:
-	bool Render(float);
+	bool Render();
 	bool UpdateFps();
+	bool UpdateRenderCount(int cnt);
 
 private:
 	D3DClass* m_Direct3D;
@@ -59,6 +64,13 @@ private:
 	LightClass* m_Light;
 	PointLightClass* m_PointLight;
 
+	TimerClass* m_Timer;
+
+	FrustumClass* m_Frustum;
+	PositionClass* m_Position;
+	XMMATRIX m_baseViewMatrix;
+	TextClass* m_RenderCountString;
+	ModelListClass* m_ModelList;
 };
 
 #endif

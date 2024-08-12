@@ -24,13 +24,13 @@ public:
     XMFLOAT3 GetPosition() const { return m_position; }
     XMFLOAT3 GetScale() const { return m_scale; }
     XMFLOAT4 GetRotation() const { return m_rotation; }
-	XMMATRIX GetWorldMatrix() const;
+	inline XMMATRIX GetWorldMatrix() const;
 
 	
 public:
-	constexpr Transform Inverse() const;
-	constexpr Transform LocalToWorld(const Transform& ParentWorldTransform) const;
-	constexpr Transform WorldToLocal(const Transform& ParentWorldTransform) const;
+	//constexpr Transform Inverse() const;
+	//constexpr Transform LocalToWorld(const Transform& ParentWorldTransform) const;
+	//constexpr Transform WorldToLocal(const Transform& ParentWorldTransform) const;
 
 
 private:
@@ -39,7 +39,7 @@ private:
 	XMFLOAT4 m_rotation; // Quaternion
 };
 
-XMMATRIX Transform::GetWorldMatrix() const
+inline XMMATRIX Transform::GetWorldMatrix() const
 {
 	XMMATRIX scale = XMMatrixScalingFromVector(XMLoadFloat3(&m_scale));
 	XMMATRIX rotation = XMMatrixRotationQuaternion(XMLoadFloat4(&m_rotation));
@@ -47,18 +47,18 @@ XMMATRIX Transform::GetWorldMatrix() const
 	return scale * rotation * translation;
 }
 
-inline constexpr Transform Transform::Inverse() const
-{
-	throw std::logic_error("Inverse function is not defined.");
-}
-
-inline constexpr Transform Transform::LocalToWorld(const Transform& ParentWorldTransform) const
-{
-	throw std::logic_error("LocalToWorld function is not defined.");
-}
-
-inline constexpr Transform Transform::WorldToLocal(const Transform& ParentWorldTransform) const
-{
-	throw std::logic_error("WorldToLocal function is not defined.");
-}
+//inline constexpr Transform Transform::Inverse() const
+//{
+//	throw std::logic_error("Inverse function is not defined.");
+//}
+//
+//inline constexpr Transform Transform::LocalToWorld(const Transform& ParentWorldTransform) const
+//{
+//	throw std::logic_error("LocalToWorld function is not defined.");
+//}
+//
+//inline constexpr Transform Transform::WorldToLocal(const Transform& ParentWorldTransform) const
+//{
+//	throw std::logic_error("WorldToLocal function is not defined.");
+//}
 

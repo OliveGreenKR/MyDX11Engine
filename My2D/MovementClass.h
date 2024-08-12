@@ -1,23 +1,24 @@
 #pragma once
-#include "TransformClass.h"
+#include "Transform.h"
 
-class MovementClass
+class PositionClass
 {
 public:
-	MovementClass();
-	MovementClass(const MovementClass&);
-	~MovementClass();
+	PositionClass();
+	PositionClass(const PositionClass&);
+	~PositionClass();
 
-	void SetTransform(TransformClass* transform) { m_transform = transform; }
+	void SetTransform(Transform* transform) { m_transform = transform; }
 	void SetFrameTime(float frametime) { m_frameTime = frametime; }
 	float GetRotationY() { return m_rotationY; }
+	const Transform* GetTransform() { return m_transform; }
 
 	void TurnLeft(bool keydown);
 	void TurnRight(bool keydown);
 
 private:
 
-	TransformClass* m_transform;
+	Transform* m_transform;
 
 	float m_frameTime;
 	float m_rotationY;

@@ -19,15 +19,20 @@ public:
     void Shutdown();
     bool Frame();
 
-    bool IsEscapePressed();
+    bool IsEscapePressed() { return IsKeyPressed(DIK_ESCAPE); }
+    bool IsMousePressed() { return IsMouseKeyPressed(0); }
+    bool IsLeftArrowPressed() { return IsKeyPressed(DIK_LEFT);}
+    bool IsRightArrowPressed() { return IsKeyPressed(DIK_RIGHT);}
+
     void GetMouseLocation(OUT int&, OUT int&);
-    bool IsMousePressed();
     unsigned char GetPressedKeyCode();
     char ConvertKeyToAscii(unsigned char keycode);
 
-    __forceinline bool IsKeyPressed(unsigned char keycode) { return m_keyboardState[keycode] & 0x80; }
 
 private:
+    __forceinline bool IsKeyPressed(unsigned char keycode) { return m_keyboardState[keycode] & 0x80; }
+    __forceinline bool IsMouseKeyPressed(unsigned char idx) { return m_mouseState.rgbButtons[idx] & 0x80; };
+
     bool ReadKeyboard();
     bool ReadMouse();
     void ProcessInput();
