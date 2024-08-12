@@ -297,7 +297,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	rotation = m_Position->GetRotationY();
 #pragma endregion
 
-	m_Camera->SetRotation(0.0f, rotation, 0.0f);	
+	m_Camera->SetEulerRotation(0.0f, rotation, 0.0f);	
 	m_Camera->Render();
 
 	// Render the graphics scene.
@@ -394,7 +394,6 @@ bool ApplicationClass::Render()
 	//for 2D rendering.
 	m_Direct3D->EnableAlphaBlending();
 	m_Direct3D->TurnZBufferOff();
-
 	//reset world matrix
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 #pragma region Fps
@@ -502,10 +501,6 @@ bool ApplicationClass::UpdateRenderCount(int renderCount)
 
 	// Setup the render count string.
 	strcpy_s(finalString, "Render Count: ");
-	strcat_s(finalString, tempString);
-	strcat_s(finalString, " Pitch :");
-
-	sprintf_s(tempString, "%.3f", m_Position->GetRotationY());
 	strcat_s(finalString, tempString);
 
 	// Update the sentence vertex buffer with the new string information.

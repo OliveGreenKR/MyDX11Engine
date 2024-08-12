@@ -16,19 +16,17 @@ public:
 	CameraClass(const CameraClass&);
 	~CameraClass();
 
-	void SetPosition(float, float, float);
-	void SetRotation(float, float, float);
+	void SetPosition(float x, float y, float z) { m_transform->SetPosition(x, y, z); }
+	void SetEulerRotation(float roll, float pitch, float yaw) { m_transform->SetEulerRotation(roll, pitch, yaw); }
 
-	XMFLOAT3 GetPosition();
-	XMFLOAT3 GetRotation();
+	XMFLOAT3 GetPosition() { return m_transform->GetPosition(); }
+	XMFLOAT4 GetRotation() { return m_transform->GetRotation(); }
 
 	void Render();
 	void GetViewMatrix(XMMATRIX&);
 
 private:
 	Transform* m_transform;
-	float m_positionX, m_positionY, m_positionZ;
-	float m_rotationX, m_rotationY, m_rotationZ;
 	XMMATRIX m_viewMatrix;
 };
 
