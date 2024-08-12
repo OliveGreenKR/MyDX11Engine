@@ -503,6 +503,10 @@ bool ApplicationClass::UpdateRenderCount(int renderCount)
 	// Setup the render count string.
 	strcpy_s(finalString, "Render Count: ");
 	strcat_s(finalString, tempString);
+	strcat_s(finalString, " Pitch :");
+
+	sprintf_s(tempString, "%.3f", m_Position->GetRotationY());
+	strcat_s(finalString, tempString);
 
 	// Update the sentence vertex buffer with the new string information.
 	result = m_RenderCountString->UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 10, 1.0f, 1.0f, 1.0f);
