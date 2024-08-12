@@ -2,7 +2,7 @@
 
 ModelListClass::ModelListClass()
 {
-    m_ModelInfoList = nullptr;
+	m_transformList = nullptr;
 }
 
 
@@ -18,11 +18,11 @@ ModelListClass::~ModelListClass()
 void ModelListClass::Initialize(int numModels)
 {
 	int i;
+	float x, y, z;
 	// Store the number of models.
 	m_modelCount = numModels;
 
-	// Create a list array of the model information.
-	m_ModelInfoList = new ModelInfoType[m_modelCount];
+	m_transformList = new Transform[m_modelCount];
 
 	// Seed the random generator with the current time.
 	srand((unsigned int)time(NULL));
@@ -31,9 +31,10 @@ void ModelListClass::Initialize(int numModels)
 	for (i = 0; i < m_modelCount; i++)
 	{
 		// Generate a random position in front of the viewer for the mode.
-		m_ModelInfoList[i].positionX = (((float)rand() - (float)rand()) / RAND_MAX) * 10.0f;
-		m_ModelInfoList[i].positionY = (((float)rand() - (float)rand()) / RAND_MAX) * 10.0f;
-		m_ModelInfoList[i].positionZ = ((((float)rand() - (float)rand()) / RAND_MAX) * 10.0f) + 5.0f;
+		 x = (((float)rand() - (float)rand()) / RAND_MAX) * 10.0f;
+		 y = (((float)rand() - (float)rand()) / RAND_MAX) * 10.0f;
+		 z = ((((float)rand() - (float)rand()) / RAND_MAX) * 10.0f) + 5.0f;
+		 m_transformList[i].SetPosition(x, y, z);
 	}
 
 	return;
@@ -42,10 +43,10 @@ void ModelListClass::Initialize(int numModels)
 void ModelListClass::Shutdown()
 {
 	// Release the model information list.
-	if (m_ModelInfoList)
+	if (m_transformList)
 	{
-		delete[] m_ModelInfoList;
-		m_ModelInfoList = 0;
+		delete[] m_transformList;
+		m_transformList = nullptr;
 	}
 
 	return;

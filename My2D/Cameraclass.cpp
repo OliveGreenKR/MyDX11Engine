@@ -2,6 +2,8 @@
 
 CameraClass::CameraClass()
 {
+	m_transform = nullptr;
+
 	m_positionX = 0.0f;
 	m_positionY = 0.0f;
 	m_positionZ = 0.0f;

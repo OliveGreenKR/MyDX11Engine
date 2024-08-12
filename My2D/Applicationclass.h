@@ -22,7 +22,6 @@
 #include "PointLightClass.h"
 #include "ShaderManagerClass.h"
 #include "FrustumClass.h"
-#include "Transform.h"
 #include "ModelListClass.h"
 #include "MovementClass.h"
 

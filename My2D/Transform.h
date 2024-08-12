@@ -22,6 +22,7 @@ public:
     void SetEulerRotation(float x, float y, float z) { XMStoreFloat4(&m_rotation, XMQuaternionRotationRollPitchYaw(x, y, z)); }
 
     XMFLOAT3 GetPosition() const { return m_position; }
+    XMFLOAT3 GetPosition() { return m_position; }
     XMFLOAT3 GetScale() const { return m_scale; }
     XMFLOAT4 GetRotation() const { return m_rotation; }
 	inline XMMATRIX GetWorldMatrix() const;

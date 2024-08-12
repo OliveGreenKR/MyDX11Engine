@@ -294,9 +294,8 @@ bool ApplicationClass::Frame(InputClass* Input)
 	m_Position->SetFrameTime(m_Timer->GetTime());
 	m_Position->TurnLeft(Input->IsLeftArrowPressed());
 	m_Position->TurnRight(Input->IsRightArrowPressed());
-#pragma endregion
-
 	rotation = m_Position->GetRotationY();
+#pragma endregion
 
 	m_Camera->SetRotation(0.0f, rotation, 0.0f);	
 	m_Camera->Render();
