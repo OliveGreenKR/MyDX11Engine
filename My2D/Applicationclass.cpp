@@ -13,7 +13,7 @@ ApplicationClass::ApplicationClass()
 	m_Fps = nullptr;
 	m_FpsString = nullptr;
 	m_Light = nullptr;
-	m_PointLight = nullptr;
+	m_PointLights = nullptr;
 	m_Timer = nullptr;
 	m_Frustum = nullptr;
 	m_Position = nullptr;
@@ -138,7 +138,17 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 #pragma region ModelList
 	// Create and initialize the model list object.
 	m_ModelList = new ModelListClass;
-	m_ModelList->Initialize(25);
+	int mdCnt = 25;
+	m_ModelList->Initialize(mdCnt);
+
+	m_ModelRenderTypes = new int[mdCnt];
+
+	for(int i = 0 ; i < mdCnt; i++) {
+		m_ModelRenderTypes[i] = (int)(randF() + 1) % 3;
+	}
+
+
+
 #pragma endregion
 #pragma region Movement
 	m_Position = new PositionClass;
@@ -152,15 +162,23 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
 	m_Light->SetSpecularColor(1.0f,0.0f,1.0f,1.0f);
 	m_Light->SetSpecularPower(16.0f);
+
+
+	lightCount = max(4,MAX_LIGHTS);
+
+	m_PointLights = new PointLightClass*[lightCount];
+
+	for (int i = 0; i < lightCount; i++) {
+		m_PointLights[i] = new PointLightClass;
+		m_PointLights[i]->SetDiffuseColor(randF(), randF(), randF(), 1.0f);
+		m_PointLights[i]->SetPosition(randF(10), randF(10), randF(10)+5);
+		m_PointLights[i]->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
+		m_PointLights[i]->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+		m_PointLights[i]->SetSpecularPower(32.0f);
+		m_PointLights[i]->SetAttenuation(0.0f, 0.01f, 0.01f);
+		m_PointLights[i]->SetRange(10.0f);
+	}
 	
-	m_PointLight = new PointLightClass;
-	m_PointLight->SetDiffuseColor(1.0f, 0.0f, 1.0f, 1.0f);
-	m_PointLight->SetPosition(0.0f, 1.0f, -5.0f);
-	m_PointLight->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
-	m_PointLight->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_PointLight->SetSpecularPower(32.0f);
-	m_PointLight->SetAttenuation(0.0f, 0.01f, 0.001f);
-	m_PointLight->SetRange(10.0f);
 #pragma endregion
 	return true;
 
@@ -343,19 +361,17 @@ bool ApplicationClass::Render()
 	nomalParam.lightDirection = m_Light->GetDirection();
 
 	plParameters.baseTexture = m_Model->GetTexture(0);
-	//plParameters.world = worldMatrix
-	//plParameters.view = viewMatrix;
-	//plParameters.projection = projectionMatrix;
 	plParameters.cameraPosition = m_Camera->GetPosition();
-	plParameters.lightCount = 1;
+	plParameters.lightCount = lightCount;
+
 	for (int i = 0; i < plParameters.lightCount; i++) {
-		plParameters.ambientColor[i] = m_PointLight->GetAmbientColor();
-		plParameters.diffuseColor[i] = m_PointLight->GetDiffuseColor();
-		plParameters.lightPosition[i] = m_PointLight->GetPosition();
-		plParameters.specularPower[i] = m_PointLight->GetSpecularPower();
-		plParameters.specularColor[i] = m_PointLight->GetSpecularColor();
-		plParameters.attenuation[i] = m_PointLight->GetAttenuation();
-		plParameters.range[i] = m_PointLight->GetRange();
+		plParameters.ambientColor[i] = m_PointLights[i]->GetAmbientColor();
+		plParameters.diffuseColor[i] = m_PointLights[i]->GetDiffuseColor();
+		plParameters.lightPosition[i] = m_PointLights[i]->GetPosition();
+		plParameters.specularPower[i] = m_PointLights[i]->GetSpecularPower();
+		plParameters.specularColor[i] = m_PointLights[i]->GetSpecularColor();
+		plParameters.attenuation[i] = m_PointLights[i]->GetAttenuation();
+		plParameters.range[i] = m_PointLights[i]->GetRange();
 	}
 
 	tParameters.baseTexture = m_Model->GetTexture(0);
@@ -372,10 +388,34 @@ bool ApplicationClass::Render()
 		if (renderModel) {
 			worldMatrix = XMMatrixTranslation(positionX, positionY, positionZ);
 			m_Model->Render(m_Direct3D->GetDeviceContext());
-			nomalParam.world = worldMatrix;
-			nomalParam.view = viewMatrix;
-			nomalParam.projection = projectionMatrix;
-			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), ShaderType::NORMAL_MAP, &nomalParam);
+			
+
+			ShaderType type = (ShaderType)m_ModelRenderTypes[i];
+
+			switch (type) {
+				case ShaderType::TEXTURE:
+					tParameters.world = worldMatrix;
+					tParameters.view = viewMatrix;
+					tParameters.projection = projectionMatrix;
+					result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), type, &tParameters);
+					break;
+				case ShaderType::NORMAL_MAP:
+					nomalParam.world = worldMatrix;
+					nomalParam.view = viewMatrix;
+					nomalParam.projection = projectionMatrix;
+					result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), type, &nomalParam);
+					break;
+				case ShaderType::POINT_LIGHT:
+					plParameters.world = worldMatrix;
+					plParameters.view = viewMatrix;
+					plParameters.projection = projectionMatrix;
+					result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), type, &plParameters);
+					break;
+				default:
+					result = false;
+					break;
+			}
+			//result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), type, &nomalParam);
 			if (!result)
 			{
 				return false;

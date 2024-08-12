@@ -46,6 +46,10 @@ private:
 	bool UpdateFps();
 	bool UpdateRenderCount(int cnt);
 
+	float randF(float mul = 1.0f) {
+		return (((float)rand() - (float)rand()) / RAND_MAX )* mul;
+	}
+
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
@@ -61,7 +65,8 @@ private:
 	int m_previousFps;
 
 	LightClass* m_Light;
-	PointLightClass* m_PointLight;
+	int lightCount;
+	PointLightClass** m_PointLights;
 
 	TimerClass* m_Timer;
 
@@ -70,6 +75,7 @@ private:
 	XMMATRIX m_baseViewMatrix;
 	TextClass* m_RenderCountString;
 	ModelListClass* m_ModelList;
+	int* m_ModelRenderTypes;
 };
 
 #endif
