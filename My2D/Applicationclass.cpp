@@ -115,8 +115,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 #pragma endregion
 #pragma region Model
 	// Set the file name of the model.
-	//strcpy_s(modelFilename, MODEL_SPHERE_PATH);
-	strcpy_s(modelFilename, MODEL_CUBE_PATH);
+	strcpy_s(modelFilename, MODEL_SPHERE_PATH);
+	//strcpy_s(modelFilename, MODEL_CUBE_PATH);
 
 	// Set the file name of the textures.
 	strcpy_s(textureFilename1, TEXTURE_STONE01_PATH);
@@ -526,7 +526,7 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 
 	// Set the render target to be the render texture and clear it.
 	m_RenderTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
-	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.5f, 1.0f, 1.0f);
+	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.6f, 0.23f, 1.0f);
 
 	// Set the position of the camera for viewing the cube.
 	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
@@ -542,7 +542,7 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 
 	// Render the model 
 	m_Model->Render(m_Direct3D->GetDeviceContext());
-	result = RenderModelWithShader(ShaderType::TEXTURE, m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+	result = RenderModelWithShader(ShaderType::POINT_LIGHT, m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
 
 	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
 	m_Direct3D->SetBackBufferRenderTarget();
