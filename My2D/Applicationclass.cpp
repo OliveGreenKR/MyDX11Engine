@@ -337,6 +337,9 @@ bool ApplicationClass::Render()
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
+	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->Render();
+
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 	m_Camera->GetViewMatrix(viewMatrix);
@@ -346,18 +349,28 @@ bool ApplicationClass::Render()
 	m_Frustum->ConstructFrustum(viewMatrix, projectionMatrix);
 #pragma endregion
 #pragma region Contents
-
 	ShaderType type = ShaderType::TEXTURE;
-
 	//setup Planes
 	for (int i = 0; i < 3; i++) {
 		m_Plane->Render(m_Direct3D->GetDeviceContext());
 	}
 
+	auto RenderWithRenderTexture = [&]()
+		{
+			TextureShaderParameters tParameters;
+			tParameters.baseTexture = m_RenderTexture->GetShaderResourceView();
+			tParameters.world = worldMatrix;
+			tParameters.view = viewMatrix;
+			tParameters.projection = projectionMatrix;
+
+			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), m_Plane->GetIndexCount(), TEXTURE, &tParameters);
+			
+			return result;
+		};
 
 	// Setup matrices - Top display plane.
 	worldMatrix = XMMatrixTranslation(0.0f, 1.5f, 0.0f);
-	result =  RenderWithShader(type, m_Plane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+	result = RenderWithRenderTexture();
 	if(!result)
 	{
 		return false;
@@ -365,7 +378,7 @@ bool ApplicationClass::Render()
 
 	// Setup matrices - Bottom left display plane.
 	worldMatrix = XMMatrixTranslation(-1.5f, -1.5f, 0.0f);
-	result = RenderWithShader(type, m_Plane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+	result = RenderWithRenderTexture();
 	if (!result)
 	{
 		return false;
@@ -373,7 +386,8 @@ bool ApplicationClass::Render()
 
 	// Setup matrices - Bottom right display plane.
 	worldMatrix = XMMatrixTranslation(1.5f, -1.5f, 0.0f);
-	result = RenderWithShader(type, m_Plane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+	//worldMatrix = XMMatrixMultiply(worldMatrix,XMMatrixRotationY(-1.f));
+	result = RenderWithRenderTexture();
 	if (!result)
 	{
 		return false;
@@ -528,7 +542,7 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 
 	// Render the model 
 	m_Model->Render(m_Direct3D->GetDeviceContext());
-	result = RenderWithShader(ShaderType::TEXTURE, m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+	result = RenderModelWithShader(ShaderType::TEXTURE, m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
 
 	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
 	m_Direct3D->SetBackBufferRenderTarget();
@@ -538,7 +552,7 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 }
 
 
-bool ApplicationClass::RenderWithShader(ShaderType type, int indexCount, XMMATRIX worldMatrix , XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
+bool ApplicationClass::RenderModelWithShader(ShaderType type, int indexCount, XMMATRIX worldMatrix , XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 {
 	bool result;
 

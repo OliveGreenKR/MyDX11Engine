@@ -46,7 +46,7 @@ private:
 	bool Render();
 	bool UpdateFps();
 	bool UpdateRenderCount(int cnt);
-	bool RenderWithShader(ShaderType type, int indexCount, XMMATRIX,XMMATRIX,XMMATRIX);
+	bool RenderModelWithShader(ShaderType type, int indexCount, XMMATRIX,XMMATRIX,XMMATRIX);
 	bool RenderSceneToTexture(float);
 
 
