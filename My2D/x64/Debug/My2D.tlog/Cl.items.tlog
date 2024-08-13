@@ -1,6 +1,7 @@
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\Applicationclass.cpp;C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\x64\Debug\Applicationclass.obj
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\Cameraclass.cpp;C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\x64\Debug\Cameraclass.obj
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\D3dclass.cpp;C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\x64\Debug\D3dclass.obj
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\PlaneClass.cpp;C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\x64\Debug\PlaneClass.obj
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\FontClass.cpp;C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\x64\Debug\FontClass.obj
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\fontshaderclass.cpp;C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\x64\Debug\fontshaderclass.obj
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\FpsClass.cpp;C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\x64\Debug\FpsClass.obj
@@ -15,6 +16,7 @@ C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\main.cpp;C:\Users\jeong\OneDri
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\ModelClass.cpp;C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\x64\Debug\ModelClass.obj
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\MultiTextureShaderClass.cpp;C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\x64\Debug\MultiTextureShaderClass.obj
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\NormalMapShaderClass.cpp;C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\x64\Debug\NormalMapShaderClass.obj
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\RenderTextureClass.cpp;C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\x64\Debug\RenderTextureClass.obj
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\ShaderManagerClass.cpp;C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\x64\Debug\ShaderManagerClass.obj
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\SpriteClass.cpp;C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\x64\Debug\SpriteClass.obj
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\Systemclass.cpp;C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\x64\Debug\Systemclass.obj

@@ -4,8 +4,8 @@
 
 ApplicationClass::ApplicationClass() 
 {
-	m_Direct3D = 0;
-	m_Camera = 0;
+	m_Direct3D = nullptr;
+	m_Camera = nullptr;
 	m_ShaderManager = nullptr;
 	m_Model = nullptr;
 	m_FontShader = nullptr;
@@ -16,8 +16,8 @@ ApplicationClass::ApplicationClass()
 	m_PointLights = nullptr;
 	m_Timer = nullptr;
 	m_Frustum = nullptr;
-	m_Position = nullptr;
-	m_ModelList = nullptr;
+	m_RenderTexture = nullptr;
+	m_Plane = nullptr;
 }
 
 
@@ -97,7 +97,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 #pragma endregion
-#pragma region RenderingCount
+#pragma region RenderingCountText
 	m_RenderCountString = new TextClass;
 	strcpy_s(renderCountString, "Render count: 0");
 
@@ -115,7 +115,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 #pragma endregion
 #pragma region Model
 	// Set the file name of the model.
-	strcpy_s(modelFilename, MODEL_SPHERE_PATH);
+	//strcpy_s(modelFilename, MODEL_SPHERE_PATH);
+	strcpy_s(modelFilename, MODEL_CUBE_PATH);
 
 	// Set the file name of the textures.
 	strcpy_s(textureFilename1, TEXTURE_STONE01_PATH);
@@ -134,24 +135,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-#pragma endregion
-#pragma region ModelList
-	// Create and initialize the model list object.
-	m_ModelList = new ModelListClass;
-	int mdCnt = 25;
-	m_ModelList->Initialize(mdCnt);
-
-	m_ModelRenderTypes = new int[mdCnt];
-
-	for(int i = 0 ; i < mdCnt; i++) {
-		m_ModelRenderTypes[i] = (int)(randF() + 1) % 3;
-	}
-
-
-
-#pragma endregion
-#pragma region Movement
-	m_Position = new PositionClass;
 #pragma endregion
 #pragma region Frustum
 	m_Frustum = new FrustumClass;
@@ -176,9 +159,25 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		m_PointLights[i]->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 		m_PointLights[i]->SetSpecularPower(32.0f);
 		m_PointLights[i]->SetAttenuation(0.0f, 0.01f, 0.01f);
-		m_PointLights[i]->SetRange(10.0f);
+		m_PointLights[i]->SetRange(30.0f);
 	}
 	
+#pragma endregion
+#pragma region TextureRender
+	m_RenderTexture = new RenderTextureClass;
+	result = m_RenderTexture->Initialize(m_Direct3D->GetDevice(), 256, 256, SCREEN_DEPTH, SCREEN_NEAR, 1);
+	if(!result)
+	{
+		return false;
+	}
+#pragma endregion
+#pragma region Plane
+	m_Plane = new DisplayPlaneClass;
+	result = m_Plane->Initialize(m_Direct3D->GetDevice(), 1.0f, 1.0f);
+	if (!result)
+	{
+		return false;
+	}
 #pragma endregion
 	return true;
 
@@ -186,6 +185,20 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
+	// Release the plane object.
+	if (m_Plane)
+	{
+		m_Plane->Shutdown();
+		delete m_Plane;
+		m_Plane = 0;
+	}
+	// Release the render to texture object.
+	if (m_RenderTexture)
+	{
+		m_RenderTexture->Shutdown();
+		delete m_RenderTexture;
+		m_RenderTexture = 0;
+	}
 	// Release the frustum class object.
 	if (m_Frustum)
 	{
@@ -193,26 +206,11 @@ void ApplicationClass::Shutdown()
 		m_Frustum = 0;
 	}
 
-	// Release the position object.
-	if (m_Position)
-	{
-		delete m_Position;
-		m_Position = 0;
-	}
-
 	// Release the timer object.
 	if (m_Timer)
 	{
 		delete m_Timer;
 		m_Timer = 0;
-	}
-
-	// Release the model list object.
-	if (m_ModelList)
-	{
-		m_ModelList->Shutdown();
-		delete m_ModelList;
-		m_ModelList = 0;
 	}
 
 	// Release the text objects for the render count string.
@@ -308,15 +306,18 @@ bool ApplicationClass::Frame(InputClass* Input)
 		return false;
 	}
 #pragma endregion
-#pragma region Movement
-	m_Position->SetFrameTime(m_Timer->GetTime());
-	m_Position->TurnLeft(Input->IsLeftArrowPressed());
-	m_Position->TurnRight(Input->IsRightArrowPressed());
-	rotation = m_Position->GetRotationY();
-#pragma endregion
-
-	m_Camera->SetEulerRotation(0.0f, rotation, 0.0f);	
 	m_Camera->Render();
+
+	rotation -= XMConvertToRadians(0.25f);
+	if (rotation < 0.0f)
+	{
+		rotation += 360.0f;
+	}
+	result =  RenderSceneToTexture(rotation);
+	if (!result)
+	{
+		return false;
+	}
 
 	// Render the graphics scene.
 	result = Render();
@@ -331,13 +332,8 @@ bool ApplicationClass::Frame(InputClass* Input)
 bool ApplicationClass::Render()
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
-	float positionX, positionY, positionZ, radius;
 	bool renderModel, result;
-	int modelCount, renderCount, i;
-	NormalMapShaderParameters nomalParam;
-	PointLightShaderParameters plParameters;
-	TextureShaderParameters tParameters;
-
+	int i;
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -346,91 +342,46 @@ bool ApplicationClass::Render()
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
-
-	//m_Direct3D->EnableAlphaBlending();
-
-
 #pragma region Frustum
 	m_Frustum->ConstructFrustum(viewMatrix, projectionMatrix);
 #pragma endregion
 #pragma region Contents
 
-	nomalParam.baseTexture = m_Model->GetTexture(0);
-	nomalParam.normalMap = m_Model->GetTexture(1);
-	nomalParam.diffuseColor = m_Light->GetDiffuseColor();
-	nomalParam.lightDirection = m_Light->GetDirection();
+	ShaderType type = ShaderType::TEXTURE;
 
-	plParameters.baseTexture = m_Model->GetTexture(0);
-	plParameters.cameraPosition = m_Camera->GetPosition();
-	plParameters.lightCount = lightCount;
-
-	for (int i = 0; i < plParameters.lightCount; i++) {
-		plParameters.ambientColor[i] = m_PointLights[i]->GetAmbientColor();
-		plParameters.diffuseColor[i] = m_PointLights[i]->GetDiffuseColor();
-		plParameters.lightPosition[i] = m_PointLights[i]->GetPosition();
-		plParameters.specularPower[i] = m_PointLights[i]->GetSpecularPower();
-		plParameters.specularColor[i] = m_PointLights[i]->GetSpecularColor();
-		plParameters.attenuation[i] = m_PointLights[i]->GetAttenuation();
-		plParameters.range[i] = m_PointLights[i]->GetRange();
+	//setup Planes
+	for (int i = 0; i < 3; i++) {
+		m_Plane->Render(m_Direct3D->GetDeviceContext());
 	}
 
-	tParameters.baseTexture = m_Model->GetTexture(0);
 
-
-	modelCount = m_ModelList->GetModelCount();
-	renderCount = 0;
-	for (int i = 0; i < modelCount; i++) {
-		m_ModelList->GetData(i, positionX, positionY, positionZ);
-		radius = 1.0f;
-
-		renderModel = m_Frustum->CheckSphere(positionX, positionY, positionZ, radius);
-		//render models in Frustum
-		if (renderModel) {
-			worldMatrix = XMMatrixTranslation(positionX, positionY, positionZ);
-			m_Model->Render(m_Direct3D->GetDeviceContext());
-			
-
-			ShaderType type = (ShaderType)m_ModelRenderTypes[i];
-
-			switch (type) {
-				case ShaderType::TEXTURE:
-					tParameters.world = worldMatrix;
-					tParameters.view = viewMatrix;
-					tParameters.projection = projectionMatrix;
-					result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), type, &tParameters);
-					break;
-				case ShaderType::NORMAL_MAP:
-					nomalParam.world = worldMatrix;
-					nomalParam.view = viewMatrix;
-					nomalParam.projection = projectionMatrix;
-					result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), type, &nomalParam);
-					break;
-				case ShaderType::POINT_LIGHT:
-					plParameters.world = worldMatrix;
-					plParameters.view = viewMatrix;
-					plParameters.projection = projectionMatrix;
-					result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), type, &plParameters);
-					break;
-				default:
-					result = false;
-					break;
-			}
-			//result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), type, &nomalParam);
-			if (!result)
-			{
-				return false;
-			}
-			renderCount++;
-		}
-	}
-
-	result = UpdateRenderCount(renderCount);
+	// Setup matrices - Top display plane.
+	worldMatrix = XMMatrixTranslation(0.0f, 1.5f, 0.0f);
+	result =  RenderWithShader(type, m_Plane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
 	if(!result)
 	{
 		return false;
 	}
 
+	// Setup matrices - Bottom left display plane.
+	worldMatrix = XMMatrixTranslation(-1.5f, -1.5f, 0.0f);
+	result = RenderWithShader(type, m_Plane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup matrices - Bottom right display plane.
+	worldMatrix = XMMatrixTranslation(1.5f, -1.5f, 0.0f);
+	result = RenderWithShader(type, m_Plane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+	if (!result)
+	{
+		return false;
+	}
+
+
 #pragma endregion
+#pragma region UI
 	//for 2D rendering.
 	m_Direct3D->EnableAlphaBlending();
 	m_Direct3D->TurnZBufferOff();
@@ -448,13 +399,14 @@ bool ApplicationClass::Render()
 	}
 #pragma endregion
 #pragma region RenderCount
-	m_RenderCountString->Render(m_Direct3D->GetDeviceContext());
-	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_RenderCountString->GetIndexCount(), worldMatrix, m_baseViewMatrix, orthoMatrix,
-								  m_Font->GetTexture(), m_RenderCountString->GetPixelColor());
+	//m_RenderCountString->Render(m_Direct3D->GetDeviceContext());
+	//result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_RenderCountString->GetIndexCount(), worldMatrix, m_baseViewMatrix, orthoMatrix,
+	//							  m_Font->GetTexture(), m_RenderCountString->GetPixelColor());
 #pragma endregion
 	// Present the rendered scene to the screen.
 	m_Direct3D->TurnZBufferOn();
 	m_Direct3D->DisableAlphaBlending();
+#pragma endregion
 	m_Direct3D->EndScene();
 
 	return true;
@@ -551,4 +503,92 @@ bool ApplicationClass::UpdateRenderCount(int renderCount)
 	}
 
 	return true;
+}
+
+bool ApplicationClass::RenderSceneToTexture(float rotation)
+{
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	bool result;
+
+	// Set the render target to be the render texture and clear it.
+	m_RenderTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
+	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.5f, 1.0f, 1.0f);
+
+	// Set the position of the camera for viewing the cube.
+	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+	m_Camera->Render();
+
+	// Get the matrices.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Camera->GetViewMatrix(viewMatrix);
+	m_RenderTexture->GetProjectionMatrix(projectionMatrix);
+
+	// Rotate the world matrix by the rotation value so that the cube will spin.
+	worldMatrix = XMMatrixRotationY(rotation);
+
+	// Render the model 
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+	result = RenderWithShader(ShaderType::TEXTURE, m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+
+	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
+	m_Direct3D->SetBackBufferRenderTarget();
+	m_Direct3D->ResetViewport();
+
+	return result;
+}
+
+
+bool ApplicationClass::RenderWithShader(ShaderType type, int indexCount, XMMATRIX worldMatrix , XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
+{
+	bool result;
+
+	switch (type) {
+		case ShaderType::TEXTURE:
+			TextureShaderParameters tParameters;
+			tParameters.baseTexture = m_Model->GetTexture(0);
+			tParameters.world = worldMatrix;
+			tParameters.view = viewMatrix;
+			tParameters.projection = projectionMatrix;
+			
+			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, TEXTURE, &tParameters);
+			break;
+		case ShaderType::NORMAL_MAP:
+			NormalMapShaderParameters nomalParam;
+			nomalParam.baseTexture = m_Model->GetTexture(0);
+			nomalParam.normalMap = m_Model->GetTexture(1);
+			nomalParam.diffuseColor = m_Light->GetDiffuseColor();
+			nomalParam.lightDirection = m_Light->GetDirection();
+			nomalParam.world = worldMatrix;
+			nomalParam.view = viewMatrix;
+			nomalParam.projection = projectionMatrix;
+			
+			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, NORMAL_MAP, &nomalParam);
+			break;
+		case ShaderType::POINT_LIGHT:
+			PointLightShaderParameters plParameters;
+			plParameters.baseTexture = m_Model->GetTexture(0);
+			plParameters.cameraPosition = m_Camera->GetPosition();
+			plParameters.lightCount = lightCount;
+
+			for (int i = 0; i < plParameters.lightCount; i++) {
+				plParameters.ambientColor[i] = m_PointLights[i]->GetAmbientColor();
+				plParameters.diffuseColor[i] = m_PointLights[i]->GetDiffuseColor();
+				plParameters.lightPosition[i] = m_PointLights[i]->GetPosition();
+				plParameters.specularPower[i] = m_PointLights[i]->GetSpecularPower();
+				plParameters.specularColor[i] = m_PointLights[i]->GetSpecularColor();
+				plParameters.attenuation[i] = m_PointLights[i]->GetAttenuation();
+				plParameters.range[i] = m_PointLights[i]->GetRange();
+			}
+			plParameters.world = worldMatrix;
+			plParameters.view = viewMatrix;
+			plParameters.projection = projectionMatrix;
+			
+			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, POINT_LIGHT, &plParameters);
+			break;
+		default:
+			result = false;
+			break;
+	}
+
+	return result;
 }

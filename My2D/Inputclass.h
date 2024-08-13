@@ -19,6 +19,7 @@ public:
     void Shutdown();
     bool Frame();
 
+    bool IsF2Pressed() { return IsKeyPressed(DIK_F2); }
     bool IsEscapePressed() { return IsKeyPressed(DIK_ESCAPE); }
     bool IsMousePressed() { return IsMouseKeyPressed(0); }
     bool IsLeftArrowPressed() { return IsKeyPressed(DIK_LEFT);}

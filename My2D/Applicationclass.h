@@ -23,7 +23,8 @@
 #include "ShaderManagerClass.h"
 #include "FrustumClass.h"
 #include "ModelListClass.h"
-#include "MovementClass.h"
+#include "RenderTextureClass.h"
+#include "PlaneClass.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -45,9 +46,15 @@ private:
 	bool Render();
 	bool UpdateFps();
 	bool UpdateRenderCount(int cnt);
+	bool RenderWithShader(ShaderType type, int indexCount, XMMATRIX,XMMATRIX,XMMATRIX);
+	bool RenderSceneToTexture(float);
+
 
 	float randF(float mul = 1.0f) {
 		return (((float)rand() - (float)rand()) / RAND_MAX )* mul;
+	}
+	float randRangeF(float min, float max) {
+		return min + (max - min) * rand() / RAND_MAX;
 	}
 
 private:
@@ -71,11 +78,11 @@ private:
 	TimerClass* m_Timer;
 
 	FrustumClass* m_Frustum;
-	PositionClass* m_Position;
 	XMMATRIX m_baseViewMatrix;
 	TextClass* m_RenderCountString;
-	ModelListClass* m_ModelList;
-	int* m_ModelRenderTypes;
+
+	RenderTextureClass* m_RenderTexture;
+	DisplayPlaneClass* m_Plane;
 };
 
 #endif

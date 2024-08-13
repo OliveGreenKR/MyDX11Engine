@@ -132,7 +132,6 @@ bool SystemClass::Frame()
 		return false;
 	}
 
-
 	// Do the frame processing for the application class object.
 	result = m_Application->Frame(m_Input);
 	if (!result)

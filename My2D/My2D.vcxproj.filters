@@ -108,6 +108,12 @@
     <ClCompile Include="MovementClass.cpp">
       <Filter>Sources\Contents\Movements</Filter>
     </ClCompile>
+    <ClCompile Include="RenderTextureClass.cpp">
+      <Filter>Sources\Core\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaneClass.cpp">
+      <Filter>Sources\Core\Model\Plane</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MultiTextureShaderClass.h">
@@ -188,6 +194,12 @@
     <ClInclude Include="MovementClass.h">
       <Filter>Sources\Contents\Movements</Filter>
     </ClInclude>
+    <ClInclude Include="RenderTextureClass.h">
+      <Filter>Sources\Core\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaneClass.h">
+      <Filter>Sources\Core\Model\Plane</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\stone02.tga">
@@ -263,6 +275,9 @@
     </Filter>
     <Filter Include="Sources\Contents\Movements">
       <UniqueIdentifier>{58943b1c-c6d4-41a7-9857-6274b2b6a689}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Core\Model\Plane">
+      <UniqueIdentifier>{9744acce-6b53-4e8c-a00e-223b06003b95}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
