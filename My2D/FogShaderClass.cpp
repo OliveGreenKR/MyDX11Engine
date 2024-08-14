@@ -248,7 +248,6 @@ bool FogShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, Fog
     dataPtr2->fogStart = parameters.fogStart;
     dataPtr2->fogEnd = parameters.fogEnd;
     dataPtr2->fogDensity = parameters.fogDensity;
-    dataPtr2->cameraPosition = parameters.cameraPosition;
     dataPtr2->fogType = parameters.fogType;
 
     deviceContext->Unmap(m_fogBuffer, 0);
@@ -260,7 +259,7 @@ bool FogShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, Fog
     deviceContext->PSSetConstantBuffers(0, 1, &m_fogBuffer);
 
     deviceContext->PSSetShaderResources(0,1, &parameters.baseTexture);
-
+    deviceContext->PSSetSamplers(0, 1, &m_sampleState);
     return true;
 }
 

@@ -26,7 +26,7 @@ public:
     XMFLOAT3 GetScale() const { return m_scale; }
     XMFLOAT4 GetRotation() const { return m_rotation; }
 	XMVECTOR GetRotationVector() const { return XMLoadFloat4(&m_rotation); }
-	inline XMMATRIX GetWorldMatrix() const;
+	inline XMMATRIX GetModelingMatrix() const;
 
 	
 public:
@@ -51,7 +51,7 @@ inline void Transform::SetEulerRotation(float xDegree, float yDegree, float zDeg
 
 }
 
-inline XMMATRIX Transform::GetWorldMatrix() const
+inline XMMATRIX Transform::GetModelingMatrix() const
 {
 	XMMATRIX scale = XMMatrixScalingFromVector(XMLoadFloat3(&m_scale));
 	XMMATRIX rotation = XMMatrixRotationQuaternion(XMLoadFloat4(&m_rotation));

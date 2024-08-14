@@ -315,7 +315,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	}
 	auto modelTransform = m_Model->GetTransform();
 	modelTransform->SetEulerRotation(0, rotation, 0);
-	modelTransform->SetPosition(0,0, -12 * (rotation/360.f));
+	modelTransform->SetPosition(0,0, -20 * (rotation/360.f));
 	
 	// Render the graphics scene.
 	result = Render();
@@ -334,8 +334,9 @@ bool ApplicationClass::Render()
 	int i;
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.5f, 0.5f, 0.5f, 1.0f);
+	//m_Direct3D->BeginScene(0.f, 0.f, 0.f, 1.0f);
 
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -20.0f);
 	m_Camera->Render();
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
@@ -352,8 +353,9 @@ bool ApplicationClass::Render()
 #pragma region Contents
 	ShaderType type = ShaderType::FOG;
 
-	worldMatrix = m_Model->GetTransform()->GetWorldMatrix();
+	XMMATRIX modelMatrix = m_Model->GetTransform()->GetModelingMatrix();
 	m_Model->Render(m_Direct3D->GetDeviceContext());
+	worldMatrix =  XMMatrixMultiply(modelMatrix, worldMatrix);
 	RenderModelWithShader(type, m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
 
 #pragma endregion
@@ -562,9 +564,7 @@ bool ApplicationClass::RenderModelWithShader(ShaderType type, int indexCount, XM
 			break;
 		case ShaderType::FOG:
 			FogShaderParameters fogParameters;
-			auto cpos =  m_Camera->GetPosition();
 			fogParameters.baseTexture = m_Model->GetTexture(0);
-			fogParameters.cameraPosition = XMFLOAT4(cpos.x,cpos.y,cpos.z,1.0f);
 
 			fogParameters.worldMatrix = worldMatrix;
 			fogParameters.viewMatrix = viewMatrix;

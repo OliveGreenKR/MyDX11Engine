@@ -287,6 +287,8 @@ bool NormalMapShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContex
     // Set shader texture resources in the pixel shader.
     deviceContext->PSSetShaderResources(0, 1, &parameters.baseTexture);
     deviceContext->PSSetShaderResources(1, 1, &parameters.normalMap);
+
+    deviceContext->PSSetSamplers(0, 1, &m_sampleState);
     return true;
 
 }

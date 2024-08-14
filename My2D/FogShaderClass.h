@@ -13,7 +13,6 @@ struct FogShaderParameters
 	float fogStart;
 	float fogEnd;
 	float fogDensity;
-	XMFLOAT4 cameraPosition;
 	int fogType;
 };
 
@@ -34,7 +33,6 @@ private:
 		float fogStart;
 		float fogEnd;
 		float fogDensity;
-		XMFLOAT4 cameraPosition;
 		int fogType;
 	};
 
