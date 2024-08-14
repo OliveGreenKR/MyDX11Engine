@@ -574,9 +574,9 @@ bool ApplicationClass::RenderModelWithShader(ShaderType type, int indexCount, XM
 			fogParameters.fogStart = 0.0f;
 			fogParameters.fogEnd = 10.0f;
 			fogParameters.fogDensity = 0.1f;
-			fogParameters.fogType = 0; //linear
+			//fogParameters.fogType = 0; //linear
 			//fogParameters.fogType = 1; //expo
-			//fogParameters.fogType = 2; //sauared expo 
+			fogParameters.fogType = 2; //sauared expo 
 
 			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, FOG, &fogParameters);
 			break;
