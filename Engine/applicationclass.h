@@ -9,9 +9,11 @@
 // MY CLASS INCLUDES //
 ///////////////////////
 #include "d3dclass.h"
+#include "inputclass.h"
 #include "cameraclass.h"
 #include "modelclass.h"
 #include "textureshaderclass.h"
+#include "transparentshaderclass.h"
 
 
 /////////////
@@ -35,7 +37,7 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame();
+	bool Frame(InputClass*);
 
 private:
 	bool Render();
@@ -43,8 +45,9 @@ private:
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
-	ModelClass* m_Model;
+	ModelClass *m_Model1, *m_Model2;
 	TextureShaderClass* m_TextureShader;
+	TransparentShaderClass* m_TransparentShader;
 };
 
 #endif

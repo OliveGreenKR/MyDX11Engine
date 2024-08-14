@@ -12,6 +12,7 @@ float4 main(PixelInputType input) : SV_TARGET
    
     // Blend the fog color with the pixel color based on the fog factor.
     color = lerp(fogColor, textureColor, input.fogFactor);
+    color.a = input.fogFactor;
 
     return color;
 }

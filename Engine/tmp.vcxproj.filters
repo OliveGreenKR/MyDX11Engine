@@ -55,6 +55,9 @@
     <ClCompile Include="textureshaderclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="transparentshaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="applicationclass.h">
@@ -78,5 +81,12 @@
     <ClInclude Include="textureshaderclass.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="transparentshaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="transparent.vs" />
+    <None Include="transparent.ps" />
   </ItemGroup>
 </Project>

@@ -115,8 +115,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 #pragma endregion
 #pragma region Model
 	// Set the file name of the model.
-	strcpy_s(modelFilename, MODEL_SPHERE_PATH);
-	//strcpy_s(modelFilename, MODEL_CUBE_PATH);
+	//strcpy_s(modelFilename, MODEL_SPHERE_PATH);
+	strcpy_s(modelFilename, MODEL_CUBE_PATH);
 
 	// Set the file name of the textures.
 	strcpy_s(textureFilename1, TEXTURE_STONE01_PATH);
@@ -333,8 +333,36 @@ bool ApplicationClass::Render()
 	bool renderModel, result;
 	int i;
 	// Clear the buffers to begin the scene.
-	m_Direct3D->BeginScene(0.5f, 0.5f, 0.5f, 1.0f);
-	//m_Direct3D->BeginScene(0.f, 0.f, 0.f, 1.0f);
+	m_Direct3D->BeginScene(0.f, 0.f, 0.f, 1.0f);
+	m_Direct3D->TurnZBufferOn();
+	m_Direct3D->DisableAlphaBlending();
+
+	//auto deviceContext = m_Direct3D->GetDeviceContext();
+	//ID3D11BlendState* alphaEnableBlendingState;
+
+	//D3D11_BLEND_DESC blendStateDescription;
+	//ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
+
+	//blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
+	//blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	//blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	//blendStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	//blendStateDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	//blendStateDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	//blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	//blendStateDescription.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	//result = m_Direct3D->GetDevice()->CreateBlendState(&blendStateDescription, &alphaEnableBlendingState);
+	//if (FAILED(result))
+	//{
+	//	// Handle error
+	//}
+	//m_Direct3D->GetDeviceContext()->OMSetBlendState(alphaEnableBlendingState, factor, 0xffffffff);
+
+
+	float factor[4] = { 0,0,0,0 };
+	m_Direct3D->EnableAlphaBlending();
+
 
 	m_Camera->SetPosition(0.0f, 0.0f, -20.0f);
 	m_Camera->Render();
@@ -345,13 +373,11 @@ bool ApplicationClass::Render()
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
 
-	
-
 #pragma region Frustum
 	m_Frustum->ConstructFrustum(viewMatrix, projectionMatrix);
 #pragma endregion
 #pragma region Contents
-	ShaderType type = ShaderType::FOG;
+	ShaderType type = ShaderType::TEXTURE;
 
 	XMMATRIX modelMatrix = m_Model->GetTransform()->GetModelingMatrix();
 	m_Model->Render(m_Direct3D->GetDeviceContext());
@@ -361,7 +387,6 @@ bool ApplicationClass::Render()
 #pragma endregion
 #pragma region UI
 	//for 2D rendering.
-	m_Direct3D->EnableAlphaBlending();
 	m_Direct3D->TurnZBufferOff();
 	//reset world matrix
 	m_Direct3D->GetWorldMatrix(worldMatrix);
@@ -375,11 +400,6 @@ bool ApplicationClass::Render()
 	{
 		return false;
 	}
-#pragma endregion
-#pragma region RenderCount
-	//m_RenderCountString->Render(m_Direct3D->GetDeviceContext());
-	//result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_RenderCountString->GetIndexCount(), worldMatrix, m_baseViewMatrix, orthoMatrix,
-	//							  m_Font->GetTexture(), m_RenderCountString->GetPixelColor());
 #pragma endregion
 	// Present the rendered scene to the screen.
 	m_Direct3D->TurnZBufferOn();
