@@ -17,6 +17,9 @@
 #define VS_NORMALMAP_PATH L"../My2D/vsNormalmap.fx"
 #define PS_NORMALMAP_PATH L"../My2D/psNormalmap.fx"
 
+#define VS_FOG_PATH L"../My2D/vsFog.fx"
+#define PS_FOG_PATH L"../My2D/psFog.fx"
+
 #define VS_FONT_PATH L"../My2D/vsFont.fx"
 #define PS_FONT_PATH L"../My2D/psFont.fx"
 

@@ -6,6 +6,7 @@ using namespace DirectX;
 using namespace std;
 
 #include "Textureclass.h"
+#include "Transform.h"
 
 class ModelClass
 {
@@ -51,6 +52,10 @@ public:
 
     int GetIndexCount();
     int GetTextureCount() { return m_textureCount;}
+
+    Transform* GetTransform() { return m_transform; }
+    const Transform* GetTransform() const { return m_transform; }
+
     ID3D11ShaderResourceView* GetTexture(int);
     ID3D11ShaderResourceView** GetTextures();
 
@@ -73,4 +78,6 @@ private:
     int m_vertexCount, m_indexCount, m_textureCount;
     TextureClass* m_Textures;
     ModelType* m_model;
+
+    Transform* m_transform = new Transform();
 };

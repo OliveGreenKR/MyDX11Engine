@@ -3,12 +3,14 @@
 #include "textureshaderclass.h"
 #include "PointLightShaderClass.h"
 #include "normalmapshaderclass.h"
+#include "FogShaderClass.h"
 
 enum ShaderType
 {
     TEXTURE,
 	POINT_LIGHT,
-	NORMAL_MAP
+	NORMAL_MAP,
+    FOG,
 };
 
 class ShaderManagerClass
@@ -27,4 +29,5 @@ private:
     TextureShaderClass* m_TextureShader;
     PointLightShaderClass* m_PointLightShader;
     NormalMapShaderClass* m_NormalMapShader;
+    FogShaderClass* m_FogShader;
 };

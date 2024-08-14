@@ -41,12 +41,12 @@ private:
 	XMFLOAT4 m_rotation; // Quaternion
 };
 
-inline void Transform::SetEulerRotation(float x, float y, float z)
+inline void Transform::SetEulerRotation(float xDegree, float yDegree, float zDegree)
 {
-	x = XMConvertToRadians(x);
-	y = XMConvertToRadians(y);
-	z = XMConvertToRadians(z);
-	XMVECTOR rotation = XMQuaternionRotationRollPitchYaw(x, y, z);
+	xDegree = XMConvertToRadians(xDegree);
+	yDegree = XMConvertToRadians(yDegree);
+	zDegree = XMConvertToRadians(zDegree);
+	XMVECTOR rotation = XMQuaternionRotationRollPitchYaw(xDegree, yDegree, zDegree);
 	XMStoreFloat4(&m_rotation, rotation);
 
 }

@@ -49,7 +49,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Create the camera object.
 	m_Camera = new CameraClass;
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -15.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	m_Camera->Render();
 	m_Camera->GetViewMatrix(m_baseViewMatrix);
 
@@ -308,17 +308,15 @@ bool ApplicationClass::Frame(InputClass* Input)
 #pragma endregion
 	m_Camera->Render();
 
-	rotation -= XMConvertToRadians(0.25f);
+	rotation -= 0.5f;
 	if (rotation < 0.0f)
 	{
 		rotation += 360.0f;
 	}
-	result =  RenderSceneToTexture(rotation);
-	if (!result)
-	{
-		return false;
-	}
-
+	auto modelTransform = m_Model->GetTransform();
+	modelTransform->SetEulerRotation(0, rotation, 0);
+	modelTransform->SetPosition(0,0, -12 * (rotation/360.f));
+	
 	// Render the graphics scene.
 	result = Render();
 	if (!result)
@@ -335,7 +333,7 @@ bool ApplicationClass::Render()
 	bool renderModel, result;
 	int i;
 	// Clear the buffers to begin the scene.
-	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+	m_Direct3D->BeginScene(0.5f, 0.5f, 0.5f, 1.0f);
 
 	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	m_Camera->Render();
@@ -345,54 +343,18 @@ bool ApplicationClass::Render()
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
+
+	
+
 #pragma region Frustum
 	m_Frustum->ConstructFrustum(viewMatrix, projectionMatrix);
 #pragma endregion
 #pragma region Contents
-	ShaderType type = ShaderType::TEXTURE;
-	//setup Planes
-	for (int i = 0; i < 3; i++) {
-		m_Plane->Render(m_Direct3D->GetDeviceContext());
-	}
+	ShaderType type = ShaderType::FOG;
 
-	auto RenderWithRenderTexture = [&]()
-		{
-			TextureShaderParameters tParameters;
-			tParameters.baseTexture = m_RenderTexture->GetShaderResourceView();
-			tParameters.world = worldMatrix;
-			tParameters.view = viewMatrix;
-			tParameters.projection = projectionMatrix;
-
-			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), m_Plane->GetIndexCount(), TEXTURE, &tParameters);
-			
-			return result;
-		};
-
-	// Setup matrices - Top display plane.
-	worldMatrix = XMMatrixTranslation(0.0f, 1.5f, 0.0f);
-	result = RenderWithRenderTexture();
-	if(!result)
-	{
-		return false;
-	}
-
-	// Setup matrices - Bottom left display plane.
-	worldMatrix = XMMatrixTranslation(-1.5f, -1.5f, 0.0f);
-	result = RenderWithRenderTexture();
-	if (!result)
-	{
-		return false;
-	}
-
-	// Setup matrices - Bottom right display plane.
-	worldMatrix = XMMatrixTranslation(1.5f, -1.5f, 0.0f);
-	//worldMatrix = XMMatrixMultiply(worldMatrix,XMMatrixRotationY(-1.f));
-	result = RenderWithRenderTexture();
-	if (!result)
-	{
-		return false;
-	}
-
+	worldMatrix = m_Model->GetTransform()->GetWorldMatrix();
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+	RenderModelWithShader(type, m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
 
 #pragma endregion
 #pragma region UI
@@ -551,7 +513,6 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 	return result;
 }
 
-
 bool ApplicationClass::RenderModelWithShader(ShaderType type, int indexCount, XMMATRIX worldMatrix , XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 {
 	bool result;
@@ -599,6 +560,27 @@ bool ApplicationClass::RenderModelWithShader(ShaderType type, int indexCount, XM
 			
 			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, POINT_LIGHT, &plParameters);
 			break;
+		case ShaderType::FOG:
+			FogShaderParameters fogParameters;
+			auto cpos =  m_Camera->GetPosition();
+			fogParameters.baseTexture = m_Model->GetTexture(0);
+			fogParameters.cameraPosition = XMFLOAT4(cpos.x,cpos.y,cpos.z,1.0f);
+
+			fogParameters.worldMatrix = worldMatrix;
+			fogParameters.viewMatrix = viewMatrix;
+			fogParameters.projectionMatrix = projectionMatrix;
+
+			fogParameters.fogColor = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+			fogParameters.fogStart = 0.0f;
+			fogParameters.fogEnd = 10.0f;
+			fogParameters.fogDensity = 0.1f;
+			fogParameters.fogType = 0; //linear
+			//fogParameters.fogType = 1; //expo
+			//fogParameters.fogType = 2; //sauared expo 
+
+			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, FOG, &fogParameters);
+			break;
+
 		default:
 			result = false;
 			break;

@@ -2,37 +2,40 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <FxCompile Include="psPointLight.fx">
-      <Filter>Resources\HLSL</Filter>
+      <Filter>Sources\Core\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="vsPointLight.fx">
-      <Filter>Resources\HLSL</Filter>
+      <Filter>Sources\Core\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="psTexture.fx">
-      <Filter>Resources\HLSL</Filter>
+      <Filter>Sources\Core\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="vsFont.fx">
-      <Filter>Resources\HLSL</Filter>
+      <Filter>Sources\Core\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="psFont.fx">
-      <Filter>Resources\HLSL</Filter>
+      <Filter>Sources\Core\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="vsNormalmap.fx">
-      <Filter>Resources\HLSL</Filter>
+      <Filter>Sources\Core\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="psMultiTexture.fx">
-      <Filter>Resources\HLSL</Filter>
+      <Filter>Sources\Core\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="psAlphaMap.fx">
-      <Filter>Resources\HLSL</Filter>
+      <Filter>Sources\Core\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="psLightMap.fx">
-      <Filter>Resources\HLSL</Filter>
+      <Filter>Sources\Core\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="psNormalmap.fx">
-      <Filter>Resources\HLSL</Filter>
+      <Filter>Sources\Core\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="vsPosUV.fx">
-      <Filter>Resources\HLSL</Filter>
+      <Filter>Sources\Core\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="psFog.fx">
+      <Filter>Sources\Core\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +116,12 @@
     </ClCompile>
     <ClCompile Include="PlaneClass.cpp">
       <Filter>Sources\Core\Model\Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="FogShaderClass.cpp">
+      <Filter>Sources\Core\Shader\private</Filter>
+    </ClCompile>
+    <ClCompile Include="vsFog.fx">
+      <Filter>Sources\Core\Shader\HLSL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +209,9 @@
     <ClInclude Include="PlaneClass.h">
       <Filter>Sources\Core\Model\Plane</Filter>
     </ClInclude>
+    <ClInclude Include="FogShaderClass.h">
+      <Filter>Sources\Core\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\stone02.tga">
@@ -218,9 +230,6 @@
   <ItemGroup>
     <Filter Include="Resources">
       <UniqueIdentifier>{c99b65e9-5a19-4603-8f92-7cda4d3b2716}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\HLSL">
-      <UniqueIdentifier>{1154c8ca-63ef-4680-bc02-65e4cb3c5825}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources">
       <UniqueIdentifier>{21bf87c0-080e-48dd-b57d-4f112cc4de11}</UniqueIdentifier>
@@ -278,6 +287,9 @@
     </Filter>
     <Filter Include="Sources\Core\Model\Plane">
       <UniqueIdentifier>{9744acce-6b53-4e8c-a00e-223b06003b95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Core\Shader\HLSL">
+      <UniqueIdentifier>{1154c8ca-63ef-4680-bc02-65e4cb3c5825}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

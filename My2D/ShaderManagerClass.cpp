@@ -5,6 +5,7 @@ ShaderManagerClass::ShaderManagerClass()
 	m_TextureShader = nullptr;
 	m_PointLightShader = nullptr;
 	m_NormalMapShader = nullptr;
+	m_FogShader = nullptr;
 }
 
 ShaderManagerClass::~ShaderManagerClass()
@@ -37,11 +38,25 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
 		return false;
 	}
 
+	m_FogShader = new FogShaderClass;
+	result = m_FogShader->Initialize(device, hwnd);
+	if (!result)
+	{
+		return false;
+	}
+
     return true;
 }
 
 void ShaderManagerClass::Shutdown()
 {
+	if(m_FogShader)
+	{
+		m_FogShader->Shutdown();
+		delete m_FogShader;
+		m_FogShader = nullptr;
+	}
+
 	if (m_NormalMapShader)
 	{
 		m_NormalMapShader->Shutdown();
@@ -83,6 +98,10 @@ bool ShaderManagerClass::RenderShader(ID3D11DeviceContext* deviceContext, int in
 		case NORMAL_MAP:
 		{
 			return m_NormalMapShader->Render(deviceContext, indexCount, *(NormalMapShaderParameters*)parameters);
+		}
+		case FOG:
+		{
+			return m_FogShader->Render(deviceContext, indexCount, *(FogShaderParameters*)parameters);
 		}
 		default:
 			return false;
