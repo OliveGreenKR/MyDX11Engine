@@ -119,7 +119,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	strcpy_s(modelFilename, MODEL_CUBE_PATH);
 
 	// Set the file name of the textures.
-	strcpy_s(textureFilename1, TEXTURE_STONE01_PATH);
+	strcpy_s(textureFilename1, TEXTURE_DIRT01_PATH);
 	strcpy_s(textureFilename2, NORMALMAP_STONE01_PATH);
 	strcpy_s(textureFilename3, SPEC_STONE03_PATH);
 
@@ -141,7 +141,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 #pragma endregion
 #pragma region Lights
 	m_Light = new LightClass;
-	m_Light->SetDiffuseColor(0.3f, 0.5f, 1.0f, 1.0f);
+	m_Light->SetDiffuseColor(1.f, 1.f, 1.0f, 1.0f);
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
 	m_Light->SetSpecularColor(1.0f,0.0f,1.0f,1.0f);
 	m_Light->SetSpecularPower(16.0f);
@@ -314,8 +314,8 @@ bool ApplicationClass::Frame(InputClass* Input)
 		rotation += 360.0f;
 	}
 	auto modelTransform = m_Model->GetTransform();
-	modelTransform->SetEulerRotation(0, rotation, 0);
-	modelTransform->SetPosition(0,0, -20 * (rotation/360.f));
+	modelTransform->SetEulerRotation(0, 25.0f, 0);
+	//modelTransform->SetPosition(0,0, -20 * (rotation/360.f));
 	
 	// Render the graphics scene.
 	result = Render();
@@ -334,37 +334,7 @@ bool ApplicationClass::Render()
 	int i;
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.f, 0.f, 0.f, 1.0f);
-	m_Direct3D->TurnZBufferOn();
-	m_Direct3D->DisableAlphaBlending();
-
-	//auto deviceContext = m_Direct3D->GetDeviceContext();
-	//ID3D11BlendState* alphaEnableBlendingState;
-
-	//D3D11_BLEND_DESC blendStateDescription;
-	//ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
-
-	//blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
-	//blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	//blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	//blendStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	//blendStateDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	//blendStateDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	//blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	//blendStateDescription.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-	//result = m_Direct3D->GetDevice()->CreateBlendState(&blendStateDescription, &alphaEnableBlendingState);
-	//if (FAILED(result))
-	//{
-	//	// Handle error
-	//}
-	//m_Direct3D->GetDeviceContext()->OMSetBlendState(alphaEnableBlendingState, factor, 0xffffffff);
-
-
-	float factor[4] = { 0,0,0,0 };
-	m_Direct3D->EnableAlphaBlending();
-
-
-	m_Camera->SetPosition(0.0f, 0.0f, -20.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	m_Camera->Render();
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
@@ -377,12 +347,20 @@ bool ApplicationClass::Render()
 	m_Frustum->ConstructFrustum(viewMatrix, projectionMatrix);
 #pragma endregion
 #pragma region Contents
-	ShaderType type = ShaderType::TEXTURE;
 
-	XMMATRIX modelMatrix = m_Model->GetTransform()->GetModelingMatrix();
+	m_Direct3D->EnableAlphaBlending();
+	XMMATRIX modelMatrix;
 	m_Model->Render(m_Direct3D->GetDeviceContext());
-	worldMatrix =  XMMatrixMultiply(modelMatrix, worldMatrix);
-	RenderModelWithShader(type, m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+
+	m_Model->GetTransform()->SetScale(0.75f, 0.75f, 0.75f);
+	m_Model->GetTransform()->SetPosition(1.0f, 0.0f, 0.0f);
+	modelMatrix = m_Model->GetTransform()->GetModelingMatrix();
+	RenderModelWithShader(NORMAL_MAP, m_Model->GetIndexCount(), modelMatrix, viewMatrix, projectionMatrix);
+
+	m_Model->GetTransform()->SetScale(1.f, 1.f, 1.f);
+	m_Model->GetTransform()->SetPosition(0.0f, 0.0f, 0.0f);
+	modelMatrix = m_Model->GetTransform()->GetModelingMatrix();
+	RenderModelWithShader(TEXTURE, m_Model->GetIndexCount(), modelMatrix, viewMatrix, projectionMatrix);
 
 #pragma endregion
 #pragma region UI
@@ -404,7 +382,8 @@ bool ApplicationClass::Render()
 	// Present the rendered scene to the screen.
 	m_Direct3D->TurnZBufferOn();
 	m_Direct3D->DisableAlphaBlending();
-#pragma endregion
+//#pragma endregion
+
 	m_Direct3D->EndScene();
 
 	return true;

@@ -209,7 +209,7 @@ bool ApplicationClass::Render()
 	// Render the second square model with the stone texture and use the 50% blending amount for transparency.
 	m_Model2->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_TransparentShader->Render(m_Direct3D->GetDeviceContext(), m_Model2->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model2->GetTexture(), blendAmount);
+	result = m_TransparentShader->Render(m_Direct3D->GetDeviceContext(), m_Model1->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model2->GetTexture(), blendAmount);
 	if(!result)
 	{
 		return false;

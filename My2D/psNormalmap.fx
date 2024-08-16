@@ -53,6 +53,6 @@ float4 main(PixelInputType input) : SV_TARGET
 
     // Combine the final light color with the texture color.
     color = color * textureColor;
-    
+
     return color;
 }
