@@ -119,7 +119,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	strcpy_s(modelFilename, MODEL_CUBE_PATH);
 
 	// Set the file name of the textures.
-	strcpy_s(textureFilename1, TEXTURE_DIRT01_PATH);
+	strcpy_s(textureFilename1, TEXTURE_STONE01_PATH);
 	strcpy_s(textureFilename2, NORMALMAP_STONE01_PATH);
 	strcpy_s(textureFilename3, SPEC_STONE03_PATH);
 
@@ -314,8 +314,8 @@ bool ApplicationClass::Frame(InputClass* Input)
 		rotation += 360.0f;
 	}
 	auto modelTransform = m_Model->GetTransform();
-	modelTransform->SetEulerRotation(0, 25.0f, 0);
-	//modelTransform->SetPosition(0,0, -20 * (rotation/360.f));
+	modelTransform->SetEulerRotation(0, rotation, 0);
+	modelTransform->SetPosition(0,0, -10 * (rotation/360.f));
 	
 	// Render the graphics scene.
 	result = Render();
@@ -333,7 +333,7 @@ bool ApplicationClass::Render()
 	bool renderModel, result;
 	int i;
 	// Clear the buffers to begin the scene.
-	m_Direct3D->BeginScene(0.f, 0.f, 0.f, 1.0f);
+	m_Direct3D->BeginScene(0.33f, 0.33f, 0.33f, 1.0f);
 	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	m_Camera->Render();
 
@@ -347,25 +347,18 @@ bool ApplicationClass::Render()
 	m_Frustum->ConstructFrustum(viewMatrix, projectionMatrix);
 #pragma endregion
 #pragma region Contents
-
-	m_Direct3D->EnableAlphaBlending();
 	XMMATRIX modelMatrix;
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-	m_Model->GetTransform()->SetScale(0.75f, 0.75f, 0.75f);
-	m_Model->GetTransform()->SetPosition(1.0f, 0.0f, 0.0f);
+
 	modelMatrix = m_Model->GetTransform()->GetModelingMatrix();
 	RenderModelWithShader(NORMAL_MAP, m_Model->GetIndexCount(), modelMatrix, viewMatrix, projectionMatrix);
-
-	m_Model->GetTransform()->SetScale(1.f, 1.f, 1.f);
-	m_Model->GetTransform()->SetPosition(0.0f, 0.0f, 0.0f);
-	modelMatrix = m_Model->GetTransform()->GetModelingMatrix();
-	RenderModelWithShader(TEXTURE, m_Model->GetIndexCount(), modelMatrix, viewMatrix, projectionMatrix);
-
+;
 #pragma endregion
 #pragma region UI
 	//for 2D rendering.
 	m_Direct3D->TurnZBufferOff();
+	m_Direct3D->EnableAlphaBlending();
 	//reset world matrix
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 #pragma region Fps
