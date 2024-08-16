@@ -20,6 +20,9 @@
 #define VS_FOG_PATH L"../My2D/vsFog.fx"
 #define PS_FOG_PATH L"../My2D/psFog.fx"
 
+#define VS_REFLEX_PATH L"../My2D/vsReflex.fx"
+#define PS_REFLEX_PATH L"../My2D/psReflex.fx"
+
 #define VS_FONT_PATH L"../My2D/vsFont.fx"
 #define PS_FONT_PATH L"../My2D/psFont.fx"
 

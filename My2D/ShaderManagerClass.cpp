@@ -6,6 +6,7 @@ ShaderManagerClass::ShaderManagerClass()
 	m_PointLightShader = nullptr;
 	m_NormalMapShader = nullptr;
 	m_FogShader = nullptr;
+	m_ReflexShader = nullptr;
 }
 
 ShaderManagerClass::~ShaderManagerClass()
@@ -45,11 +46,25 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
 		return false;
 	}
 
+	m_ReflexShader = new ReflexShaderClass;
+	result = m_ReflexShader->Initialize(device, hwnd);
+	if (!result)
+	{
+		return false;
+	}
+
     return true;
 }
 
 void ShaderManagerClass::Shutdown()
 {
+	// Release the reflex shader object.
+	if (m_ReflexShader)
+	{
+		m_ReflexShader->Shutdown();
+		delete m_ReflexShader;
+		m_ReflexShader = nullptr;
+	}
 	if(m_FogShader)
 	{
 		m_FogShader->Shutdown();
@@ -102,6 +117,10 @@ bool ShaderManagerClass::RenderShader(ID3D11DeviceContext* deviceContext, int in
 		case FOG:
 		{
 			return m_FogShader->Render(deviceContext, indexCount, *(FogShaderParameters*)parameters);
+		}
+		case REFLEX:
+		{
+			return m_ReflexShader->Render(deviceContext, indexCount, *(ReflexShaderParameters*)parameters);
 		}
 		default:
 			return false;

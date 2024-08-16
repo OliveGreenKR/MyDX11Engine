@@ -4,6 +4,7 @@
 #include "PointLightShaderClass.h"
 #include "normalmapshaderclass.h"
 #include "FogShaderClass.h"
+#include "ReflexShaderClass.h"
 
 enum ShaderType
 {
@@ -11,6 +12,7 @@ enum ShaderType
 	POINT_LIGHT,
 	NORMAL_MAP,
     FOG,
+    REFLEX,
 };
 
 class ShaderManagerClass
@@ -30,4 +32,5 @@ private:
     PointLightShaderClass* m_PointLightShader;
     NormalMapShaderClass* m_NormalMapShader;
     FogShaderClass* m_FogShader;
+    ReflexShaderClass* m_ReflexShader;
 };

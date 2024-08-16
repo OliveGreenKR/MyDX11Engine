@@ -37,6 +37,12 @@
     <FxCompile Include="psFog.fx">
       <Filter>Sources\Core\Shader\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="vsReflex.fx">
+      <Filter>Sources\Core\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="psReflex.fx">
+      <Filter>Sources\Core\Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TextClass.cpp">
@@ -122,6 +128,9 @@
     </ClCompile>
     <ClCompile Include="vsFog.fx">
       <Filter>Sources\Core\Shader\HLSL</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflexShaderClass.cpp">
+      <Filter>Sources\Core\Shader\private</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -210,6 +219,9 @@
       <Filter>Sources\Core\Model\Plane</Filter>
     </ClInclude>
     <ClInclude Include="FogShaderClass.h">
+      <Filter>Sources\Core\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ReflexShaderClass.h">
       <Filter>Sources\Core\Shader</Filter>
     </ClInclude>
   </ItemGroup>

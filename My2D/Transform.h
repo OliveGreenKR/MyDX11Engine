@@ -33,13 +33,16 @@ public:
     XMFLOAT4 GetRotation() const { return m_rotation; }
 	XMVECTOR GetRotationVector() const { return XMLoadFloat4(&m_rotation); }
 	inline XMMATRIX GetModelingMatrix() const;
+	inline XMMATRIX GetRotationMatrix() const { return XMMatrixRotationQuaternion(XMLoadFloat4(&m_rotation)); }
+	inline XMMATRIX GetTranslationMatrix() const { return XMMatrixTranslationFromVector(XMLoadFloat3(&m_position)); }
+	inline XMMATRIX GetScaleMatrix() const { return XMMatrixScalingFromVector(XMLoadFloat3(&m_scale)); }
+
 
 	
 public:
 	//constexpr Transform Inverse() const;
 	//constexpr Transform LocalToWorld(const Transform& ParentWorldTransform) const;
 	//constexpr Transform WorldToLocal(const Transform& ParentWorldTransform) const;
-
 
 private:
 	XMFLOAT3 m_position;

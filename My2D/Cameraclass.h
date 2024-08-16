@@ -23,11 +23,16 @@ public:
 	XMFLOAT4 GetRotation() { return m_transform->GetRotation(); }
 
 	void Render();
-	void GetViewMatrix(XMMATRIX&);
+	void GetViewMatrix(XMMATRIX& viewMatrix) { viewMatrix = m_viewMatrix; }
+
+	void RenderReflection(float a, float b, float c, float d) { RenderReflection(XMFLOAT4(a, b, c, d)); }
+	void RenderReflection(XMFLOAT4 plane);
+	XMMATRIX GetReflectionViewMatrix() const { return m_reflectionViewMatrix;}
 
 private:
 	Transform* m_transform;
 	XMMATRIX m_viewMatrix;
+	XMMATRIX m_reflectionViewMatrix;
 };
 
 #endif

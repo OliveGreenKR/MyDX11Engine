@@ -308,15 +308,6 @@ bool ApplicationClass::Frame(InputClass* Input)
 #pragma endregion
 	m_Camera->Render();
 
-	rotation -= 0.5f;
-	if (rotation < 0.0f)
-	{
-		rotation += 360.0f;
-	}
-	auto modelTransform = m_Model->GetTransform();
-	modelTransform->SetEulerRotation(0, rotation, 0);
-	modelTransform->SetPosition(0,0, -10 * (rotation/360.f));
-	
 	// Render the graphics scene.
 	result = Render();
 	if (!result)
@@ -333,7 +324,7 @@ bool ApplicationClass::Render()
 	bool renderModel, result;
 	int i;
 	// Clear the buffers to begin the scene.
-	m_Direct3D->BeginScene(0.33f, 0.33f, 0.33f, 1.0f);
+	m_Direct3D->BeginScene(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	m_Camera->Render();
 
@@ -350,10 +341,9 @@ bool ApplicationClass::Render()
 	XMMATRIX modelMatrix;
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-
 	modelMatrix = m_Model->GetTransform()->GetModelingMatrix();
-	RenderModelWithShader(NORMAL_MAP, m_Model->GetIndexCount(), modelMatrix, viewMatrix, projectionMatrix);
-;
+	RenderModelWithShader(REFLEX, m_Model->GetIndexCount(), modelMatrix, viewMatrix, projectionMatrix);
+
 #pragma endregion
 #pragma region UI
 	//for 2D rendering.
@@ -572,7 +562,15 @@ bool ApplicationClass::RenderModelWithShader(ShaderType type, int indexCount, XM
 
 			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, FOG, &fogParameters);
 			break;
+		case ShaderType::REFLEX:
+			ReflexShaderParameters reflexParameters;
+			reflexParameters.world = worldMatrix;
+			reflexParameters.view = viewMatrix;
+			reflexParameters.projection = projectionMatrix;
+			reflexParameters.reflection = m_Camera->GetReflectionViewMatrix();
 
+			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, REFLEX, &reflexParameters);
+			break;
 		default:
 			result = false;
 			break;
