@@ -347,7 +347,7 @@ bool ApplicationClass::Render()
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 
 	m_Camera->SetPosition(0, 0, -10);
-	m_Camera->SetEulerRotation(0, 0, 0);
+	//m_Camera->SetEulerRotation(0, 0, 0);
 	m_Camera->Render();
 
 	m_Camera->GetViewMatrix(viewMatrix);
@@ -370,21 +370,30 @@ bool ApplicationClass::Render()
 		return false;
 	}
 
-	//XMFLOAT4 reflectionPlane(0.f, 0.0f, 1.0f, 1.5f);
+#pragma region reflex test
+
+	//XMFLOAT4 reflectionPlane(0.f, -1.0f, 0.0f, 1.5f);
 	//XMVECTOR planeVector = XMLoadFloat4(&reflectionPlane);
 
-	//modelMatrix = m_Model->GetModelingMatrix();
 	//m_Camera->RenderReflection(reflectionPlane);
-	//m_Camera->GetReflectionViewMatrix(viewMatrix);
-	//result = RenderModelWithShader(TEXTURE, m_Model, modelMatrix, viewMatrix, projectionMatrix);
-	//if (!result)
-	//{
-	//	return false;
-	//}
+	//m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
 
-	//m_FloorModel->GetTransform()->SetPosition(0, -1.5f, 0.f);
+	//// Get the matrices.
+	//m_Direct3D->GetWorldMatrix(modelMatrix);
+	//m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
+	//// Rotate the world matrix by the rotation value so that the cube will spin.
+	//modelMatrix = m_Model->GetModelingMatrix();
+	// 
+	//// Render the model 
+	//m_Model->Render(m_Direct3D->GetDeviceContext());
+	//result = RenderModelWithShader(ShaderType::TEXTURE, m_Model, modelMatrix, reflectionViewMatrix, projectionMatrix);
+
+#pragma endregion
+
+	m_FloorModel->GetTransform()->SetPosition(0, -1.5f, 0.f);
 	m_FloorModel->GetTransform()->SetPosition(0.f, 1.5f, 0.0f);
-	m_FloorModel->GetTransform()->SetEulerRotation(-180,0, 0);
+	m_FloorModel->GetTransform()->SetEulerRotation(-180,180, 0);
 
 	m_FloorModel->Render(m_Direct3D->GetDeviceContext());
 	m_Camera->GetViewMatrix(viewMatrix);
@@ -527,8 +536,6 @@ bool ApplicationClass::RenderReflectionToTexture()
 	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
 
 	// use the camera to calculate the reflection view matrix
-	XMFLOAT3 reflectnorm = {0, 0, 1};
-
 	XMFLOAT4 reflectionPlane(0.f, -1.0f, 0.0f, 1.5f);
 	XMVECTOR planeVector = XMLoadFloat4(&reflectionPlane);
 

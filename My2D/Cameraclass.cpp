@@ -67,6 +67,7 @@ void CameraClass::RenderReflection(XMFLOAT4 plane)
 {
 	XMFLOAT3 up,lookAt;
 	XMVECTOR upVector, positionVector, lookAtVector, rotationVector;
+	XMVECTOR rfRotationVector;
 	float yaw, pitch, roll;
 	XMMATRIX rotationMatrix;
 	XMMATRIX reflectionMatrix;
@@ -77,18 +78,18 @@ void CameraClass::RenderReflection(XMFLOAT4 plane)
 
 	rotationMatrix = XMMatrixRotationQuaternion(rotationVector);
 	rotationMatrix =  rotationMatrix * reflectionMatrix;
-	rotationVector = XMQuaternionRotationMatrix(rotationMatrix);
+	rfRotationVector = XMQuaternionRotationMatrix(rotationMatrix);
 
 	up = { 0,1,0 };
 	upVector = XMLoadFloat3(&up);
-	upVector = XMVector3Rotate(upVector, rotationVector);
+	upVector = XMVector3Rotate(upVector, rfRotationVector);
 
 	m_transform->GetPosition(positionVector);
 	positionVector = XMVector3TransformCoord(positionVector, reflectionMatrix);
 
 	lookAt = { 0,0,1 };
 	lookAtVector = XMLoadFloat3(&lookAt);
-	lookAtVector = XMVector3Rotate(lookAtVector, rotationVector);
+	lookAtVector = XMVector3Rotate(lookAtVector, rfRotationVector);
 	lookAtVector = XMVectorAdd(positionVector, lookAtVector);
 	
 	m_reflectionViewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
