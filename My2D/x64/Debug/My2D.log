@@ -2,4 +2,17 @@
   Applicationclass.cpp
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\Applicationclass.cpp(341,7): warning C4101: 'renderModel': unreferenced local variable
 C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\Applicationclass.cpp(342,6): warning C4101: 'i': unreferenced local variable
+  FogShaderClass.cpp
+  FontClass.cpp
+  MultiTextureShaderClass.cpp
+C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\My2D\MultiTextureShaderClass.cpp(375,18): warning C4101: 'bufferNumber': unreferenced local variable
+  NormalMapShaderClass.cpp
+  PointLightShaderClass.cpp
+  ReflexShaderClass.cpp
+  Systemclass.cpp
+  TextClass.cpp
+  fontshaderclass.cpp
+  main.cpp
+  textureshaderclass.cpp
+  Generating Code...
   My2D.vcxproj -> C:\Users\jeong\OneDrive\GameDev\MyDX11Engine\x64\Debug\My2D.exe

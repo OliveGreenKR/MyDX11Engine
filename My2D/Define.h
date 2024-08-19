@@ -27,9 +27,11 @@
 #define PS_FONT_PATH L"../My2D/psFont.fx"
 
 #define MODEL_CUBE_PATH "../My2D/data/cube.txt"
+#define MODEL_CUBE2_PATH "../My2D/data/cube2.txt"
 //#define MODEL_SPHERE_PATH "../MyDx11Engine/data/sphere.obj"
 #define MODEL_SPHERE_PATH "../My2D/data/sphere.txt"
 #define MODEL_SQUARE_PATH "../My2D/data/square.txt"
+#define MODEL_TRI_PATH "../My2D/data/triangle.txt"
 #define MODEL_PLANE_PATH "../My2D/data/plane.txt"
 #define MODEL_FLOOR_PATH "../My2D/data/floor.txt"
 
