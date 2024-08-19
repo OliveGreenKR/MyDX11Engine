@@ -49,7 +49,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->Render();
 
 	// Set the file name of the cube model.
-    strcpy_s(modelFilename, "../Engine/data/cube.txt");
+    strcpy_s(modelFilename, "../Engine/data/cube2.txt");
 
     // Set the file name of the texture.
     strcpy_s(textureFilename, "../Engine/data/stone02.tga");
@@ -229,6 +229,7 @@ bool ApplicationClass::RenderReflectionToTexture(float rotation)
 	// Get the world and projection matrices.
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+	m_RenderTexture->GetProjectionMatrix(projectionMatrix);
 
 	// Rotate the world matrix by the rotation value so that the cube will spin.
     worldMatrix = XMMatrixRotationY(rotation);

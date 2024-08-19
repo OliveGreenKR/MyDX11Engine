@@ -66,29 +66,31 @@ void CameraClass::Render()
 void CameraClass::RenderReflection(XMFLOAT4 plane)
 {
 	XMFLOAT3 up,lookAt;
-	XMVECTOR upVector, positionVector, lookAtVector, roatationVector;
+	XMVECTOR upVector, positionVector, lookAtVector, rotationVector;
 	float yaw, pitch, roll;
 	XMMATRIX rotationMatrix;
 	XMMATRIX reflectionMatrix;
 
 	// Create the reflection matrix using the plane.
 	reflectionMatrix = XMMatrixReflect(XMLoadFloat4(&plane));
+	rotationVector = m_transform->GetRotationVector();
+
+	rotationMatrix = XMMatrixRotationQuaternion(rotationVector);
+	rotationMatrix =  rotationMatrix * reflectionMatrix;
+	rotationVector = XMQuaternionRotationMatrix(rotationMatrix);
 
 	up = { 0,1,0 };
 	upVector = XMLoadFloat3(&up);
+	upVector = XMVector3Rotate(upVector, rotationVector);
 
 	m_transform->GetPosition(positionVector);
-	positionVector = XMVector3Transform(positionVector, reflectionMatrix);
+	positionVector = XMVector3TransformCoord(positionVector, reflectionMatrix);
 
 	lookAt = { 0,0,1 };
 	lookAtVector = XMLoadFloat3(&lookAt);
-	lookAtVector = XMVector3Transform(lookAtVector, reflectionMatrix);
+	lookAtVector = XMVector3Rotate(lookAtVector, rotationVector);
+	lookAtVector = XMVectorAdd(positionVector, lookAtVector);
 	
-	roatationVector = m_transform->GetRotationVector();
-
-	lookAtVector = XMVector3Rotate(lookAtVector, roatationVector);
-	upVector = XMVector3Rotate(upVector, roatationVector);
-
 	m_reflectionViewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
     return;
 }

@@ -49,7 +49,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Create the camera object.
 	m_Camera = new CameraClass;
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->SetPosition(0.0f, 0.f, -10.0f);
 	m_Camera->Render();
 	m_Camera->GetViewMatrix(m_baseViewMatrix);
 
@@ -177,7 +177,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 #pragma endregion
 #pragma region TextureRender
 	m_RenderTexture = new RenderTextureClass;
-	result = m_RenderTexture->Initialize(m_Direct3D->GetDevice(), 256, 256, SCREEN_DEPTH, SCREEN_NEAR, 1);
+	result = m_RenderTexture->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, SCREEN_DEPTH, SCREEN_NEAR, 1);
 	if(!result)
 	{
 		return false;
@@ -319,11 +319,11 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 	m_Model->GetTransform()->SetEulerRotation(0, rotation, 0);
 
-	//result =  RenderReflectionToTexture();
-	//if (!result)
-	//{
-	//	return false;
-	//}
+	result =  RenderReflectionToTexture();
+	if (!result)
+	{
+		return false;
+	}
 	
 	// Render the graphics scene.
 	result = Render();
@@ -342,11 +342,14 @@ bool ApplicationClass::Render()
 	int i;
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
-	m_Camera->Render();
-
+	m_Direct3D->TurnZBufferOn();
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Direct3D->GetWorldMatrix(worldMatrix);
+
+	m_Camera->SetPosition(0, -2, -10);
+	m_Camera->SetEulerRotation(0, 10, 0);
+	m_Camera->Render();
+
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
@@ -355,51 +358,43 @@ bool ApplicationClass::Render()
 	m_Frustum->ConstructFrustum(viewMatrix, projectionMatrix);
 #pragma endregion
 #pragma region Contents
+
 	XMMATRIX modelMatrix;
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	modelMatrix = m_Model->GetModelingMatrix();
+
 	result = RenderModelWithShader(TEXTURE, m_Model, modelMatrix, viewMatrix, projectionMatrix);
 	if(!result)
 	{
 		return false;
 	}
 
-	XMFLOAT4 reflectionPlane(0.f, 1.0f, 0.0f, -1.5f);
-	XMVECTOR planeVector = XMLoadFloat4(&reflectionPlane);
+	//XMFLOAT4 reflectionPlane(0.f, 0.0f, 1.0f, 1.5f);
+	//XMVECTOR planeVector = XMLoadFloat4(&reflectionPlane);
 
-	// 반사 행렬 생성
-	XMMATRIX reflectionMatrix = XMMatrixReflect(planeVector);
+	//modelMatrix = m_Model->GetModelingMatrix();
+	//m_Camera->RenderReflection(reflectionPlane);
+	//m_Camera->GetReflectionViewMatrix(viewMatrix);
+	//result = RenderModelWithShader(TEXTURE, m_Model, modelMatrix, viewMatrix, projectionMatrix);
+	//if (!result)
+	//{
+	//	return false;
+	//}
 
-	//// 회전 대칭
-	//XMMATRIX rotationMatrix = m_Model->GetTransform()->GetRotationMatrix();
-	//XMMATRIX reflectedRotationMatrix = rotationMatrix * reflectionMatrix;
+	//m_FloorModel->GetTransform()->SetPosition(0, -1.5f, 0.f);
+	m_FloorModel->GetTransform()->SetPosition(0.f, 0.f, 10.0f);
+	m_FloorModel->GetTransform()->SetEulerRotation(-90,0, 0);
 
-	//// 위치 대칭
-	//XMMATRIX translation = m_Model->GetTransform()->GetTranslationMatrix();
-	//XMMATRIX reflectedTranslation = XMMatrixMultiply(reflectionMatrix, translation);
-
-	//// 대칭된 위치와 회전을 적용
-	//modelMatrix =  reflectedTranslation;
-
-	m_Camera->RenderReflection(reflectionPlane);
-	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
-
-	result = RenderModelWithShader(TEXTURE, m_Model, modelMatrix, reflectionViewMatrix, projectionMatrix);
+	m_FloorModel->Render(m_Direct3D->GetDeviceContext());
+	m_Camera->GetViewMatrix(viewMatrix);
+	modelMatrix = m_FloorModel->GetModelingMatrix();
+	result = RenderModelWithShader(REFLEX, m_FloorModel, modelMatrix, viewMatrix, projectionMatrix);
 	if (!result)
 	{
 		return false;
 	}
 
-	/*m_FloorModel->GetTransform()->SetPosition(0, -1.5f, 0.f);
-	m_FloorModel->Render(m_Direct3D->GetDeviceContext());
-
-	modelMatrix = m_FloorModel->GetModelingMatrix();
-	result = RenderModelWithShader(REFLEX, m_FloorModel, modelMatrix, viewMatrix, projectionMatrix);
-	if(!result)
-	{
-		return false;
-	}*/
 
 #pragma endregion
 #pragma region UI
@@ -524,7 +519,7 @@ bool ApplicationClass::UpdateRenderCount(int renderCount)
 
 bool ApplicationClass::RenderReflectionToTexture()
 {
-	XMMATRIX worldMatrix, reflectionViewMatrix, projectionMatrix;
+	XMMATRIX modelMatrix, reflectionViewMatrix, projectionMatrix;
 	bool result;
 
 	// Set the render target to be the render texture and clear it.
@@ -532,24 +527,24 @@ bool ApplicationClass::RenderReflectionToTexture()
 	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
 
 	// use the camera to calculate the reflection view matrix
-	XMFLOAT4 reflectionPlane(0.f, 1.0f, 0.0f, 1.5f);
-	XMVECTOR planeVector = XMLoadFloat4(&reflectionPlane);
+	XMFLOAT3 reflectnorm = {0, 0, 1};
 
-	XMMATRIX r = XMMatrixReflect(planeVector);
+	XMFLOAT4 reflectionPlane(0.f, 0.0f, 1.0f, -10.f);
+	XMVECTOR planeVector = XMLoadFloat4(&reflectionPlane);
 
 	m_Camera->RenderReflection(reflectionPlane);
 	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
 
 	// Get the matrices.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
-	m_RenderTexture->GetProjectionMatrix(projectionMatrix);
+	m_Direct3D->GetWorldMatrix(modelMatrix);
+	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
 	// Rotate the world matrix by the rotation value so that the cube will spin.
-	worldMatrix = m_Model->GetModelingMatrix();
+	modelMatrix = m_Model->GetModelingMatrix();
 	 
 	// Render the model 
 	m_Model->Render(m_Direct3D->GetDeviceContext());
-	result = RenderModelWithShader(ShaderType::TEXTURE, m_Model, worldMatrix, reflectionViewMatrix, projectionMatrix);
+	result = RenderModelWithShader(ShaderType::TEXTURE, m_Model, modelMatrix, reflectionViewMatrix, projectionMatrix);
 
 	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
 	m_Direct3D->SetBackBufferRenderTarget();
