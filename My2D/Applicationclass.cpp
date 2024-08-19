@@ -346,8 +346,8 @@ bool ApplicationClass::Render()
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 
-	m_Camera->SetPosition(0, -2, -10);
-	m_Camera->SetEulerRotation(0, 10, 0);
+	m_Camera->SetPosition(0, 0, -10);
+	m_Camera->SetEulerRotation(0, 0, 0);
 	m_Camera->Render();
 
 	m_Camera->GetViewMatrix(viewMatrix);
@@ -383,8 +383,8 @@ bool ApplicationClass::Render()
 	//}
 
 	//m_FloorModel->GetTransform()->SetPosition(0, -1.5f, 0.f);
-	m_FloorModel->GetTransform()->SetPosition(0.f, 0.f, 10.0f);
-	m_FloorModel->GetTransform()->SetEulerRotation(-90,0, 0);
+	m_FloorModel->GetTransform()->SetPosition(0.f, 1.5f, 0.0f);
+	m_FloorModel->GetTransform()->SetEulerRotation(-180,0, 0);
 
 	m_FloorModel->Render(m_Direct3D->GetDeviceContext());
 	m_Camera->GetViewMatrix(viewMatrix);
@@ -529,7 +529,7 @@ bool ApplicationClass::RenderReflectionToTexture()
 	// use the camera to calculate the reflection view matrix
 	XMFLOAT3 reflectnorm = {0, 0, 1};
 
-	XMFLOAT4 reflectionPlane(0.f, 0.0f, 1.0f, -10.f);
+	XMFLOAT4 reflectionPlane(0.f, -1.0f, 0.0f, 1.5f);
 	XMVECTOR planeVector = XMLoadFloat4(&reflectionPlane);
 
 	m_Camera->RenderReflection(reflectionPlane);
