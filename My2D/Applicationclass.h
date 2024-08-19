@@ -46,8 +46,8 @@ private:
 	bool Render();
 	bool UpdateFps();
 	bool UpdateRenderCount(int cnt);
-	bool RenderModelWithShader(ShaderType type, int indexCount, XMMATRIX,XMMATRIX,XMMATRIX);
-	bool RenderSceneToTexture(float);
+	bool RenderModelWithShader(ShaderType type, ModelClass* model, XMMATRIX,XMMATRIX,XMMATRIX);
+	bool RenderReflectionToTexture();
 
 
 	float randF(float mul = 1.0f) {
@@ -63,6 +63,7 @@ private:
 
 	ShaderManagerClass* m_ShaderManager;
 	ModelClass* m_Model;
+	ModelClass* m_FloorModel;
 
 	FontShaderClass* m_FontShader;
 	FontClass* m_Font;
@@ -82,7 +83,6 @@ private:
 	TextClass* m_RenderCountString;
 
 	RenderTextureClass* m_RenderTexture;
-	DisplayPlaneClass* m_Plane;
 };
 
 #endif

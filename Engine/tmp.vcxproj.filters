@@ -58,6 +58,12 @@
     <ClCompile Include="transparentshaderclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="reflectionshaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rendertextureclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="applicationclass.h">
@@ -83,6 +89,12 @@
     </ClInclude>
     <ClInclude Include="transparentshaderclass.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="reflectionshaderclass.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rendertextureclass.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

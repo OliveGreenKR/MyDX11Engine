@@ -30,12 +30,15 @@
 //#define MODEL_SPHERE_PATH "../MyDx11Engine/data/sphere.obj"
 #define MODEL_SPHERE_PATH "../My2D/data/sphere.txt"
 #define MODEL_SQUARE_PATH "../My2D/data/square.txt"
+#define MODEL_PLANE_PATH "../My2D/data/plane.txt"
+#define MODEL_FLOOR_PATH "../My2D/data/floor.txt"
 
 #define TEXTURE_STONE01_PATH "../My2D/data/stone01.tga"
 #define TEXTURE_STONE02_PATH "../My2D/data/stone02.tga"
 #define TEXTURE_STONE03_PATH "../My2D/data/stone03.tga"
 #define TEXTURE_DIRT01_PATH "../My2D/data/dirt01.tga"
 #define TEXTURE_SPRITE01_PATH "../My2D/data/sprite01.tga"
+#define TEXTURE_BLUE01_PATH "../My2D/data/blue01.tga"
 
 #define NORMALMAP_STONE01_PATH "../My2D/data/stone01_normal.tga"
 #define NORMALMAP_STONE03_PATH "../My2D/data/stone03_normal.tga"

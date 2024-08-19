@@ -27,7 +27,7 @@ public:
 
 	void RenderReflection(float a, float b, float c, float d) { RenderReflection(XMFLOAT4(a, b, c, d)); }
 	void RenderReflection(XMFLOAT4 plane);
-	XMMATRIX GetReflectionViewMatrix() const { return m_reflectionViewMatrix;}
+	XMMATRIX GetReflectionViewMatrix( XMMATRIX& reflection ) const { return reflection = m_reflectionViewMatrix;}
 
 private:
 	Transform* m_transform;

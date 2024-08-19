@@ -17,7 +17,7 @@ ApplicationClass::ApplicationClass()
 	m_Timer = nullptr;
 	m_Frustum = nullptr;
 	m_RenderTexture = nullptr;
-	m_Plane = nullptr;
+	m_FloorModel = nullptr;
 }
 
 
@@ -135,6 +135,18 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
+
+	strcpy_s(modelFilename, MODEL_FLOOR_PATH);
+	strcpy_s(textureFilename1, TEXTURE_BLUE01_PATH);
+
+	m_FloorModel = new ModelClass;
+	
+	result = m_FloorModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 1, textureFilenames);
+	if (!result)
+	{
+		return false;
+	}
+
 #pragma endregion
 #pragma region Frustum
 	m_Frustum = new FrustumClass;
@@ -171,14 +183,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 #pragma endregion
-#pragma region Plane
-	m_Plane = new DisplayPlaneClass;
-	result = m_Plane->Initialize(m_Direct3D->GetDevice(), 1.0f, 1.0f);
-	if (!result)
-	{
-		return false;
-	}
-#pragma endregion
 	return true;
 
 }
@@ -186,11 +190,11 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 void ApplicationClass::Shutdown()
 {
 	// Release the plane object.
-	if (m_Plane)
+	if (m_FloorModel)
 	{
-		m_Plane->Shutdown();
-		delete m_Plane;
-		m_Plane = 0;
+		m_FloorModel->Shutdown();
+		delete m_FloorModel;
+		m_FloorModel = 0;
 	}
 	// Release the render to texture object.
 	if (m_RenderTexture)
@@ -306,7 +310,20 @@ bool ApplicationClass::Frame(InputClass* Input)
 		return false;
 	}
 #pragma endregion
-	m_Camera->Render();
+	// Update the rotation variable each frame.
+	rotation -= 0.25f;
+	if (rotation < 0.0f)
+	{
+		rotation += 360.0f;
+	}
+
+	m_Model->GetTransform()->SetEulerRotation(0, rotation, 0);
+
+	result =  RenderReflectionToTexture();
+	if (!result)
+	{
+		return false;
+	}
 
 	// Render the graphics scene.
 	result = Render();
@@ -320,11 +337,11 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 bool ApplicationClass::Render()
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix, reflectionViewMatrix;
 	bool renderModel, result;
 	int i;
 	// Clear the buffers to begin the scene.
-	m_Direct3D->BeginScene(0.15f, 0.15f, 0.15f, 1.0f);
+	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	m_Camera->Render();
 
@@ -340,9 +357,22 @@ bool ApplicationClass::Render()
 #pragma region Contents
 	XMMATRIX modelMatrix;
 	m_Model->Render(m_Direct3D->GetDeviceContext());
+	modelMatrix = m_Model->GetModelingMatrix();
+	result = RenderModelWithShader(TEXTURE, m_Model, modelMatrix, viewMatrix, projectionMatrix);
+	if(!result)
+	{
+		return false;
+	}
 
-	modelMatrix = m_Model->GetTransform()->GetModelingMatrix();
-	RenderModelWithShader(REFLEX, m_Model->GetIndexCount(), modelMatrix, viewMatrix, projectionMatrix);
+	m_FloorModel->GetTransform()->SetPosition(0, -1.5f, 0.1f);
+	m_FloorModel->Render(m_Direct3D->GetDeviceContext());
+
+	modelMatrix = m_FloorModel->GetModelingMatrix();
+	result = RenderModelWithShader(REFLEX, m_FloorModel, modelMatrix, viewMatrix, projectionMatrix);
+	if(!result)
+	{
+		return false;
+	}
 
 #pragma endregion
 #pragma region UI
@@ -365,7 +395,7 @@ bool ApplicationClass::Render()
 	// Present the rendered scene to the screen.
 	m_Direct3D->TurnZBufferOn();
 	m_Direct3D->DisableAlphaBlending();
-//#pragma endregion
+#pragma endregion
 
 	m_Direct3D->EndScene();
 
@@ -465,30 +495,30 @@ bool ApplicationClass::UpdateRenderCount(int renderCount)
 	return true;
 }
 
-bool ApplicationClass::RenderSceneToTexture(float rotation)
+bool ApplicationClass::RenderReflectionToTexture()
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	XMMATRIX worldMatrix, reflectionViewMatrix, projectionMatrix;
 	bool result;
 
 	// Set the render target to be the render texture and clear it.
 	m_RenderTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
-	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.6f, 0.23f, 1.0f);
+	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
 
-	// Set the position of the camera for viewing the cube.
-	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
-	m_Camera->Render();
+	// use the camera to calculate the reflection view matrix
+	m_Camera->RenderReflection(0, -1, 0, -1.5f);
+
 
 	// Get the matrices.
 	m_Direct3D->GetWorldMatrix(worldMatrix);
-	m_Camera->GetViewMatrix(viewMatrix);
+	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
 	m_RenderTexture->GetProjectionMatrix(projectionMatrix);
 
 	// Rotate the world matrix by the rotation value so that the cube will spin.
-	worldMatrix = XMMatrixRotationY(rotation);
+	worldMatrix = m_Model->GetModelingMatrix();
 
 	// Render the model 
 	m_Model->Render(m_Direct3D->GetDeviceContext());
-	result = RenderModelWithShader(ShaderType::POINT_LIGHT, m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+	result = RenderModelWithShader(ShaderType::TEXTURE, m_Model, worldMatrix, reflectionViewMatrix, projectionMatrix);
 
 	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
 	m_Direct3D->SetBackBufferRenderTarget();
@@ -497,14 +527,15 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 	return result;
 }
 
-bool ApplicationClass::RenderModelWithShader(ShaderType type, int indexCount, XMMATRIX worldMatrix , XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
+bool ApplicationClass::RenderModelWithShader(ShaderType type, ModelClass* model, XMMATRIX worldMatrix , XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 {
 	bool result;
+	int indexCount =  model->GetIndexCount();
 
 	switch (type) {
 		case ShaderType::TEXTURE:
 			TextureShaderParameters tParameters;
-			tParameters.baseTexture = m_Model->GetTexture(0);
+			tParameters.baseTexture = model->GetTexture(0);
 			tParameters.world = worldMatrix;
 			tParameters.view = viewMatrix;
 			tParameters.projection = projectionMatrix;
@@ -513,8 +544,8 @@ bool ApplicationClass::RenderModelWithShader(ShaderType type, int indexCount, XM
 			break;
 		case ShaderType::NORMAL_MAP:
 			NormalMapShaderParameters nomalParam;
-			nomalParam.baseTexture = m_Model->GetTexture(0);
-			nomalParam.normalMap = m_Model->GetTexture(1);
+			nomalParam.baseTexture = model->GetTexture(0);
+			nomalParam.normalMap = model->GetTexture(1);
 			nomalParam.diffuseColor = m_Light->GetDiffuseColor();
 			nomalParam.lightDirection = m_Light->GetDirection();
 			nomalParam.world = worldMatrix;
@@ -525,7 +556,7 @@ bool ApplicationClass::RenderModelWithShader(ShaderType type, int indexCount, XM
 			break;
 		case ShaderType::POINT_LIGHT:
 			PointLightShaderParameters plParameters;
-			plParameters.baseTexture = m_Model->GetTexture(0);
+			plParameters.baseTexture = model->GetTexture(0);
 			plParameters.cameraPosition = m_Camera->GetPosition();
 			plParameters.lightCount = lightCount;
 
@@ -546,7 +577,7 @@ bool ApplicationClass::RenderModelWithShader(ShaderType type, int indexCount, XM
 			break;
 		case ShaderType::FOG:
 			FogShaderParameters fogParameters;
-			fogParameters.baseTexture = m_Model->GetTexture(0);
+			fogParameters.baseTexture = model->GetTexture(0);
 
 			fogParameters.worldMatrix = worldMatrix;
 			fogParameters.viewMatrix = viewMatrix;
@@ -564,10 +595,16 @@ bool ApplicationClass::RenderModelWithShader(ShaderType type, int indexCount, XM
 			break;
 		case ShaderType::REFLEX:
 			ReflexShaderParameters reflexParameters;
+			XMMATRIX reflectionMatrix;
+			m_Camera->GetReflectionViewMatrix(reflectionMatrix);
+
+			reflexParameters.baseTexture = model->GetTexture(0);
+			reflexParameters.reflectionTexture = m_RenderTexture->GetShaderResourceView();
+
 			reflexParameters.world = worldMatrix;
 			reflexParameters.view = viewMatrix;
 			reflexParameters.projection = projectionMatrix;
-			reflexParameters.reflection = m_Camera->GetReflectionViewMatrix();
+			reflexParameters.reflection = reflectionMatrix;
 
 			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, REFLEX, &reflexParameters);
 			break;

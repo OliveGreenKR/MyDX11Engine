@@ -12,8 +12,9 @@
 #include "inputclass.h"
 #include "cameraclass.h"
 #include "modelclass.h"
+#include "rendertextureclass.h"
 #include "textureshaderclass.h"
-#include "transparentshaderclass.h"
+#include "reflectionshaderclass.h"
 
 
 /////////////
@@ -40,14 +41,17 @@ public:
 	bool Frame(InputClass*);
 
 private:
-	bool Render();
+	bool RenderReflectionToTexture(float);
+	bool Render(float);
 
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
-	ModelClass *m_Model1, *m_Model2;
+	ModelClass* m_CubeModel;
+	ModelClass* m_FloorModel;
+	RenderTextureClass* m_RenderTexture;
 	TextureShaderClass* m_TextureShader;
-	TransparentShaderClass* m_TransparentShader;
+	ReflectionShaderClass* m_ReflectionShader;
 };
 
 #endif
