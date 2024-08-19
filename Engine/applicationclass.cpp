@@ -52,7 +52,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
     strcpy_s(modelFilename, "../Engine/data/cube.txt");
 
     // Set the file name of the texture.
-    strcpy_s(textureFilename, "../Engine/data/stone01.tga");
+    strcpy_s(textureFilename, "../Engine/data/stone02.tga");
 
     // Create and initialize the cube model object.
     m_CubeModel = new ModelClass;
@@ -66,8 +66,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Set the file name of the floor model.
     strcpy_s(modelFilename, "../Engine/data/floor.txt");
-
-    // Set the file name of the texture.
     strcpy_s(textureFilename, "../Engine/data/blue01.tga");
 
     // Create and initialize the floor model object.

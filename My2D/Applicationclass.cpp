@@ -119,7 +119,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	strcpy_s(modelFilename, MODEL_CUBE_PATH);
 
 	// Set the file name of the textures.
-	strcpy_s(textureFilename1, TEXTURE_STONE01_PATH);
+	strcpy_s(textureFilename1, TEXTURE_STONE02_PATH);
 	strcpy_s(textureFilename2, NORMALMAP_STONE01_PATH);
 	strcpy_s(textureFilename3, SPEC_STONE03_PATH);
 
@@ -319,12 +319,12 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 	m_Model->GetTransform()->SetEulerRotation(0, rotation, 0);
 
-	result =  RenderReflectionToTexture();
-	if (!result)
-	{
-		return false;
-	}
-
+	//result =  RenderReflectionToTexture();
+	//if (!result)
+	//{
+	//	return false;
+	//}
+	
 	// Render the graphics scene.
 	result = Render();
 	if (!result)
@@ -357,6 +357,7 @@ bool ApplicationClass::Render()
 #pragma region Contents
 	XMMATRIX modelMatrix;
 	m_Model->Render(m_Direct3D->GetDeviceContext());
+
 	modelMatrix = m_Model->GetModelingMatrix();
 	result = RenderModelWithShader(TEXTURE, m_Model, modelMatrix, viewMatrix, projectionMatrix);
 	if(!result)
@@ -364,7 +365,33 @@ bool ApplicationClass::Render()
 		return false;
 	}
 
-	m_FloorModel->GetTransform()->SetPosition(0, -1.5f, 0.1f);
+	XMFLOAT4 reflectionPlane(0.f, 1.0f, 0.0f, -1.5f);
+	XMVECTOR planeVector = XMLoadFloat4(&reflectionPlane);
+
+	// 반사 행렬 생성
+	XMMATRIX reflectionMatrix = XMMatrixReflect(planeVector);
+
+	//// 회전 대칭
+	//XMMATRIX rotationMatrix = m_Model->GetTransform()->GetRotationMatrix();
+	//XMMATRIX reflectedRotationMatrix = rotationMatrix * reflectionMatrix;
+
+	//// 위치 대칭
+	//XMMATRIX translation = m_Model->GetTransform()->GetTranslationMatrix();
+	//XMMATRIX reflectedTranslation = XMMatrixMultiply(reflectionMatrix, translation);
+
+	//// 대칭된 위치와 회전을 적용
+	//modelMatrix =  reflectedTranslation;
+
+	m_Camera->RenderReflection(reflectionPlane);
+	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
+
+	result = RenderModelWithShader(TEXTURE, m_Model, modelMatrix, reflectionViewMatrix, projectionMatrix);
+	if (!result)
+	{
+		return false;
+	}
+
+	/*m_FloorModel->GetTransform()->SetPosition(0, -1.5f, 0.f);
 	m_FloorModel->Render(m_Direct3D->GetDeviceContext());
 
 	modelMatrix = m_FloorModel->GetModelingMatrix();
@@ -372,7 +399,7 @@ bool ApplicationClass::Render()
 	if(!result)
 	{
 		return false;
-	}
+	}*/
 
 #pragma endregion
 #pragma region UI
@@ -505,17 +532,21 @@ bool ApplicationClass::RenderReflectionToTexture()
 	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
 
 	// use the camera to calculate the reflection view matrix
-	m_Camera->RenderReflection(0, -1, 0, -1.5f);
+	XMFLOAT4 reflectionPlane(0.f, 1.0f, 0.0f, 1.5f);
+	XMVECTOR planeVector = XMLoadFloat4(&reflectionPlane);
 
+	XMMATRIX r = XMMatrixReflect(planeVector);
+
+	m_Camera->RenderReflection(reflectionPlane);
+	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
 
 	// Get the matrices.
 	m_Direct3D->GetWorldMatrix(worldMatrix);
-	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
 	m_RenderTexture->GetProjectionMatrix(projectionMatrix);
 
 	// Rotate the world matrix by the rotation value so that the cube will spin.
 	worldMatrix = m_Model->GetModelingMatrix();
-
+	 
 	// Render the model 
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 	result = RenderModelWithShader(ShaderType::TEXTURE, m_Model, worldMatrix, reflectionViewMatrix, projectionMatrix);

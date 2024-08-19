@@ -15,6 +15,7 @@ public:
 
 public:
 	__forceinline void SetPosition(const XMFLOAT3& position) { m_position = position; }
+	__forceinline void SetPosition(const XMVECTOR& position) { XMStoreFloat3(&m_position, position); }
     __forceinline void SetPosition(float x, float y, float z) { m_position = XMFLOAT3(x, y, z); }
 
 	__forceinline void AddPosition(const XMFLOAT3& position) { m_position.x += position.x; m_position.y += position.y; m_position.z += position.z; }
@@ -29,6 +30,7 @@ public:
 
     XMFLOAT3 GetPosition() const { return m_position; }
     XMFLOAT3 GetPosition() { return m_position; }
+	void GetPosition(XMVECTOR& position) const { position = XMLoadFloat3(&m_position); }
     XMFLOAT3 GetScale() const { return m_scale; }
     XMFLOAT4 GetRotation() const { return m_rotation; }
 	XMVECTOR GetRotationVector() const { return XMLoadFloat4(&m_rotation); }

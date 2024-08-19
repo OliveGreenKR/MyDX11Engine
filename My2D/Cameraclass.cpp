@@ -65,54 +65,30 @@ void CameraClass::Render()
 
 void CameraClass::RenderReflection(XMFLOAT4 plane)
 {
-    XMFLOAT3 up, position, lookAt;
-    XMVECTOR upVector, positionVector, lookAtVector, rotationVector;
-    XMMATRIX rotationMatrix;
-    XMVECTOR planeNormal, distanceVector, reflectedPositionVector;
-    float distance;
+	XMFLOAT3 up,lookAt;
+	XMVECTOR upVector, positionVector, lookAtVector, roatationVector;
+	float yaw, pitch, roll;
+	XMMATRIX rotationMatrix;
+	XMMATRIX reflectionMatrix;
 
-    // Setup the position of the camera in the world.
-    position = m_transform->GetPosition();
-    positionVector = XMLoadFloat3(&position);
+	// Create the reflection matrix using the plane.
+	reflectionMatrix = XMMatrixReflect(XMLoadFloat4(&plane));
 
-    // Calculate the distance between the camera and the reflection plane.
-    planeNormal = XMVector3Normalize(XMLoadFloat4(&plane));
-    distanceVector = XMPlaneDotCoord(planeNormal, positionVector);
-    distance = XMVectorGetX(distanceVector);
+	up = { 0,1,0 };
+	upVector = XMLoadFloat3(&up);
 
-    // Calculate the reflected point
-    reflectedPositionVector = XMVectorSubtract(positionVector, XMVectorScale(planeNormal, 2.0f * distance));
+	m_transform->GetPosition(positionVector);
+	positionVector = XMVector3Transform(positionVector, reflectionMatrix);
 
+	lookAt = { 0,0,1 };
+	lookAtVector = XMLoadFloat3(&lookAt);
+	lookAtVector = XMVector3Transform(lookAtVector, reflectionMatrix);
+	
+	roatationVector = m_transform->GetRotationVector();
 
-    // Get the rotation matrix from the transform.
-    rotationMatrix = m_transform->GetRotationMatrix();
-    rotationVector = m_transform->GetRotationVector();
+	lookAtVector = XMVector3Rotate(lookAtVector, roatationVector);
+	upVector = XMVector3Rotate(upVector, roatationVector);
 
-    // Setup the vector that points upwards.
-    up = { 0.0f, 1.0f, 0.0f };
-    upVector = XMLoadFloat3(&up);
-    upVector = XMVector3Normalize(XMVector3TransformCoord(upVector,rotationMatrix));
-
-    // Setup where the camera is looking by default.
-    lookAt = { 0.0f, 0.0f, 1.0f };
-    lookAtVector = XMLoadFloat3(&lookAt);
-    lookAtVector = XMVector3Normalize(XMVector3TransformCoord(lookAtVector, rotationMatrix));
-
-    // Reflect the rotation vector over the plane
-    XMVECTOR reflectedRotationVector = XMVector3Reflect(rotationVector, planeNormal);
-
-    // Create the rotation matrix
-    rotationMatrix = XMMatrixRotationQuaternion(reflectedRotationVector);
-
-    // Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
-    lookAtVector = XMVector3TransformCoord(lookAtVector, rotationMatrix);
-    upVector = XMVector3TransformCoord(upVector, rotationMatrix);
-
-    // Translate the rotated camera position to the location of the viewer.
-    lookAtVector = XMVectorAdd(reflectedPositionVector, lookAtVector);
-
-    // Finally create the view matrix from the three updated vectors.
-    m_reflectionViewMatrix = XMMatrixLookAtLH(reflectedPositionVector, lookAtVector, upVector);
-
+	m_reflectionViewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
     return;
 }
