@@ -43,6 +43,18 @@
     <FxCompile Include="psReflex.fx">
       <Filter>Sources\Core\Shader\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="psWater.fx">
+      <Filter>Sources\Core\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="vsWater.fx">
+      <Filter>Sources\Core\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="vsRefraction.fx">
+      <Filter>Sources\Core\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="psRefraction.fx">
+      <Filter>Sources\Core\Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TextClass.cpp">
@@ -130,6 +142,12 @@
       <Filter>Sources\Core\Shader\HLSL</Filter>
     </ClCompile>
     <ClCompile Include="ReflexShaderClass.cpp">
+      <Filter>Sources\Core\Shader\private</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterShaderClass.cpp">
+      <Filter>Sources\Core\Shader\private</Filter>
+    </ClCompile>
+    <ClCompile Include="RefractionShaderClass.cpp">
       <Filter>Sources\Core\Shader\private</Filter>
     </ClCompile>
   </ItemGroup>
@@ -222,6 +240,12 @@
       <Filter>Sources\Core\Shader</Filter>
     </ClInclude>
     <ClInclude Include="ReflexShaderClass.h">
+      <Filter>Sources\Core\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterShaderClass.h">
+      <Filter>Sources\Core\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RefractionShaderClass.h">
       <Filter>Sources\Core\Shader</Filter>
     </ClInclude>
   </ItemGroup>

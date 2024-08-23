@@ -62,8 +62,8 @@ protected:
 
 		return;
 	}
+	static HRESULT CompileShaderFromFile(WCHAR* filename, LPCSTR entryPoint, LPCSTR shaderModel, OUT ID3DBlob** buffer);
 	
-
 protected:
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11PixelShader* m_pixelShader;
@@ -127,4 +127,28 @@ inline void ShaderClass<ShaderParameters>::ShutdownShader()
 		m_vertexShader->Release();
 		m_vertexShader = 0;
 	}
+}
+
+//to avoid multiple definitions issue => using 'inline'
+template<class ShaderParameters>
+inline HRESULT ShaderClass<ShaderParameters>::CompileShaderFromFile(WCHAR* filename, LPCSTR entryPoint, LPCSTR shaderModel, OUT ID3DBlob** buffer)
+{
+	HRESULT result;
+	ID3DBlob* errorMessage;
+	errorMessage = 0;
+	
+	result = D3DCompileFromFile(filename, NULL, NULL, entryPoint, shaderModel, D3D10_SHADER_ENABLE_STRICTNESS, 0, buffer, &errorMessage);
+	
+	if (FAILED(result))
+	{
+		if (errorMessage)
+		{
+			OutputShaderErrorMessage(errorMessage, GetActiveWindow(), filename);
+		}
+		else
+		{
+			MessageBox(GetActiveWindow(), filename, L"Missing Shader File", MB_OK);
+		}
+	}
+	return result;
 }

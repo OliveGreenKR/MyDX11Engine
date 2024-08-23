@@ -23,6 +23,12 @@
 #define VS_REFLEX_PATH L"../My2D/vsReflex.fx"
 #define PS_REFLEX_PATH L"../My2D/psReflex.fx"
 
+#define VS_WATER_PATH L"../My2D/vsWater.fx"
+#define PS_WATER_PATH L"../My2D/psWater.fx"
+
+#define VS_REFRAC_PATH L"../My2D/vsRefraction.fx"
+#define PS_REFRAC_PATH L"../My2D/psRefraction.fx"
+
 #define VS_FONT_PATH L"../My2D/vsFont.fx"
 #define PS_FONT_PATH L"../My2D/psFont.fx"
 
@@ -34,6 +40,10 @@
 #define MODEL_TRI_PATH "../My2D/data/triangle.txt"
 #define MODEL_PLANE_PATH "../My2D/data/plane.txt"
 #define MODEL_FLOOR_PATH "../My2D/data/floor.txt"
+#define MODEL_BATH_PATH "../My2D/data/bath.txt"
+#define MODEL_GROUND_PATH "../My2D/data/ground.txt"
+#define MODEL_WALL_PATH "../My2D/data/wall.txt"
+#define MODEL_WATER_PATH "../My2D/data/water.txt"
 
 #define TEXTURE_STONE01_PATH "../My2D/data/stone01.tga"
 #define TEXTURE_STONE02_PATH "../My2D/data/stone02.tga"
@@ -41,6 +51,10 @@
 #define TEXTURE_DIRT01_PATH "../My2D/data/dirt01.tga"
 #define TEXTURE_SPRITE01_PATH "../My2D/data/sprite01.tga"
 #define TEXTURE_BLUE01_PATH "../My2D/data/blue01.tga"
+#define TEXTURE_WATER01_PATH "../My2D/data/water01.tga"
+#define TEXTURE_WALL01_PATH "../My2D/data/wall01.tga"
+#define TEXTURE_MARBLE01_PATH "../My2D/data/marble01.tga"
+#define TEXTURE_GROUND01_PATH "../My2D/data/ground01.tga"
 
 #define NORMALMAP_STONE01_PATH "../My2D/data/stone01_normal.tga"
 #define NORMALMAP_STONE03_PATH "../My2D/data/stone03_normal.tga"
