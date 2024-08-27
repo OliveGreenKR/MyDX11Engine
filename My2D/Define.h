@@ -3,7 +3,10 @@
 #define CWD ("../My2D")
 
 #define VS_POSUV_PATH L"../My2D/vsPosUV.fx"
+#define VS_POSUVN_PATH L"../My2D/vsPosUVN.fx"
 #define PS_PATH L"../My2D/psTexture.fx"
+
+#define PS_LIGHT_PATH L"../My2D/psLight.fx"
 
 #define VS_MULTITEX_PATH L"../My2D/vsMultiTexture.fx"
 #define PS_MULTITEX_PATH L"../My2D/psMultiTexture.fx"

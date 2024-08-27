@@ -1,61 +1,75 @@
-#include "RefractionShaderClass.h"
+#include "LightShaderClass.h"
 #include "Define.h"
 
-RefractionShaderClass::RefractionShaderClass()
-    : ShaderClass(), m_matrixBuffer(nullptr), m_lightBuffer(nullptr), m_clipPlaneBuffer(nullptr)
+LightShaderClass::LightShaderClass()
+	: ShaderClass(), m_matrixBuffer(nullptr), m_lightBuffer(nullptr) {}
+
+LightShaderClass::~LightShaderClass()
 {
+		Shutdown();
 }
 
-RefractionShaderClass::~RefractionShaderClass()
+bool LightShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
-    Shutdown();
+	bool result;
+	wchar_t vsFilename[128];
+	wchar_t psFilename[128];
+	int error;
+
+	// Set the filename of the vertex shader.
+	error = wcscpy_s(vsFilename, 128, VS_POSUVN_PATH);
+	if (error != 0)
+	{
+		return false;
+	}
+
+	// Set the filename of the pixel shader.
+	error = wcscpy_s(psFilename, 128, PS_LIGHT_PATH);
+	if (error != 0)
+	{
+		return false;
+	}
+
+	// Initialize the vertex and pixel shaders.
+	result = InitializeShader(device, hwnd, vsFilename, psFilename);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
 }
 
-bool RefractionShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
+
+void LightShaderClass::Shutdown()
 {
-    bool result;
-    wchar_t vsFilename[128];
-    wchar_t psFilename[128];
-    int error;
-
-    // Set the filename of the vertex shader.
-    error = wcscpy_s(vsFilename, 128, VS_REFRAC_PATH);
-    if (error != 0)
-    {
-        return false;
-    }
-
-    // Set the filename of the pixel shader.
-    error = wcscpy_s(psFilename, 128, PS_REFRAC_PATH);
-    if (error != 0)
-    {
-        return false;
-    }
-
-    // Initialize the vertex and pixel shaders.
-    result = InitializeShader(device, hwnd, vsFilename, psFilename);
-    if (!result)
-    {
-        return false;
-    }
-
-    return true;
+	ShaderClass::ShutdownShader();
+	ShutdownShader();
 }
 
-void RefractionShaderClass::Shutdown()
+void LightShaderClass::ShutdownShader()
 {
-    ShaderClass::ShutdownShader();
-    ShutdownShader();
+	if (m_lightBuffer)
+	{
+		m_lightBuffer->Release();
+		m_lightBuffer = nullptr;
+	}
+
+	if (m_matrixBuffer)
+	{
+		m_matrixBuffer->Release();
+		m_matrixBuffer = nullptr;
+	}
 }
 
-bool RefractionShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
+bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename) 
 {
     HRESULT result;
     ID3D10Blob* vertexShaderBuffer;
     ID3D10Blob* pixelShaderBuffer;
     D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
     unsigned int numElements;
-    D3D11_BUFFER_DESC matrixBufferDesc, lightBufferDesc, ClipBufferDesc;
+    D3D11_BUFFER_DESC matrixBufferDesc, lightBufferDesc;
     D3D11_SAMPLER_DESC samplerDesc;
 
     // Initialize the pointers this function will use to null.
@@ -161,20 +175,6 @@ bool RefractionShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WC
     }
 
 
-    ClipBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    ClipBufferDesc.ByteWidth = sizeof(ClipPlaneBufferType);
-    ClipBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    ClipBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    ClipBufferDesc.MiscFlags = 0;
-    ClipBufferDesc.StructureByteStride = 0;
-
-    // Create the light constant buffer pointer so we can access the pixel shader constant buffer from within this class.
-    result = device->CreateBuffer(&ClipBufferDesc, nullptr, &m_clipPlaneBuffer);
-    if (FAILED(result))
-    {
-        return false;
-    }
-
     // Create a texture sampler state description.
     samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
     samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -200,91 +200,60 @@ bool RefractionShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WC
     return true;
 }
 
-void RefractionShaderClass::ShutdownShader()
-{
-    // Release the clip plane constant buffer.
-    if(m_clipPlaneBuffer)
-	{
-		m_clipPlaneBuffer->Release();
-		m_clipPlaneBuffer = nullptr;
-	}
-
-    // Release the light constant buffer.
-    if (m_lightBuffer)
-    {
-        m_lightBuffer->Release();
-        m_lightBuffer = nullptr;
-    }
-
-    // Release the matrix constant buffer.
-    if (m_matrixBuffer)
-    {
-        m_matrixBuffer->Release();
-        m_matrixBuffer = nullptr;
-    }
-}
-
-bool RefractionShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, RefractionShaderParameters& parameters)
+bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, LightShaderParameters& parameters)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     MatrixBufferType* dataPtr;
-    LightBufferType* lightPtr;
-    ClipPlaneBufferType* clipPtr;
+    LightBufferType* dataPtr2;
 
-    // MatrixBuffer
+    // Transpose the matrices to prepare them for the shader.
+    parameters.world = XMMatrixTranspose(parameters.world);
+    parameters.view = XMMatrixTranspose(parameters.view);
+    parameters.projection = XMMatrixTranspose(parameters.projection);
+
+    // Lock the constant buffer so it can be written to.
     result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
         return false;
     }
 
+    // Get a pointer to the data in the constant buffer.
     dataPtr = (MatrixBufferType*)mappedResource.pData;
 
-    dataPtr->world = XMMatrixTranspose(parameters.world);
-    dataPtr->view = XMMatrixTranspose(parameters.view);
-    dataPtr->projection = XMMatrixTranspose(parameters.projection);
+    // Copy the matrices into the constant buffer.
+    dataPtr->world = parameters.world;
+    dataPtr->view = parameters.view;
+    dataPtr->projection = parameters.projection;
 
+    // Unlock the constant buffer.
     deviceContext->Unmap(m_matrixBuffer, 0);
 
-    // LightBuffer
+    // Lock the light constant buffer so it can be written to.
     result = deviceContext->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
         return false;
     }
 
-    lightPtr = (LightBufferType*)mappedResource.pData;
+    // Get a pointer to the data in the constant buffer.
+    dataPtr2 = (LightBufferType*)mappedResource.pData;
 
-    lightPtr->ambientColor = parameters.ambientColor;
-    lightPtr->diffuseColor = parameters.diffuseColor;
-    lightPtr->lightDirection = parameters.lightDirection;
-    lightPtr->padding = 0.0f;
+    // Copy the lighting variables into the constant buffer.
+    dataPtr2->ambientColor = parameters.ambientColor;
+    dataPtr2->diffuseColor = parameters.diffuseColor;
+    dataPtr2->lightDirection = parameters.lightDirection;
+    dataPtr2->padding = 0.0f;
 
+    // Unlock the constant buffer.
     deviceContext->Unmap(m_lightBuffer, 0);
 
-    // ClipPlaneBuffer
-    result = deviceContext->Map(m_clipPlaneBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    if (FAILED(result))
-	{
-		return false;
-	}
-
-    clipPtr = (ClipPlaneBufferType*)mappedResource.pData;
-
-    clipPtr->clipPlane = parameters.clipPlane;
-
-    deviceContext->Unmap(m_clipPlaneBuffer, 0);
-
-    // Set Constant Buffers
     deviceContext->VSSetConstantBuffers(0, 1, &m_matrixBuffer);
-    deviceContext->VSSetConstantBuffers(1, 1, &m_clipPlaneBuffer);
 
     deviceContext->PSSetConstantBuffers(0, 1, &m_lightBuffer);
 
-    // Set the shader texture resource
     deviceContext->PSSetShaderResources(0, 1, &parameters.baseTexture);
 
-    deviceContext->PSSetSamplers(0, 1, &m_sampleState);
     return true;
 }

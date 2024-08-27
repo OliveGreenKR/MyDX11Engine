@@ -5,8 +5,8 @@ ShaderManagerClass::ShaderManagerClass()
 	m_TextureShader = nullptr;
 	m_PointLightShader = nullptr;
 	m_NormalMapShader = nullptr;
-	m_FogShader = nullptr;
-	m_ReflexShader = nullptr;
+	m_LightShader = nullptr;
+	m_WaterShader = nullptr;
 }
 
 ShaderManagerClass::~ShaderManagerClass()
@@ -25,6 +25,13 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
+	m_LightShader = new LightShaderClass;
+	result = m_LightShader->Initialize(device, hwnd);
+	if (!result)
+	{
+		return false;
+	}
+
 	m_PointLightShader =  new PointLightShaderClass;
 	result = m_PointLightShader->Initialize(device, hwnd);
 	if (!result)
@@ -39,15 +46,15 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
 		return false;
 	}
 
-	m_FogShader = new FogShaderClass;
-	result = m_FogShader->Initialize(device, hwnd);
+	m_WaterShader = new WaterShaderClass;
+	result = m_WaterShader->Initialize(device, hwnd);
 	if (!result)
 	{
 		return false;
 	}
 
-	m_ReflexShader = new ReflexShaderClass;
-	result = m_ReflexShader->Initialize(device, hwnd);
+	m_RefractionShader = new RefractionShaderClass;
+	result = m_RefractionShader->Initialize(device, hwnd);
 	if (!result)
 	{
 		return false;
@@ -58,18 +65,18 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
 
 void ShaderManagerClass::Shutdown()
 {
-	// Release the reflex shader object.
-	if (m_ReflexShader)
+	if (m_RefractionShader) 
 	{
-		m_ReflexShader->Shutdown();
-		delete m_ReflexShader;
-		m_ReflexShader = nullptr;
+		m_RefractionShader->Shutdown();
+		delete m_RefractionShader;
+		m_RefractionShader = nullptr;
+	
 	}
-	if(m_FogShader)
+	if(m_WaterShader)
 	{
-		m_FogShader->Shutdown();
-		delete m_FogShader;
-		m_FogShader = nullptr;
+		m_WaterShader->Shutdown();
+		delete m_WaterShader;
+		m_WaterShader = nullptr;
 	}
 
 	if (m_NormalMapShader)
@@ -85,6 +92,13 @@ void ShaderManagerClass::Shutdown()
 		m_PointLightShader->Shutdown();
 		delete m_PointLightShader;
 		m_PointLightShader = nullptr;
+	}
+
+	if (m_LightShader)
+	{
+		m_LightShader->Shutdown();
+		delete m_LightShader;
+		m_LightShader = nullptr;
 	}
 
 	// Release the texture shader object.
@@ -106,6 +120,10 @@ bool ShaderManagerClass::RenderShader(ID3D11DeviceContext* deviceContext, int in
 		{
 			return m_TextureShader->Render(deviceContext, indexCount, *(TextureShaderParameters*)parameters);
 		}
+		case LIGHT:
+		{
+			return m_LightShader->Render(deviceContext, indexCount, *(LightShaderParameters*)parameters);
+		}
 		case POINT_LIGHT:
 		{
 			return m_PointLightShader->Render(deviceContext, indexCount, *(PointLightShaderParameters*)parameters);
@@ -114,13 +132,13 @@ bool ShaderManagerClass::RenderShader(ID3D11DeviceContext* deviceContext, int in
 		{
 			return m_NormalMapShader->Render(deviceContext, indexCount, *(NormalMapShaderParameters*)parameters);
 		}
-		case FOG:
+		case WATER:
 		{
-			return m_FogShader->Render(deviceContext, indexCount, *(FogShaderParameters*)parameters);
+			return m_WaterShader->Render(deviceContext, indexCount, *(WaterShaderParameters*)parameters);
 		}
-		case REFLEX:
+		case REFRACTION:
 		{
-			return m_ReflexShader->Render(deviceContext, indexCount, *(ReflexShaderParameters*)parameters);
+			return m_RefractionShader->Render(deviceContext, indexCount, *(RefractionShaderParameters*)parameters);
 		}
 		default:
 			return false;

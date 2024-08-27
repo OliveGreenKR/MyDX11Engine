@@ -7,7 +7,12 @@ ApplicationClass::ApplicationClass()
 	m_Direct3D = nullptr;
 	m_Camera = nullptr;
 	m_ShaderManager = nullptr;
-	m_Model = nullptr;
+
+	m_GroundModel = nullptr;
+	m_BathModel = nullptr;
+	m_WallModel = nullptr;
+	m_WaterModel = nullptr;
+
 	m_FontShader = nullptr;
 	m_Font = nullptr;
 	m_Fps = nullptr;
@@ -16,8 +21,9 @@ ApplicationClass::ApplicationClass()
 	m_PointLights = nullptr;
 	m_Timer = nullptr;
 	m_Frustum = nullptr;
-	m_RenderTexture = nullptr;
-	m_FloorModel = nullptr;
+
+	m_RefractionTexture = nullptr;
+	m_ReflectionTexture = nullptr;
 }
 
 
@@ -52,6 +58,9 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->SetPosition(0.0f, 0.f, -10.0f);
 	m_Camera->Render();
 	m_Camera->GetViewMatrix(m_baseViewMatrix);
+
+	m_Camera->SetPosition(-10.0f, 6.0f, -10.0f);
+	m_Camera->SetEulerRotation(0, 45.f, 0);
 
 	// Create and initialize the font shader object.
 	m_FontShader = new FontShaderClass;
@@ -114,34 +123,55 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 #pragma endregion
 #pragma region Model
-	// Set the file name of the model.
-	//strcpy_s(modelFilename, MODEL_SPHERE_PATH);
-	strcpy_s(modelFilename, MODEL_CUBE2_PATH);
-
-	// Set the file name of the textures.
-	strcpy_s(textureFilename1, TEXTURE_STONE02_PATH);
-	strcpy_s(textureFilename2, NORMALMAP_STONE01_PATH);
-	strcpy_s(textureFilename3, SPEC_STONE03_PATH);
+	//strcpy_s(modelFilename, MODEL_CUBE2_PATH);
+	//strcpy_s(textureFilename1, TEXTURE_STONE02_PATH);
+	//strcpy_s(textureFilename2, NORMALMAP_STONE01_PATH);
+	//strcpy_s(textureFilename3, SPEC_STONE03_PATH);
 
 	textureFilenames[0] = textureFilename1;
 	textureFilenames[1] = textureFilename2;
 	textureFilenames[2] = textureFilename3;
 
-	// Create and initialize the model object.
-	m_Model = new ModelClass;
+	strcpy_s(modelFilename, "../My2D/data/ground.txt");
+	strcpy_s(textureFilename1, "../My2D/data/ground01.tga");
 
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 2, textureFilenames);
+	// Create and initialize the model object.
+	m_GroundModel = new ModelClass;
+
+	result = m_GroundModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 2, textureFilenames);
 	if (!result)
 	{
 		return false;
 	}
 
-	strcpy_s(modelFilename, MODEL_FLOOR_PATH);
-	strcpy_s(textureFilename1, TEXTURE_BLUE01_PATH);
+	strcpy_s(modelFilename, "../My2D/data/wall.txt");
+	strcpy_s(textureFilename1, "../My2D/data/wall01.tga");
 
-	m_FloorModel = new ModelClass;
+	m_WallModel = new ModelClass;
 	
-	result = m_FloorModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 1, textureFilenames);
+	result = m_WallModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 1, textureFilenames);
+	if (!result)
+	{
+		return false;
+	}
+
+	strcpy_s(modelFilename, "../My2D/data/bath.txt");
+	strcpy_s(textureFilename1, "../My2D/data/marble01.tga");
+
+	m_BathModel = new ModelClass;
+
+	result = m_BathModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 1, textureFilenames);
+	if (!result)
+	{
+		return false;
+	}
+
+	strcpy_s(modelFilename, "../My2D/data/water.txt");
+	strcpy_s(textureFilename1, "../My2D/data/water01.tga");
+
+	m_WaterModel = new ModelClass;
+
+	result = m_WaterModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 1, textureFilenames);
 	if (!result)
 	{
 		return false;
@@ -153,11 +183,9 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 #pragma endregion
 #pragma region Lights
 	m_Light = new LightClass;
+	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.f, 1.f, 1.0f, 1.0f);
-	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
-	m_Light->SetSpecularColor(1.0f,0.0f,1.0f,1.0f);
-	m_Light->SetSpecularPower(16.0f);
-
+	m_Light->SetDirection(0.0f, -1.0f, 0.5f);
 
 	lightCount = max(4,MAX_LIGHTS);
 
@@ -176,32 +204,36 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	
 #pragma endregion
 #pragma region TextureRender
-	m_RenderTexture = new RenderTextureClass;
-	result = m_RenderTexture->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, SCREEN_DEPTH, SCREEN_NEAR, 1);
+	m_RefractionTexture = new RenderTextureClass;
+	result = m_RefractionTexture->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, SCREEN_DEPTH, SCREEN_NEAR, 1);
 	if(!result)
 	{
 		return false;
 	}
+
+	m_ReflectionTexture = new RenderTextureClass;
+	result = m_ReflectionTexture->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, SCREEN_DEPTH, SCREEN_NEAR, 1);
+	if (!result)
+	{
+		return false;
+	}
 #pragma endregion
+
+	m_waterHeight = 2.75f;
+	m_waterTranslation = 0.0f;
+
 	return true;
 
 }
 
 void ApplicationClass::Shutdown()
 {
-	// Release the plane object.
-	if (m_FloorModel)
-	{
-		m_FloorModel->Shutdown();
-		delete m_FloorModel;
-		m_FloorModel = 0;
-	}
 	// Release the render to texture object.
-	if (m_RenderTexture)
+	if (m_RefractionTexture)
 	{
-		m_RenderTexture->Shutdown();
-		delete m_RenderTexture;
-		m_RenderTexture = 0;
+		m_RefractionTexture->Shutdown();
+		delete m_RefractionTexture;
+		m_RefractionTexture = 0;
 	}
 	// Release the frustum class object.
 	if (m_Frustum)
@@ -231,11 +263,11 @@ void ApplicationClass::Shutdown()
 		m_Light = nullptr;
 	}
 	// Release the model object.
-	if (m_Model)
+	if (m_GroundModel)
 	{
-		m_Model->Shutdown();
-		delete m_Model;
-		m_Model = 0;
+		m_GroundModel->Shutdown();
+		delete m_GroundModel;
+		m_GroundModel = 0;
 	}
 
 	// Release the shader object.
@@ -317,7 +349,17 @@ bool ApplicationClass::Frame(InputClass* Input)
 		rotation += 360.0f;
 	}
 
-	m_Model->GetTransform()->SetEulerRotation(0, rotation, 0);
+	m_waterTranslation += 0.01f * m_Timer->GetTime();
+	if(m_waterTranslation > 1.0f)
+	{
+		m_waterTranslation -= 1.0f;
+	}
+
+	result = RenderRefractionToTexture();
+	if (!result)
+	{
+		return false;
+	}
 
 	result =  RenderReflectionToTexture();
 	if (!result)
@@ -360,51 +402,15 @@ bool ApplicationClass::Render()
 #pragma region Contents
 
 	XMMATRIX modelMatrix;
-	m_Model->Render(m_Direct3D->GetDeviceContext());
+	m_GroundModel->Render(m_Direct3D->GetDeviceContext());
 
-	modelMatrix = m_Model->GetModelingMatrix();
+	modelMatrix = m_GroundModel->GetModelingMatrix();
 
-	result = RenderModelWithShader(TEXTURE, m_Model, modelMatrix, viewMatrix, projectionMatrix);
+	result = RenderModelWithShader(TEXTURE, m_GroundModel, modelMatrix, viewMatrix, projectionMatrix);
 	if(!result)
 	{
 		return false;
 	}
-
-#pragma region reflex test
-
-	//XMFLOAT4 reflectionPlane(0.f, -1.0f, 0.0f, 1.5f);
-	//XMVECTOR planeVector = XMLoadFloat4(&reflectionPlane);
-
-	//m_Camera->RenderReflection(reflectionPlane);
-	//m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
-
-	//// Get the matrices.
-	//m_Direct3D->GetWorldMatrix(modelMatrix);
-	//m_Direct3D->GetProjectionMatrix(projectionMatrix);
-
-	//// Rotate the world matrix by the rotation value so that the cube will spin.
-	//modelMatrix = m_Model->GetModelingMatrix();
-	// 
-	//// Render the model 
-	//m_Model->Render(m_Direct3D->GetDeviceContext());
-	//result = RenderModelWithShader(ShaderType::TEXTURE, m_Model, modelMatrix, reflectionViewMatrix, projectionMatrix);
-
-#pragma endregion
-
-	m_FloorModel->GetTransform()->SetPosition(0, -1.5f, 0.f);
-	m_FloorModel->GetTransform()->SetPosition(0.f, 1.5f, 0.0f);
-	m_FloorModel->GetTransform()->SetEulerRotation(-180,180, 0);
-
-	m_FloorModel->Render(m_Direct3D->GetDeviceContext());
-	m_Camera->GetViewMatrix(viewMatrix);
-	modelMatrix = m_FloorModel->GetModelingMatrix();
-	result = RenderModelWithShader(REFLEX, m_FloorModel, modelMatrix, viewMatrix, projectionMatrix);
-	if (!result)
-	{
-		return false;
-	}
-
-
 #pragma endregion
 #pragma region UI
 	//for 2D rendering.
@@ -526,32 +532,66 @@ bool ApplicationClass::UpdateRenderCount(int renderCount)
 	return true;
 }
 
-bool ApplicationClass::RenderReflectionToTexture()
+bool ApplicationClass::RenderRefractionToTexture()
 {
-	XMMATRIX modelMatrix, reflectionViewMatrix, projectionMatrix;
+	XMMATRIX modelMatrix, ViewMatrix, projectionMatrix;
+	XMFLOAT4 clipPlane;
 	bool result;
 
+	clipPlane = XMFLOAT4(0.0f, -1.0f, 0.0f, m_waterHeight + 0.1f);
+
 	// Set the render target to be the render texture and clear it.
-	m_RenderTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
-	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
+	m_RefractionTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
+	m_RefractionTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
 
 	// use the camera to calculate the reflection view matrix
 	XMFLOAT4 reflectionPlane(0.f, -1.0f, 0.0f, 1.5f);
 	XMVECTOR planeVector = XMLoadFloat4(&reflectionPlane);
 
-	m_Camera->RenderReflection(reflectionPlane);
-	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
+	m_Camera->Render();
 
 	// Get the matrices.
 	m_Direct3D->GetWorldMatrix(modelMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+	m_Camera->GetViewMatrix(ViewMatrix);
 
-	// Rotate the world matrix by the rotation value so that the cube will spin.
-	modelMatrix = m_Model->GetModelingMatrix();
+	m_BathModel->GetTransform()->SetPosition(0, 2.0f, 0);
+	modelMatrix = m_BathModel->GetModelingMatrix();
 	 
 	// Render the model 
-	m_Model->Render(m_Direct3D->GetDeviceContext());
-	result = RenderModelWithShader(ShaderType::TEXTURE, m_Model, modelMatrix, reflectionViewMatrix, projectionMatrix);
+	m_BathModel->Render(m_Direct3D->GetDeviceContext());
+	result = RenderModelWithShader(ShaderType::REFRACTION, m_BathModel, modelMatrix, ViewMatrix, projectionMatrix);
+
+	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
+	m_Direct3D->SetBackBufferRenderTarget();
+	m_Direct3D->ResetViewport();
+
+	return result;
+}
+
+bool ApplicationClass::RenderReflectionToTexture()
+{
+	XMMATRIX modelMatrix, viewMatrix, projectionMatrix;
+	bool result;
+
+	// Set the render target to be the render texture and clear it.
+	m_ReflectionTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
+	m_ReflectionTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
+
+	// Get the matrices.
+	m_Direct3D->GetWorldMatrix(modelMatrix);
+	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+	m_Camera->GetViewMatrix(viewMatrix);
+
+	m_WallModel->GetTransform()->SetPosition(0, 6.0f, 8.0f);
+	modelMatrix = m_WallModel->GetModelingMatrix();
+
+	// Render the model 
+	m_WallModel->Render(m_Direct3D->GetDeviceContext());
+	result = RenderModelWithShader(ShaderType::POINT_LIGHT, m_WallModel, modelMatrix, viewMatrix, projectionMatrix);
+
+	if (!result)
+		return false;
 
 	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
 	m_Direct3D->SetBackBufferRenderTarget();
@@ -574,6 +614,20 @@ bool ApplicationClass::RenderModelWithShader(ShaderType type, ModelClass* model,
 			tParameters.projection = projectionMatrix;
 			
 			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, TEXTURE, &tParameters);
+			break;
+		case ShaderType::LIGHT:
+			LightShaderParameters lParameters;
+			lParameters.baseTexture = model->GetTexture(0);
+
+			lParameters.world = worldMatrix;
+			lParameters.view = viewMatrix;
+			lParameters.projection = projectionMatrix;
+
+			lParameters.ambientColor = m_Light->GetAmbientColor();
+			lParameters.diffuseColor = m_Light->GetDiffuseColor();
+			lParameters.lightDirection = m_Light->GetDirection();
+			
+			result =  m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, LIGHT, &lParameters);
 			break;
 		case ShaderType::NORMAL_MAP:
 			NormalMapShaderParameters nomalParam;
@@ -608,38 +662,22 @@ bool ApplicationClass::RenderModelWithShader(ShaderType type, ModelClass* model,
 			
 			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, POINT_LIGHT, &plParameters);
 			break;
-		case ShaderType::FOG:
-			FogShaderParameters fogParameters;
-			fogParameters.baseTexture = model->GetTexture(0);
+		case ShaderType::REFRACTION:
+			RefractionShaderParameters refractionParameters;
 
-			fogParameters.worldMatrix = worldMatrix;
-			fogParameters.viewMatrix = viewMatrix;
-			fogParameters.projectionMatrix = projectionMatrix;
+			refractionParameters.baseTexture = model->GetTexture(0);
+			
+			refractionParameters.world = worldMatrix;
+			refractionParameters.view = viewMatrix;
+			refractionParameters.projection = projectionMatrix;
+			
+			refractionParameters.ambientColor = m_Light->GetAmbientColor();
+			refractionParameters.diffuseColor = m_Light->GetDiffuseColor();
+			refractionParameters.lightDirection = m_Light->GetDirection();
 
-			fogParameters.fogColor = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-			fogParameters.fogStart = 0.0f;
-			fogParameters.fogEnd = 10.0f;
-			fogParameters.fogDensity = 0.1f;
-			//fogParameters.fogType = 0; //linear
-			//fogParameters.fogType = 1; //expo
-			fogParameters.fogType = 2; //sauared expo 
+			refractionParameters.clipPlane = XMFLOAT4(0.0f, -1.0f, 0.0f, m_waterHeight + 0.1f);
 
-			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, FOG, &fogParameters);
-			break;
-		case ShaderType::REFLEX:
-			ReflexShaderParameters reflexParameters;
-			XMMATRIX reflectionMatrix;
-			m_Camera->GetReflectionViewMatrix(reflectionMatrix);
-
-			reflexParameters.baseTexture = model->GetTexture(0);
-			reflexParameters.reflectionTexture = m_RenderTexture->GetShaderResourceView();
-
-			reflexParameters.world = worldMatrix;
-			reflexParameters.view = viewMatrix;
-			reflexParameters.projection = projectionMatrix;
-			reflexParameters.reflection = reflectionMatrix;
-
-			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, REFLEX, &reflexParameters);
+			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, REFRACTION, &refractionParameters);
 			break;
 		default:
 			result = false;

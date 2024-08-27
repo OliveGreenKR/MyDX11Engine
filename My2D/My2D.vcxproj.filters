@@ -55,6 +55,9 @@
     <FxCompile Include="psRefraction.fx">
       <Filter>Sources\Core\Shader\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="psLight.fx">
+      <Filter>Sources\Core\Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TextClass.cpp">
@@ -149,6 +152,15 @@
     </ClCompile>
     <ClCompile Include="RefractionShaderClass.cpp">
       <Filter>Sources\Core\Shader\private</Filter>
+    </ClCompile>
+    <ClCompile Include="LightShaderClass.h">
+      <Filter>Sources\Core\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="LightShaderClass.cpp">
+      <Filter>Sources\Core\Shader\private</Filter>
+    </ClCompile>
+    <ClCompile Include="vsPosUVN.fx">
+      <Filter>Sources\Core\Shader\HLSL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

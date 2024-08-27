@@ -3,16 +3,20 @@
 #include "textureshaderclass.h"
 #include "PointLightShaderClass.h"
 #include "normalmapshaderclass.h"
+#include "LightShaderClass.h"
 #include "FogShaderClass.h"
 #include "ReflexShaderClass.h"
+#include "WaterShaderClass.h"
+#include "RefractionShaderClass.h"
 
 enum ShaderType
 {
     TEXTURE,
 	POINT_LIGHT,
+    LIGHT,
 	NORMAL_MAP,
-    FOG,
-    REFLEX,
+    WATER,
+    REFRACTION,
 };
 
 class ShaderManagerClass
@@ -29,8 +33,9 @@ public:
 
 private:
     TextureShaderClass* m_TextureShader;
+    LightShaderClass* m_LightShader;
     PointLightShaderClass* m_PointLightShader;
     NormalMapShaderClass* m_NormalMapShader;
-    FogShaderClass* m_FogShader;
-    ReflexShaderClass* m_ReflexShader;
+    WaterShaderClass* m_WaterShader;
+    RefractionShaderClass* m_RefractionShader;
 };

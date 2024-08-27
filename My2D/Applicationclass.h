@@ -48,6 +48,7 @@ private:
 	bool UpdateRenderCount(int cnt);
 	bool RenderModelWithShader(ShaderType type, ModelClass* model, XMMATRIX,XMMATRIX,XMMATRIX);
 	bool RenderReflectionToTexture();
+	bool RenderRefractionToTexture();
 
 
 	float randF(float mul = 1.0f) {
@@ -62,8 +63,7 @@ private:
 	CameraClass* m_Camera;
 
 	ShaderManagerClass* m_ShaderManager;
-	ModelClass* m_Model;
-	ModelClass* m_FloorModel;
+	ModelClass* m_GroundModel, *m_WallModel, *m_BathModel, *m_WaterModel;
 
 	FontShaderClass* m_FontShader;
 	FontClass* m_Font;
@@ -82,7 +82,8 @@ private:
 	XMMATRIX m_baseViewMatrix;
 	TextClass* m_RenderCountString;
 
-	RenderTextureClass* m_RenderTexture;
+	RenderTextureClass* m_RefractionTexture, *m_ReflectionTexture;
+	float m_waterHeight, m_waterTranslation;
 };
 
 #endif

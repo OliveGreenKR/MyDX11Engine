@@ -168,6 +168,8 @@
     <ClCompile Include="Cameraclass.cpp" />
     <ClCompile Include="D3dclass.cpp" />
     <ClCompile Include="FogShaderClass.cpp" />
+    <ClCompile Include="LightShaderClass.cpp" />
+    <ClCompile Include="LightShaderClass.h" />
     <ClCompile Include="PlaneClass.cpp" />
     <ClCompile Include="FontClass.cpp" />
     <ClCompile Include="fontshaderclass.cpp" />
@@ -196,6 +198,9 @@
     <ClCompile Include="vsFog.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="vsPosUVN.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="WaterShaderClass.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +220,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="psFont.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="psLight.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="psPointLight.fx">
