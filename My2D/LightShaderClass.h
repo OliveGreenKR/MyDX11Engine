@@ -8,8 +8,8 @@ struct LightShaderParameters
     XMMATRIX view;
     XMMATRIX projection;
 
-    XMFLOAT4 ambientColor;
     XMFLOAT4 diffuseColor;
+    XMFLOAT4 ambientColor;
     XMFLOAT3 lightDirection;
 };
 
@@ -26,8 +26,8 @@ private:
 
     struct LightBufferType
     {
-        XMFLOAT4 ambientColor;
         XMFLOAT4 diffuseColor;
+        XMFLOAT4 ambientColor;
         XMFLOAT3 lightDirection;
         float padding;
     };

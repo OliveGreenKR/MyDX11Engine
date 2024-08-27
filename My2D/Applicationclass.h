@@ -61,6 +61,7 @@ private:
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
+	Transform* m_CameraTarget;
 
 	ShaderManagerClass* m_ShaderManager;
 	ModelClass* m_GroundModel, *m_WallModel, *m_BathModel, *m_WaterModel;

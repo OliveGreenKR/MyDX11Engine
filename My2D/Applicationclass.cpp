@@ -44,6 +44,9 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	char* textureFilenames[8];
 	bool result;
 
+	m_waterHeight = 2.75f;
+	m_waterTranslation = 0.0f;
+
 #pragma region D3D, Camera, Font, FontShader, Timer
 	m_Direct3D = new D3DClass;
 	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
@@ -59,8 +62,12 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->Render();
 	m_Camera->GetViewMatrix(m_baseViewMatrix);
 
-	m_Camera->SetPosition(-10.0f, 6.0f, -10.0f);
-	m_Camera->SetEulerRotation(0, 45.f, 0);
+	m_Camera->SetPosition(0.0f, 6.0f, -18.0f);
+	//m_Camera->SetEulerRotation(15.f, 0, 0);
+
+	m_CameraTarget = new Transform;
+	m_CameraTarget->SetPosition(0.0f, 3.f, 0.f);
+	m_Camera->SetTarget(m_CameraTarget);
 
 	// Create and initialize the font shader object.
 	m_FontShader = new FontShaderClass;
@@ -138,11 +145,12 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Create and initialize the model object.
 	m_GroundModel = new ModelClass;
 
-	result = m_GroundModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 2, textureFilenames);
+	result = m_GroundModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 1, textureFilenames);
 	if (!result)
 	{
 		return false;
 	}
+	m_GroundModel->GetTransform()->SetPosition(0,1,0);
 
 	strcpy_s(modelFilename, "../My2D/data/wall.txt");
 	strcpy_s(textureFilename1, "../My2D/data/wall01.tga");
@@ -155,6 +163,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	m_WallModel->GetTransform()->SetPosition(0, 6.0f, 8.0f);
+
 	strcpy_s(modelFilename, "../My2D/data/bath.txt");
 	strcpy_s(textureFilename1, "../My2D/data/marble01.tga");
 
@@ -166,16 +176,21 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	m_BathModel->GetTransform()->SetPosition(0,2.0f, 0);	
+
 	strcpy_s(modelFilename, "../My2D/data/water.txt");
 	strcpy_s(textureFilename1, "../My2D/data/water01.tga");
 
 	m_WaterModel = new ModelClass;
+
 
 	result = m_WaterModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, 1, textureFilenames);
 	if (!result)
 	{
 		return false;
 	}
+
+	m_WaterModel->GetTransform()->SetPosition(0, m_waterHeight, 0);
 
 #pragma endregion
 #pragma region Frustum
@@ -185,7 +200,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light = new LightClass;
 	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.f, 1.f, 1.0f, 1.0f);
-	m_Light->SetDirection(0.0f, -1.0f, 0.5f);
+	m_Light->SetDirection(0,-2, -1);
 
 	lightCount = max(4,MAX_LIGHTS);
 
@@ -218,9 +233,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 #pragma endregion
-
-	m_waterHeight = 2.75f;
-	m_waterTranslation = 0.0f;
 
 	return true;
 
@@ -348,6 +360,11 @@ bool ApplicationClass::Frame(InputClass* Input)
 	{
 		rotation += 360.0f;
 	}
+	float x = 10 * sqrt(2) * cos(XMConvertToRadians(rotation));
+	float z = sqrt(200 - (x)*(x));
+
+	z = rotation > 180 ? -z : z;
+	m_Camera->SetPosition(x,6.0f, z);
 
 	m_waterTranslation += 0.01f * m_Timer->GetTime();
 	if(m_waterTranslation > 1.0f)
@@ -385,13 +402,9 @@ bool ApplicationClass::Render()
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 	m_Direct3D->TurnZBufferOn();
+
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Direct3D->GetWorldMatrix(worldMatrix);
-
-	m_Camera->SetPosition(0, 0, -10);
-	//m_Camera->SetEulerRotation(0, 0, 0);
-	m_Camera->Render();
-
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
@@ -402,15 +415,39 @@ bool ApplicationClass::Render()
 #pragma region Contents
 
 	XMMATRIX modelMatrix;
-	m_GroundModel->Render(m_Direct3D->GetDeviceContext());
-
 	modelMatrix = m_GroundModel->GetModelingMatrix();
-
-	result = RenderModelWithShader(TEXTURE, m_GroundModel, modelMatrix, viewMatrix, projectionMatrix);
+	m_GroundModel->Render(m_Direct3D->GetDeviceContext());
+	result = RenderModelWithShader(LIGHT, m_GroundModel, modelMatrix, viewMatrix, projectionMatrix);
 	if(!result)
 	{
 		return false;
 	}
+
+	modelMatrix = m_WallModel->GetModelingMatrix();
+	m_WallModel->Render(m_Direct3D->GetDeviceContext());
+	result = RenderModelWithShader(LIGHT, m_WallModel, modelMatrix, viewMatrix, projectionMatrix);
+	if (!result)
+	{
+		return false;
+	}
+
+	modelMatrix = m_BathModel->GetModelingMatrix();
+	m_BathModel->Render(m_Direct3D->GetDeviceContext());
+	result = RenderModelWithShader(LIGHT, m_BathModel, modelMatrix, viewMatrix, projectionMatrix);
+	if (!result)
+	{
+		return false;
+	}
+
+	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
+
+	m_WaterModel->Render(m_Direct3D->GetDeviceContext());
+
+	result = RenderModelWithShader(WATER, m_WaterModel, m_WaterModel->GetModelingMatrix(), viewMatrix, projectionMatrix);
+	if (!result)
+		return false;
+
+
 #pragma endregion
 #pragma region UI
 	//for 2D rendering.
@@ -555,9 +592,8 @@ bool ApplicationClass::RenderRefractionToTexture()
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Camera->GetViewMatrix(ViewMatrix);
 
-	m_BathModel->GetTransform()->SetPosition(0, 2.0f, 0);
+
 	modelMatrix = m_BathModel->GetModelingMatrix();
-	 
 	// Render the model 
 	m_BathModel->Render(m_Direct3D->GetDeviceContext());
 	result = RenderModelWithShader(ShaderType::REFRACTION, m_BathModel, modelMatrix, ViewMatrix, projectionMatrix);
@@ -571,24 +607,25 @@ bool ApplicationClass::RenderRefractionToTexture()
 
 bool ApplicationClass::RenderReflectionToTexture()
 {
-	XMMATRIX modelMatrix, viewMatrix, projectionMatrix;
+	XMFLOAT4 reflectionPlane;
+	XMMATRIX modelMatrix, reflectionViewMatrix, projectionMatrix;
 	bool result;
 
 	// Set the render target to be the render texture and clear it.
 	m_ReflectionTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
 	m_ReflectionTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
 
-	// Get the matrices.
+	reflectionPlane = XMFLOAT4(0.0f, -1.0f, 0.0f, m_waterHeight);
+	m_Camera->RenderReflection(reflectionPlane);
+	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
+
 	m_Direct3D->GetWorldMatrix(modelMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
-	m_Camera->GetViewMatrix(viewMatrix);
 
-	m_WallModel->GetTransform()->SetPosition(0, 6.0f, 8.0f);
 	modelMatrix = m_WallModel->GetModelingMatrix();
-
 	// Render the model 
 	m_WallModel->Render(m_Direct3D->GetDeviceContext());
-	result = RenderModelWithShader(ShaderType::POINT_LIGHT, m_WallModel, modelMatrix, viewMatrix, projectionMatrix);
+	result = RenderModelWithShader(ShaderType::LIGHT, m_WallModel, modelMatrix, reflectionViewMatrix, projectionMatrix);
 
 	if (!result)
 		return false;
@@ -679,6 +716,22 @@ bool ApplicationClass::RenderModelWithShader(ShaderType type, ModelClass* model,
 
 			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, REFRACTION, &refractionParameters);
 			break;
+
+		case ShaderType::WATER:
+			WaterShaderParameters wParameters;
+			wParameters.normalTexture = model->GetTexture(0);
+			wParameters.reflectionTexture = m_ReflectionTexture->GetShaderResourceView();
+			wParameters.refractionTexture = m_RefractionTexture->GetShaderResourceView();
+			wParameters.waterTranslation = m_waterTranslation;
+			wParameters.reflectRefractScale = 0.03f;
+			wParameters.world = worldMatrix;
+			wParameters.view = viewMatrix;
+			wParameters.projection = projectionMatrix;
+			m_Camera->GetReflectionViewMatrix(wParameters.reflection);
+
+			result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), indexCount, WATER, &wParameters);
+			break;
+
 		default:
 			result = false;
 			break;

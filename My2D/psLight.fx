@@ -9,7 +9,7 @@ struct PixelInputType
     float3 normal : NORMAL;
 };
 
-cbuffer LightBuffer : register(b0)
+cbuffer LightBuffer 
 {
     float4 diffuseColor;
     float4 ambientColor;
@@ -28,11 +28,11 @@ float4 main(PixelInputType input) : SV_Target
     textureColor = shaderTexture.Sample(SampleType, input.tex);
     
     lightDir = -lightDirection;
-    lightIntensity = max(saturate(dot(input.normal, lightDir)), 0.1f);
+    lightIntensity = saturate(dot(input.normal, lightDir));
     
-    if (lightIntensity > 0.0f)
+    if(lightIntensity > 0.0f)
     {
-        color += diffuseColor * lightIntensity;
+        color += (diffuseColor * lightIntensity);
     }
     
     color = saturate(color);

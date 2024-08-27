@@ -39,12 +39,11 @@ void CameraClass::Render()
 	positionVector = XMLoadFloat3(&position);
 
 	// Setup where the camera is looking by default.
-	lookAt.x = 0.0f;
-	lookAt.y = 0.0f;
-	lookAt.z = 1.0f;
+	lookAt = GetLookAt();
 
 	// Load it into a XMVECTOR structure.
 	lookAtVector = XMLoadFloat3(&lookAt);
+	lookAtVector = XMVector3Normalize(lookAtVector);
 
 	// Create the rotation matrix from the yaw, pitch, and roll values.
 	roatationVector = m_transform->GetRotationVector();
@@ -87,11 +86,37 @@ void CameraClass::RenderReflection(XMFLOAT4 plane)
 	m_transform->GetPosition(positionVector);
 	positionVector = XMVector3TransformCoord(positionVector, reflectionMatrix);
 
-	lookAt = { 0,0,1 };
+	lookAt = GetLookAt();
+
 	lookAtVector = XMLoadFloat3(&lookAt);
+	lookAtVector = XMVector3Normalize(lookAtVector);
 	lookAtVector = XMVector3Rotate(lookAtVector, rfRotationVector);
 	lookAtVector = XMVectorAdd(positionVector, lookAtVector);
 	
 	m_reflectionViewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
     return;
 }
+
+XMFLOAT3 CameraClass::GetLookAt() const
+{
+	XMFLOAT3 lookAt;
+
+	if (m_target)
+	{
+		XMFLOAT3 target, position;
+		target = m_target->GetPosition();
+		position = m_transform->GetPosition();
+		lookAt.x = (target.x - position.x);
+		lookAt.y = (target.y - position.y);
+		lookAt.z = (target.z - position.z);
+	}
+	else
+	{
+		lookAt.x = 0.0f;
+		lookAt.y = 0.0f;
+		lookAt.z = 1.0f;
+	}
+	return lookAt;
+}
+
+

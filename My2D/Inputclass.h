@@ -30,10 +30,11 @@ public:
     char ConvertKeyToAscii(unsigned char keycode);
 
 
-private:
-    __forceinline bool IsKeyPressed(unsigned char keycode) { return m_keyboardState[keycode] & 0x80; }
+//private:
+    __forceinline bool IsKeyPressed(unsigned char keycode) { return m_keyboardState[keycode] & 0x80; };
     __forceinline bool IsMouseKeyPressed(unsigned char idx) { return m_mouseState.rgbButtons[idx] & 0x80; };
 
+private:
     bool ReadKeyboard();
     bool ReadMouse();
     void ProcessInput();
